@@ -26,11 +26,11 @@
 
       <div class="login-setting">
         <p>
-          <el-checkbox v-model="checked">自动登录</el-checkbox>
+          <el-checkbox v-model="checked">{{$t('login.auto')}}</el-checkbox>
           </p>
         <p @click="handleSetting" class="settings">
           <svg-icon icon-class="setting" />
-         <span>系统设置</span>
+         <span>{{$t('login.sysSetting')}}</span>
         </p>
       </div>
     </el-form>
@@ -41,7 +41,7 @@
 <script>
 export default {
   name: 'index',
-  data () {
+  data() {
     return {
       loginForm: {
         username: 'admin',
@@ -59,14 +59,14 @@ export default {
     }
   },
   methods: {
-    showPwd () {
+    showPwd() {
       if (this.passwordType === 'password') {
         this.passwordType = ''
       } else {
         this.passwordType = 'password'
       }
     },
-    handleLogin () {
+    handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
         } else {
@@ -75,7 +75,7 @@ export default {
         }
       })
     },
-    handleSetting () {
+    handleSetting() {
       this.$router.push('/setting')
     }
   }

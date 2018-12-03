@@ -1,28 +1,70 @@
 <template>
   <div class="setting-container">
     <div class="item">
-      <span>当前版本</span>
-      <span class="right">v2.0</span>
+      <span>{{$t('setting.currentVersion')}}</span>
+      <span class="right">{{version}}</span>
     </div>
+
     <div class="item">
-      <span>IP/域名</span>
+      <span>{{$t('setting.domainName')}}</span>
       <p class="right">
-        <input type="text" v-model="ipPath" placeholder="" maxlength="16">
+        <input type="text" v-model="ipPath" placeholder="" maxlength="16" @click="changeIp">
       </p>
     </div>
-    <div class="item">
-      <span>切换语言</span>
-      <span class="right">中文</span>
+
+    <div class="item" @click="changeLang">
+      <span>{{$t('setting.switchLanguage')}}</span>
+      <span class="right" v-html="language==='en'?'English':'中文'"></span>
     </div>
+
+    <mt-actionsheet
+      :actions="actions"
+      v-model="sheetVisible">
+    </mt-actionsheet>
   </div>
 </template>
 
 <script>
 export default {
   name: 'sys',
-  data () {
+  data() {
     return {
-      ipPath: '1212121212121'
+      version: 'v2.0',
+      sheetVisible: false,
+      actions: [
+        {name: '中文', method: this.selectZh},
+        {name: 'English', method: this.selectEh}
+      ]
+    }
+  },
+  computed: {
+    language() {
+      return this.$store.getters.language
+    },
+    ipPath: {
+      get() {
+        return this.$store.getters.ipPath
+      },
+      set(value) {
+        this.$store.commit('updateIp', value)
+      }
+    }
+  },
+  methods: {
+    changeLang() {
+      this.sheetVisible = true
+    },
+    selectZh() {
+      this.setLang('zh')
+    },
+    selectEh() {
+      this.setLang('en')
+    },
+    setLang(lang) {
+      this.$i18n.locale = lang
+      this.$store.dispatch('setLanguage', lang)
+    },
+    changeIp() {
     }
   }
 }
@@ -31,26 +73,27 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
   @import "../../commom/scss/mixin";
   @import "../../commom/scss/varible";
-  .setting-container{
+
+  .setting-container {
     background: $baseColor;
-  .item{
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-  @include border-bottom-1px($borderBottom);
-    font-size: $font-size-medium;
-    line-height: 20px;
-  .right{
-    color: $settingColor;
-  input{
-    text-align: right;
-    font-size: $font-size-medium;
-    border: 0;
-    outline: none;
-    line-height: 20px;
-    color: $settingColor;
-  }
-  }
-  }
+    .item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px;
+      @include border-bottom-1px($borderBottom);
+      font-size: $font-size-medium;
+      line-height: 20px;
+      .right {
+        color: $settingColor;
+        input {
+          text-align: right;
+          font-size: $font-size-medium;
+          border: 0;
+          outline: none;
+          line-height: 20px;
+          color: $settingColor;
+        }
+      }
+    }
   }
 </style>

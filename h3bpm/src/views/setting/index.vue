@@ -4,8 +4,10 @@
       <p @click="back">
         <svg-icon icon-class="back"/>
       </p>
-      <p class="title">系统设置</p>
-      <p class="sure">确定</p>
+
+      <p class="title">{{$t('setting.title')}}</p>
+
+      <p class="sure" @click="sureIp">{{$t('setting.sure')}}</p>
     </div>
     <sys-setting></sys-setting>
   </div>
@@ -13,15 +15,30 @@
 
 <script>
 import SysSetting from '@/components/SysSetting'
+import {validateIp} from '@/utils/validate'
 export default {
   name: 'setting',
-  data () {
+  data() {
     return {
     }
   },
   methods: {
-    back () {
+    back() {
       this.$router.history.go(-1)
+    },
+    sureIp() {
+      console.log(this.$store.getters.ipPath)
+      const ip = this.$store.getters.ipPath
+      if (!ip) {
+        return false
+      }
+      if (ip) {
+        if (!validateIp(ip)) {
+          console.log(false)
+        } else {
+          console.log(true)
+        }
+      }
     }
   },
   components: {
@@ -39,7 +56,7 @@ export default {
     height: 100%;
     background: $bg2;
     .setting-header {
-      padding: 12px;
+      padding: 14px 10px;
       display: flex;
       justify-content: space-between;
       background: $baseColor;

@@ -5,7 +5,6 @@ import App from './App'
 import router from './router'
 import store from './store'
 import './permission'
-// import Mint from 'mint-ui'
 import { Button, Form, Input, FormItem, Checkbox } from 'element-ui'
 import i18n from './lang'
 import './icons'
@@ -14,7 +13,8 @@ import './commom/element/element-variables.scss'
 import 'mint-ui/lib/style.css'
 import './commom/scss/index.scss'
 // import fastclick from 'fastclick'
-// Vue.use(Mint)
+import { Actionsheet } from 'mint-ui'
+Vue.component(Actionsheet.name, Actionsheet)
 Vue.use(Button)
 Vue.use(Form)
 Vue.use(FormItem)
