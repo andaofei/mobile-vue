@@ -22,7 +22,7 @@
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" size="medium" style="width:100%;margin-bottom:10px;" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
+      <el-button :loading="loading" type="primary" size="medium" style="width:100%;margin-bottom:10px;height: 40px" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
 
       <div class="login-setting">
         <p>

@@ -23,7 +23,7 @@ time, mark, audio, video, input {
   font-size: 100%;
   font-weight: normal;
   vertical-align: baseline;
-  //box-sizing: border-box font-family $base-family;
+  box-sizing: border-box font-family $base-family;
 }
 
 /* HTML5 display-role reset for older browsers */
@@ -50,18 +50,15 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-
 /* custom */
 
 a {
   -webkit-backface-visibility: hidden;
   text-decoration: none;
 }
-
 li {
   list-style: none
 }
-
 body {
   -webkit-text-size-adjust: none;
   //-webkit-tap-highlight-color: $mainColor;
