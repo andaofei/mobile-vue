@@ -78,17 +78,17 @@ export default {
     username: 'Username',
     password: 'Password',
     any: 'any',
-    auto: 'AutomaticLogin',
-    sysSetting: 'SystemSettings',
+    auto: 'AutoLogin',
+    sysSetting: 'SystemSet',
     thirdparty: 'Or connect with',
     thirdpartyTips: 'Can not be simulated on local, so please combine you own business simulation! ! !'
   },
   setting: {
-    title: 'SystemSettings',
+    title: 'SystemSet',
     sure: 'Determine',
     currentVersion: 'CurrentVersion',
     domainName: 'DomainName',
-    switchLanguage: 'SwitchLanguage'
+    switchLanguage: 'SwitchLang'
   },
   documentation: {
     documentation: 'Documentation',

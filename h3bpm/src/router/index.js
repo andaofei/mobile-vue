@@ -18,7 +18,7 @@ export default new Router({
     },
     {
       path: '/login',
-      component: () => import('@/views/login/index'),
+      component: () => import('@/views/Login/index'),
       hidden: true
     },
     {
@@ -29,13 +29,26 @@ export default new Router({
     {
       path: '',
       component: Layout,
-      redirect: 'dashboard',
+      redirect: '/dashboard',
       children: [
         {
-          path: 'dashboard',
-          component: () => import('@/views/home/index'),
+          path: '/dashboard',
+          redirect: '/dashboard/todolist',
+          component: () => import('@/views/Home/index'),
           name: 'Dashboard',
-          meta: { title: 'dashboard', icon: 'dashboard', noCache: true }
+          meta: { title: 'dashboard', icon: 'dashboard', noCache: true },
+          children: [
+            {
+              path: '/dashboard/todolist',
+              component: () => import('@/views/Home/components/TodoList')
+            }
+          ]
+        },
+        {
+          path: '/process',
+          component: () => import('@/views/Process/index'),
+          name: 'Process',
+          meta: { title: 'process', icon: 'process', noCache: true }
         }
       ]
     }

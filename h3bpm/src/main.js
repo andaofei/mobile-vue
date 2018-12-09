@@ -13,8 +13,9 @@ import './commom/element/element-variables.scss'
 import 'mint-ui/lib/style.css'
 import './commom/scss/index.scss'
 // import fastclick from 'fastclick'
-import { Actionsheet } from 'mint-ui'
+import { Actionsheet, Toast } from 'mint-ui'
 Vue.component(Actionsheet.name, Actionsheet)
+Vue.component(Toast.name, Toast)
 Vue.use(Button)
 Vue.use(Form)
 Vue.use(FormItem)

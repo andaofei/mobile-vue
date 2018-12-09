@@ -8,7 +8,7 @@
     <div class="item">
       <span>{{$t('setting.domainName')}}</span>
       <p class="right">
-        <input type="text" v-model="ipPath" placeholder="" maxlength="16" @click="changeIp">
+        <input type="text" v-model="ipPath" placeholder="" maxlength="16" @click="changeIp" autofocus="autofocus">
       </p>
     </div>
 
@@ -79,7 +79,7 @@ export default {
     .item {
       display: flex;
       justify-content: space-between;
-      padding: 10px;
+      padding: 12px 10px;
       @include border-bottom-1px($borderBottom);
       font-size: $font-size-medium;
       line-height: 20px;

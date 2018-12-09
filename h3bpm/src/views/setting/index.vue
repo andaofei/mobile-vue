@@ -16,8 +16,10 @@
 <script>
 import SysSetting from '@/components/SysSetting'
 import {validateIp} from '@/utils/validate'
+import Cookies from 'js-cookie'
+import { Toast } from 'mint-ui'
 export default {
-  name: 'setting',
+  name: 'Setting',
   data() {
     return {
     }
@@ -34,9 +36,22 @@ export default {
       }
       if (ip) {
         if (!validateIp(ip)) {
-          console.log(false)
+          let instance = Toast({
+            message: 'IP格式有误',
+            iconClass: 'icon el-icon-info'
+          })
+          setTimeout(() => {
+            instance.close()
+          }, 2000)
         } else {
-          console.log(true)
+          Cookies.set('sysIp', ip)
+          let instance = Toast({
+            message: '设置成功',
+            iconClass: 'icon el-icon-success'
+          })
+          setTimeout(() => {
+            instance.close()
+          }, 2000)
         }
       }
     }
@@ -62,7 +77,7 @@ export default {
       background: $baseColor;
       @include border-bottom-1px($borderBottom);
       .title, .sure {
-        font-size: $font-size-medium;
+        font-size: $font-size-medium-x;
       }
       .sure {
         color: $mainColor;

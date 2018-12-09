@@ -2,8 +2,8 @@ import Cookies from 'js-cookie'
 
 const app = {
   state: {
-    language: Cookies.get('language') || 'en',
-    ipPath: '11111'
+    language: Cookies.get('language') || 'zh',
+    ipPath: Cookies.get('sysIp') || '127.0.0.1'
   },
   mutations: {
     SET_LANGUAGE: (state, language) => {

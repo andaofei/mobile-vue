@@ -9,20 +9,21 @@
         <span class="svg-container">
           <svg-icon icon-class="user" />
         </span>
-        <el-input v-model="loginForm.username" :placeholder="$t('login.username')" name="username" type="text" auto-complete="on"/>
+        <el-input v-model="loginForm.username" maxlength="16" :placeholder="$t('login.username')" name="username" type="text" auto-complete="on"/>
       </el-form-item>
 
       <el-form-item prop="password">
         <span class="svg-container">
           <svg-icon icon-class="password" />
         </span>
-        <el-input :type="passwordType" v-model="loginForm.password" :placeholder="$t('login.password')" name="password" auto-complete="on" @keyup.enter.native="handleLogin" />
+        <el-input :type="passwordType" maxlength="16" v-model="loginForm.password" :placeholder="$t('login.password')" name="password" auto-complete="on" @keyup.enter.native="handleLogin" />
         <span class="show-pwd" @click="showPwd">
-          <svg-icon icon-class="eye" />
+          <svg-icon v-if="passwordType ==='password'" icon-class="eye" />
+          <svg-icon v-else icon-class="eyeopen" />
         </span>
       </el-form-item>
 
-      <el-button :loading="loading" type="primary" size="medium" style="width:100%;margin-bottom:10px;height: 40px" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
+      <el-button :loading="loading" type="primary" size="medium" style="width:100%;margin-bottom:12px;height: 44px" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
 
       <div class="login-setting">
         <p>
@@ -69,6 +70,13 @@ export default {
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
+          this.loading = true
+          this.$store.dispatch('LoginSys', this.loginForm).then(() => {
+            this.loading = false
+            this.$router.push({ path: this.redirect || '/' })
+          }).catch(() => {
+            this.loading = false
+          })
         } else {
           console.log('error submit!!')
           return false
@@ -77,6 +85,15 @@ export default {
     },
     handleSetting() {
       this.$router.push('/setting')
+    }
+  },
+  watch: {
+    $route: {
+      handler: function(route) {
+        console.log(route)
+        this.redirect = route.query && route.query.redirect
+      },
+      immediate: true
     }
   }
 }
@@ -100,18 +117,18 @@ export default {
   .login-container {
     .el-input {
       display: inline-block;
-      height: 40px;
+      height: 44px;
       width: 60%;
       font-size: 14px;
       input {
         background: transparent;
-        border: 0px;
+        border: 0;
         -webkit-appearance: none;
         border-radius: 0;
         padding: 0 5px 0 1px;
         color: $light_gray;
-        height: 40px;
-        line-height: 40px;
+        height: 44px;
+        line-height: 44px;
         caret-color: $cursor;
         &:-webkit-autofill {
           -webkit-box-shadow: 0 0 0px 1000px $bg inset !important;
@@ -151,7 +168,7 @@ $light_gray:#eee;
     }
   }
   .login-form {
-    height: 55%;
+    height: 65%;
     max-width: 100%;
     padding: 0 2rem;
   }
@@ -193,9 +210,8 @@ $light_gray:#eee;
     right: 10px;
     top: 0;
     font-size: 16px;
+    height: 100%;
     color: $dark_gray;
-    cursor: pointer;
-    user-select: none;
   }
   .thirdparty-button {
     position: absolute;
@@ -209,7 +225,7 @@ $light_gray:#eee;
     .settings{
       span{
         color:$dark_gray;
-        font-size: 12px;
+        font-size: 14px;
       }
     }
   }
