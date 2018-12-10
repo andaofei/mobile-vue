@@ -73,7 +73,8 @@ export default {
           this.loading = true
           this.$store.dispatch('LoginSys', this.loginForm).then(() => {
             this.loading = false
-            this.$router.push({ path: this.redirect || '/' })
+            // this.$router.push({ path: this.redirect || '/' })
+            this.$router.push({ path: '/dashboard' })
           }).catch(() => {
             this.loading = false
           })
@@ -183,7 +184,7 @@ $light_gray:#eee;
     }
   }
   .svg-container {
-    padding: 0 5px 0 10px;
+    padding: 0 20px 0 10px;
     color: $dark_gray;
     vertical-align: middle;
     width: 20px;

@@ -23,7 +23,7 @@ export default new Router({
     },
     {
       path: '/setting',
-      component: () => import('@/views/setting/index'),
+      component: () => import('@/views/Setting/index'),
       hidden: true
     },
     {
@@ -51,6 +51,12 @@ export default new Router({
           meta: { title: 'process', icon: 'process', noCache: true }
         }
       ]
+    },
+    {
+      path: '/homeSetting',
+      name: 'HomeSetting',
+      hidden: true,
+      component: () => import('@/components/HomeSetting/index')
     }
   ]
 })

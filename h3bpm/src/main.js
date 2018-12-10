@@ -12,7 +12,7 @@ import 'normalize.css/normalize.css'
 import './commom/element/element-variables.scss'
 import 'mint-ui/lib/style.css'
 import './commom/scss/index.scss'
-// import fastclick from 'fastclick'
+import fastclick from 'fastclick'
 import { Actionsheet, Toast } from 'mint-ui'
 Vue.component(Actionsheet.name, Actionsheet)
 Vue.component(Toast.name, Toast)
@@ -22,7 +22,7 @@ Vue.use(FormItem)
 Vue.use(Input)
 Vue.use(Checkbox)
 Vue.config.productionTip = false
-// fastclick.attach(document.body)
+fastclick.attach(document.body)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

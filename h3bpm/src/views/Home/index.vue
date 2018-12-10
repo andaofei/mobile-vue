@@ -1,6 +1,8 @@
 <template>
     <div class="home-container">
-      <div class="home-title">h3bpm</div>
+      <!--header-->
+      <HomeHeader></HomeHeader>
+      <!--navbar-->
       <div class="home-navbar">
         <router-link
           :to="{ path: '/dashboard/todolist' }">
@@ -8,17 +10,18 @@
         </router-link>
         <router-link
           :to="{ path: '/dashboard/todolist' }">
-          <span>待办</span>
+          <span>待阅</span>
         </router-link>
         <router-link
           :to="{ path: '/dashboard/todolist' }">
-          <span>待办</span>
+          <span>已办</span>
         </router-link>
         <router-link
           :to="{ path: '/dashboard/todolist' }">
-          <span>待办</span>
+          <span>已阅</span>
         </router-link>
       </div>
+      <!--view-->
       <div class="home-box">
         <router-view></router-view>
       </div>
@@ -26,8 +29,12 @@
 </template>
 
 <script>
+import HomeHeader from '@/components/HomeHeader'
 export default {
-  name: 'Home'
+  name: 'Home',
+  components: {
+    HomeHeader
+  }
 }
 </script>
 
@@ -36,6 +43,14 @@ export default {
   position: absolute;
   width: 100%;
   height: 100%;
+  .home-navbar{
+    width: 100%;
+    display: flex;
+    a{
+      flex:1;
+      text-align: center;
+    }
+  }
   .home-box{
     width: 100%;
     height: 400px;

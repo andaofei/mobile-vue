@@ -1,5 +1,13 @@
 <template>
-  <div class="setting-container">
+  <div >
+    <div class="setting-header">
+      <p @click="back"><svg-icon icon-class="back"/></p>
+
+      <p class="title">{{$t('setting.title')}}</p>
+
+      <p class="sure" @click="sureIp">{{$t('setting.sure')}}</p>
+    </div>
+    <div class="setting-container">
     <div class="item">
       <span>{{$t('setting.currentVersion')}}</span>
       <span class="right">{{version}}</span>
@@ -8,7 +16,7 @@
     <div class="item">
       <span>{{$t('setting.domainName')}}</span>
       <p class="right">
-        <input type="text" v-model="ipPath" placeholder="" maxlength="16" @click="changeIp" autofocus="autofocus">
+        <input type="text" v-model="ipPath" placeholder="" maxlength="16" autofocus="autofocus">
       </p>
     </div>
 
@@ -22,9 +30,13 @@
       v-model="sheetVisible">
     </mt-actionsheet>
   </div>
+  </div>
 </template>
 
 <script>
+import {validateIp} from '@/utils/validate'
+import Cookies from 'js-cookie'
+import { Toast } from 'mint-ui'
 export default {
   name: 'sys',
   data() {
@@ -64,7 +76,35 @@ export default {
       this.$i18n.locale = lang
       this.$store.dispatch('setLanguage', lang)
     },
-    changeIp() {
+    back() {
+      this.$router.history.go(-1)
+    },
+    sureIp() {
+      console.log(this.$store.getters.ipPath)
+      const ip = this.$store.getters.ipPath
+      if (!ip) {
+        return false
+      }
+      if (ip) {
+        if (!validateIp(ip)) {
+          let instance = Toast({
+            message: 'IP格式有误',
+            iconClass: 'icon el-icon-info'
+          })
+          setTimeout(() => {
+            instance.close()
+          }, 2000)
+        } else {
+          Cookies.set('sysIp', ip)
+          let instance = Toast({
+            message: '设置成功',
+            iconClass: 'icon el-icon-success'
+          })
+          setTimeout(() => {
+            instance.close()
+          }, 2000)
+        }
+      }
     }
   }
 }
@@ -73,7 +113,19 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
   @import "../../commom/scss/mixin";
   @import "../../commom/scss/varible";
-
+  .setting-header {
+    padding: 14px 10px;
+    display: flex;
+    justify-content: space-between;
+    background: $baseColor;
+    @include border-bottom-1px($borderBottom);
+    .title, .sure {
+      font-size: $font-size-medium-x;
+    }
+    .sure {
+      color: $mainColor;
+    }
+  }
   .setting-container {
     background: $baseColor;
     .item {

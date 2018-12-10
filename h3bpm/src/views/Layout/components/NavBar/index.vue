@@ -2,7 +2,7 @@
 <div class="nav-container">
   <router-link
     :to="{ path: '/dashboard' }">
-    <span>首页</span>
+    <span>首页中心</span>
   </router-link>
   <router-link
     :to="{ path: '/process' }">
@@ -10,11 +10,11 @@
   </router-link>
   <router-link
     :to="{ path: '/dashboard' }">
-    <span>首页</span>
+    <span>我的流程</span>
   </router-link>
   <router-link
     :to="{ path: '/dashboard' }">
-    <span>首页</span>
+    <span>应用中心</span>
   </router-link>
 </div>
 </template>
