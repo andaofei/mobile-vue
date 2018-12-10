@@ -28,7 +28,7 @@
       <div class="login-setting">
         <p>
           <el-checkbox v-model="checked">{{$t('login.auto')}}</el-checkbox>
-          </p>
+        </p>
         <p @click="handleSetting" class="settings">
           <svg-icon icon-class="setting" />
          <span>{{$t('login.sysSetting')}}</span>
