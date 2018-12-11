@@ -1,6 +1,6 @@
-@mixin border-bottom-1px($color){
+@mixin border-bottom-1px($color) {
   position: relative;
-  &:after{
+  &:after {
     display: block;
     position: absolute;
     left: 0;
@@ -10,27 +10,67 @@
     content: ' ';
   }
 }
-@media (-webkit-min-device-pixel-ratio: 1.5),(min-device-pixel-ratio: 1.5){
-  .border-bottom-1px{
-    &::after{
+//上边框
+@mixin border-top-1px($color) {
+  position: relative;
+  &:before {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    border-top: 1px solid $color;
+    content: ' ';
+  }
+}
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
+  .border-bottom-1px {
+    &::after {
       -webkit-transform: scaleY(0.7);
       transform: scaleY(0.7);
     }
   }
 }
 
-@media (-webkit-min-device-pixel-ratio: 2),(min-device-pixel-ratio: 2){
-  .border-bottom-1px{
-    &::after{
+@media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2) {
+  .border-bottom-1px {
+    &::after {
       -webkit-transform: scaleY(0.5);
       transform: scaleY(0.5);
     }
   }
 }
 
-@media (-webkit-min-device-pixel-ratio: 3),(min-device-pixel-ratio: 3){
-  .border-bottom-1px{
-    &::after{
+@media (-webkit-min-device-pixel-ratio: 3), (min-device-pixel-ratio: 3) {
+  .border-bottom-1px {
+    &::after {
+      -webkit-transform: scaleY(0.3);
+      transform: scaleY(0.3);
+    }
+  }
+}
+//上边框
+@media (-webkit-min-device-pixel-ratio: 1.5), (min-device-pixel-ratio: 1.5) {
+  .border-top-1px {
+    &::after {
+      -webkit-transform: scaleY(0.7);
+      transform: scaleY(0.7);
+    }
+  }
+}
+
+@media (-webkit-min-device-pixel-ratio: 2), (min-device-pixel-ratio: 2) {
+  .border-top-1px {
+    &::after {
+      -webkit-transform: scaleY(0.5);
+      transform: scaleY(0.5);
+    }
+  }
+}
+
+@media (-webkit-min-device-pixel-ratio: 3), (min-device-pixel-ratio: 3) {
+  .border-top-1px {
+    &::after {
       -webkit-transform: scaleY(0.3);
       transform: scaleY(0.3);
     }

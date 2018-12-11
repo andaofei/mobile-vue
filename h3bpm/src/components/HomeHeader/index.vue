@@ -9,7 +9,7 @@
     </p>
     <p @click="handleClickFilter" class="home-header-filter">
       <svg-icon icon-class="filter" />
-      <span class="filter-text">筛选</span>
+      <span class="filter-text">{{$t('home.filter')}}</span>
     </p>
   </div>
 </template>
@@ -46,8 +46,8 @@ export default {
     }
   }
   .home-header-logo{
-    width: 90px;
-    height: 20px;
+    width: 100px;
+    height: 18px;
     img{
       width: 100%;
       height: 100%;

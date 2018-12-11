@@ -88,7 +88,7 @@ export default {
       if (ip) {
         if (!validateIp(ip)) {
           let instance = Toast({
-            message: 'IP格式有误',
+            message: this.$t('setting.IpError'),
             iconClass: 'icon el-icon-info'
           })
           setTimeout(() => {
@@ -97,7 +97,7 @@ export default {
         } else {
           Cookies.set('sysIp', ip)
           let instance = Toast({
-            message: '设置成功',
+            message: this.$t('setting.success'),
             iconClass: 'icon el-icon-success'
           })
           setTimeout(() => {
@@ -136,14 +136,14 @@ export default {
       font-size: $font-size-medium;
       line-height: 20px;
       .right {
-        color: $settingColor;
+        color: $textColor;
         input {
           text-align: right;
           font-size: $font-size-medium;
           border: 0;
           outline: none;
           line-height: 20px;
-          color: $settingColor;
+          color: $textColor;
         }
       }
     }

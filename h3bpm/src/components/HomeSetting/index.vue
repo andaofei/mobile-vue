@@ -2,19 +2,36 @@
     <div class="home-settings">
       <sys-setting></sys-setting>
       <!--注销-->
-      <div class="log-out" @click="logOut">注销</div>
+      <div class="log-out" @click="logOut">{{$t('logout.title')}}</div>
     </div>
 </template>
 
 <script>
 import SysSetting from '@/components/SysSetting'
+import { MessageBox } from 'mint-ui'
 export default {
   name: 'HomeSetting',
+  data() {
+    return {
+      tip: '%{logout} title'
+    }
+  },
   methods: {
     logOut() {
-      this.$store.dispatch('FedLogOut').then(() => {
-        location.reload()// In order to re-instantiate the vue-router object to avoid bugs
+      MessageBox.confirm('', {
+        title: this.$t('logout.tip'),
+        message: this.$t('logout.config'),
+        confirmButtonText: this.$t('logout.determine'),
+        cancelButtonText: this.$t('logout.cancel'),
+        showCancelButton: true
       })
+        .then(action => {
+          this.$store.dispatch('FedLogOut').then(() => {
+            location.reload()
+          })
+        })
+        .catch(() => {
+        })
     }
   },
   components: {

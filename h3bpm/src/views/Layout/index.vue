@@ -27,7 +27,7 @@ export default {
     flex: 1 1 auto;
   }
   .nav-bar{
-    height: 40px;
+    height: 44px;
     width: 100%;
   }
 }

@@ -1,7 +1,7 @@
 <template>
 <div class="login-container">
   <div class="login-logo">
-    <img src="/static/images/logo.svg" alt="">
+    <img src="/static/default/bpm.jpg" alt="">
   </div>
   <div class="login-form">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">

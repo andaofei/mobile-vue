@@ -1,27 +1,49 @@
 <template>
     <div class="home-container">
-      <!--header-->
-      <HomeHeader></HomeHeader>
-      <!--navbar-->
-      <div class="home-navbar">
-        <router-link
-          :to="{ path: '/dashboard/todolist' }">
-          <span>待办</span>
-        </router-link>
-        <router-link
-          :to="{ path: '/dashboard/todolist' }">
-          <span>待阅</span>
-        </router-link>
-        <router-link
-          :to="{ path: '/dashboard/todolist' }">
-          <span>已办</span>
-        </router-link>
-        <router-link
-          :to="{ path: '/dashboard/todolist' }">
-          <span>已阅</span>
-        </router-link>
+      <div class="home-top">
+        <!--header-->
+        <HomeHeader></HomeHeader>
+        <!--nav-bar-->
+        <div class="home-navbar">
+          <router-link
+            tag="div"
+            class="nav-item"
+            :to="{ path: '/dashboard/todolist' }">
+            <div class="navbar-item">
+              <el-badge :value="12" class="item">
+                <span>待办</span>
+              </el-badge>
+            </div>
+          </router-link>
+          <router-link
+            tag="div"
+            class="nav-item"
+            :to="{ path: '/dashboard/toberead' }">
+            <div class="navbar-item">
+              <el-badge :value="1" class="item">
+                <span>待阅</span>
+              </el-badge>
+            </div>
+          </router-link>
+          <router-link
+            tag="div"
+            class="nav-item"
+            :to="{ path: '/dashboard/alldone' }">
+            <div class="navbar-item">
+                <span>已办</span>
+            </div>
+          </router-link>
+          <router-link
+            tag="div"
+            class="nav-item"
+            :to="{ path: '/dashboard/read' }">
+            <div class="navbar-item">
+                <span>已阅</span>
+            </div>
+          </router-link>
+        </div>
       </div>
-      <!--view-->
+      <!--view-box-->
       <div class="home-box">
         <router-view></router-view>
       </div>
@@ -39,21 +61,54 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+  @import "../../commom/scss/mixin";
+  @import "../../commom/scss/varible";
 .home-container{
   position: absolute;
   width: 100%;
   height: 100%;
-  .home-navbar{
-    width: 100%;
-    display: flex;
-    a{
-      flex:1;
-      text-align: center;
+  display: flex;
+  flex-direction: column;
+  .home-top {
+    .home-navbar {
+      width: 100%;
+      display: flex;
+      @include border-bottom-1px($borderBottom);
+      a:nth-child(2) {
+        & .navbar-item {
+          border-left: 0.5px solid $borderBottom;
+        }
+      }
+      .nav-item:nth-child(3) {
+        & .navbar-item {
+          border-left: 0.5px solid $borderBottom;
+          border-right: 0.5px solid $borderBottom;
+        }
+      }
+      .nav-item{
+        flex: 1;
+        text-align: center;
+        font-size: 14px;
+        padding: 11px 0;
+        color: $textColor;
+        .item {
+          span {
+            font-size: 14px;
+            padding: 0 7px;
+          }
+        }
+      }
+      .router-link-active{
+        color: $mainColor;
+        border-bottom: 2px solid $mainColor;
+      }
     }
   }
-  .home-box{
+  .home-box {
     width: 100%;
-    height: 400px;
+    flex: 1 0 auto;
+    background: $bg;
+    position: relative;
   }
 }
 </style>

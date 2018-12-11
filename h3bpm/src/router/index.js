@@ -40,15 +40,43 @@ export default new Router({
           children: [
             {
               path: '/dashboard/todolist',
+              name: 'TodoList',
               component: () => import('@/views/Home/components/TodoList')
+            },
+            {
+              path: '/dashboard/toberead',
+              name: 'TobeRead',
+              component: () => import('@/views/Home/components/TobeRead')
+            },
+            {
+              path: '/dashboard/read',
+              name: 'Read',
+              component: () => import('@/views/Home/components/Read')
+            },
+            {
+              path: '/dashboard/alldone',
+              name: 'AllDone',
+              component: () => import('@/views/Home/components/AllDone')
             }
           ]
         },
         {
-          path: '/process',
-          component: () => import('@/views/Process/index'),
-          name: 'Process',
-          meta: { title: 'process', icon: 'process', noCache: true }
+          path: '/initiworkflow',
+          component: () => import('@/views/InitiWorkflow/index'),
+          name: 'InitiWorkflow',
+          meta: { title: 'initiworkflow', icon: 'initiworkflow', noCache: true }
+        },
+        {
+          path: '/myworkflow',
+          component: () => import('@/views/MyWorkflow/index'),
+          name: 'MyWorkflow',
+          meta: { title: 'myworkflow', icon: 'myworkflow', noCache: true }
+        },
+        {
+          path: '/appcenter',
+          component: () => import('@/views/AppCenter/index'),
+          name: 'AppCenter',
+          meta: { title: 'appcenter', icon: 'appcenter', noCache: true }
         }
       ]
     },

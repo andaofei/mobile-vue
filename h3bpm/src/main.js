@@ -4,16 +4,22 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+import VueLazyload from 'vue-lazyload'
 import './permission'
-import { Button, Form, Input, FormItem, Checkbox } from 'element-ui'
+import { Button, Form, Input, FormItem, Checkbox, Badge } from 'element-ui'
 import i18n from './lang'
 import './icons'
 import 'normalize.css/normalize.css'
 import './commom/element/element-variables.scss'
-import 'mint-ui/lib/style.css'
+import './commom/mintui/style.scss'
+// import 'mint-ui/lib/style.css'
 import './commom/scss/index.scss'
-import fastclick from 'fastclick'
+// import fastclick from 'fastclick'
 import { Actionsheet, Toast } from 'mint-ui'
+Vue.use(VueLazyload, {
+  loading: require('../static/default/loading.svg'), // 加载的图片
+  error: require('../static/default/bpm.jpg')
+})
 Vue.component(Actionsheet.name, Actionsheet)
 Vue.component(Toast.name, Toast)
 Vue.use(Button)
@@ -21,8 +27,9 @@ Vue.use(Form)
 Vue.use(FormItem)
 Vue.use(Input)
 Vue.use(Checkbox)
+Vue.use(Badge)
 Vue.config.productionTip = false
-fastclick.attach(document.body)
+// fastclick.attach(document.body)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
