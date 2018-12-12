@@ -21,7 +21,9 @@ export default {
     handleClickSetting() {
       this.$router.push('/homeSetting')
     },
-    handleClickFilter() {}
+    handleClickFilter() {
+      this.$store.commit('SET_FILTER_SHOW', true)
+    }
   }
 }
 </script>

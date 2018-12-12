@@ -58,7 +58,7 @@ export default {
         return this.$store.getters.ipPath
       },
       set(value) {
-        this.$store.commit('updateIp', value)
+        this.$store.commit('UP_DATE_IP', value)
       }
     }
   },

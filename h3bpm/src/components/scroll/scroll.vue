@@ -9,8 +9,17 @@
               <div class="item-left"><img src="./images/avator.svg" alt=""></div>
               <div class="item-right">
                 <div class="item-right-box">
-                  <div>{{item}}</div>
-                  <div>0</div>
+                  <div class="right-box-top">系统管理员的报销申请</div>
+                  <div class="right-box-btm">
+                    <p class="time">
+                      <span class="time-title">接收时间：</span>
+                      <span class="time-inner">{{item}}</span>
+                    </p>
+                    <p class="detail">
+                      <svg-icon icon-class="zhang"/>
+                      <span class="detail-inner">填写报销申请</span>
+                    </p>
+                  </div>
                 </div>
               </div>
             </li>
@@ -58,7 +67,6 @@ import BScroll from 'better-scroll'
 import Loading from '../loading/loading.vue'
 import Bubble from '../bubble/bubble.vue'
 import {getRect} from '../../commom/js/dom'
-
 const COMPONENT_NAME = 'scroll'
 const DIRECTION_H = 'horizontal'
 const DIRECTION_V = 'vertical'
@@ -320,84 +328,112 @@ export default {
 }
 </script>
 
-<style lang="stylus" rel="stylesheet/stylus">
-  .list-wrapper
-    position: relative
-    height: 100%
-    /*position: absolute*/
-    /*left: 0*/
-    /*top: 0*/
-    /*right: 0*/
-    /*bottom: 0*/
-    overflow: hidden
-    background: #fff
-    .scroll-content
-      position: relative
-      z-index: 1
-    .list-content
-      position: relative
-      z-index: 10
-      background: #fff
-      /*列表*/
-      .list-item
-        height: 60px
-        line-height: 60px
-        font-size: 1rem
-        padding: 0 10px
-        border-bottom: 1px solid #e5e5e5
-        display flex
-        .item-left
-          flex  0 0 60px
-          display flex
-          flex-direction column
-          justify-content center
-          img
-            width 40px
-            height 40px
-            border-radius 50%
-        .item-right
-          flex 1 1 auto
-          position relative
-          .item-right-box
-            position absolute
-            width 100%
-            height 100%
-            left 0
-            top 0
-            display flex
-            flex-direction column
-    .no-data
-      position absolute
-      transform translate(-50%, -50%)
-      top 40%
-      left 50%
-      span
-        font-size 1rem
-        color rgba(0,0,0,0.65)
-
-  .pulldown-wrapper
-    position: absolute
-    width: 100%
-    left: 0
-    display: flex
-    justify-content center
-    align-items center
-    transition: all
-    .after-trigger
-      margin-top: 10px
-    .after-trigger-text
-      span
-        font-size 14px
-        color rgba(0, 0, 0, .65)
-
-  .pullup-wrapper
-    width: 100%
-    display: flex
-    justify-content center
-    align-items center
-    padding: 16px 0
-    .before-trigger
-      span
-        font-size 14px
-        color rgba(0, 0, 0, .65)
+<style rel="stylesheet/scss" lang="scss" scoped>
+  @import "../../commom/scss/mixin";
+  @import "../../commom/scss/varible";
+  .list-wrapper {
+    position: relative;
+    height: 100%;
+    overflow: hidden;
+    background: $baseColor;
+    .scroll-content {
+      position: relative;
+      z-index: 1;
+      .list-content {
+        position: relative;
+        z-index: 10;
+        background: $baseColor;
+        /*列表*/
+        .list-item {
+          font-size: 1rem;
+          padding: 10px;
+          @include border-bottom-1px($borderBottom);
+          display: flex;
+          .item-left {
+            flex: 0 0 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            img {
+              width: 40px;
+              height: 40px;
+              border-radius: 50%;
+            }
+          }
+          .item-right {
+            flex: 1 0 auto;
+            .item-right-box {
+              display: flex;
+              flex-direction: column;
+              justify-content: space-between;
+            }
+            .right-box-top {
+              color: $textColor;
+              font-size: 1rem;
+              line-height: 1.5rem;
+            }
+            .right-box-btm {
+              .time {
+                font-size: 14px;
+                line-height: 1.3rem;
+              }
+            }
+            .time-title {
+              color: $textColor;
+            }
+            .time-inner {
+              color: $textColor2;
+            }
+            .detail {
+              color: $mainColor;
+              line-height: 1.2rem;
+            }
+            .detail-inner {
+              font-size: 14px;
+            }
+          }
+        }
+      }
+      .no-data {
+        position: absolute;
+        transform: translate(-50%, -50%);
+        top: 40%;
+        left: 50%;
+        span {
+          font-size: 1rem;
+          color: $textColor2;
+        }
+      }
+    }
+  }
+  .pulldown-wrapper {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    display: flex ;
+    justify-content: center ;
+    align-items: center;
+    transition: all;
+  }
+  .after-trigger {
+    margin-top: 10px ;
+    .after-trigger-text {
+      span {
+        font-size: 14px;
+        color: $textColor2;
+      }
+    }
+  }
+  .pullup-wrapper {
+    width: 100%;
+    display: flex ;
+    justify-content: center;
+    align-items: center;
+    padding: 16px 0;
+  }
+  .before-trigger {
+    span{
+      font-size: 14px; color: $textColor2;
+    }
+  }
 </style>

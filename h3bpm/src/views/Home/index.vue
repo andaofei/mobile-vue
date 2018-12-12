@@ -8,9 +8,9 @@
           <router-link
             tag="div"
             class="nav-item"
-            :to="{ path: '/dashboard/todolist' }">
+            :to="{ path: '/dashboard/todolist', query: {name: 'TodoList', id: 0}}">
             <div class="navbar-item">
-              <el-badge :value="12" class="item">
+              <el-badge :value="todoCounts" class="item">
                 <span>待办</span>
               </el-badge>
             </div>
@@ -18,9 +18,9 @@
           <router-link
             tag="div"
             class="nav-item"
-            :to="{ path: '/dashboard/toberead' }">
+            :to="{ path: '/dashboard/toberead', query: {name: 'TobeRead', id: 1}}">
             <div class="navbar-item">
-              <el-badge :value="1" class="item">
+              <el-badge :value="toReadCounts" class="item">
                 <span>待阅</span>
               </el-badge>
             </div>
@@ -28,7 +28,7 @@
           <router-link
             tag="div"
             class="nav-item"
-            :to="{ path: '/dashboard/alldone' }">
+            :to="{ path: '/dashboard/alldone', query: {name: 'AllDone', id: 2} }">
             <div class="navbar-item">
                 <span>已办</span>
             </div>
@@ -36,7 +36,7 @@
           <router-link
             tag="div"
             class="nav-item"
-            :to="{ path: '/dashboard/read' }">
+            :to="{ path: '/dashboard/read', query: {name: 'Read', id: 3} }">
             <div class="navbar-item">
                 <span>已阅</span>
             </div>
@@ -54,6 +54,24 @@
 import HomeHeader from '@/components/HomeHeader'
 export default {
   name: 'Home',
+  data() {
+    return {
+      routeLists: [
+      ]
+    }
+  },
+  computed: {
+    todoCounts: {
+      get() {
+        return this.$store.getters.todoCounts
+      }
+    },
+    toReadCounts: {
+      get() {
+        return this.$store.getters.toReadCounts
+      }
+    }
+  },
   components: {
     HomeHeader
   }
