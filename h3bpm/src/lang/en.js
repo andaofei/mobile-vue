@@ -42,6 +42,12 @@ export default {
   home: {
     filter: 'Filter'
   },
+  filter: {
+    ToDoList: 'ToDoList',
+    TobeRead: 'TobeRead',
+    AllDone: 'AllDone',
+    Read: 'Read'
+  },
   tagsView: {
     refresh: 'Refresh',
     close: 'Close',

@@ -21,8 +21,11 @@ export default {
     handleClickSetting() {
       this.$router.push('/homeSetting')
     },
+    // 点击筛选
     handleClickFilter() {
-      this.$store.commit('SET_FILTER_SHOW', true)
+      const name = this.$route.meta
+      this.$store.commit('SET_FILTER_SHOW', {status: true, inner: name})
+      console.log(this.$route)
     }
   }
 }

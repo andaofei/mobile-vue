@@ -23,6 +23,7 @@ export default {
     return {}
   },
   created() {
+    // console.log(this.$route)
     for (let i = 0; i < 8; i++) {
       this.items.push(this.$i18n.t('normalScrollListPage.previousTxt') + ++this.itemIndex + this.$i18n.t('normalScrollListPage.followingTxt'))
     }

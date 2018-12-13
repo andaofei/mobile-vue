@@ -42,6 +42,12 @@ export default {
   home: {
     filter: '筛选'
   },
+  filter: {
+    ToDoList: '待办',
+    TobeRead: '待阅',
+    AllDone: '已办',
+    Read: '已阅'
+  },
   tagsView: {
     refresh: '刷新',
     close: '关闭',

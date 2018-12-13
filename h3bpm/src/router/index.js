@@ -41,22 +41,26 @@ export default new Router({
             {
               path: '/dashboard/todolist',
               name: 'TodoList',
-              component: () => import('@/views/Home/components/TodoList')
+              component: () => import('@/views/Home/components/TodoList'),
+              meta: { title: 'ToDoList', noCache: true, id: 0 }
             },
             {
               path: '/dashboard/toberead',
               name: 'TobeRead',
-              component: () => import('@/views/Home/components/TobeRead')
-            },
-            {
-              path: '/dashboard/read',
-              name: 'Read',
-              component: () => import('@/views/Home/components/Read')
+              component: () => import('@/views/Home/components/TobeRead'),
+              meta: { title: 'TobeRead', noCache: true, id: 1 }
             },
             {
               path: '/dashboard/alldone',
               name: 'AllDone',
-              component: () => import('@/views/Home/components/AllDone')
+              component: () => import('@/views/Home/components/AllDone'),
+              meta: { title: 'AllDone', noCache: true, id: 2 }
+            },
+            {
+              path: '/dashboard/read',
+              name: 'Read',
+              component: () => import('@/views/Home/components/Read'),
+              meta: { title: 'Read', noCache: true, id: 3 }
             }
           ]
         },

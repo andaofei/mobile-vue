@@ -8,7 +8,8 @@
           <router-link
             tag="div"
             class="nav-item"
-            :to="{ path: '/dashboard/todolist', query: {name: 'TodoList', id: 0}}">
+            :to="{path: '/dashboard/todolist'}"
+          >
             <div class="navbar-item">
               <el-badge :value="todoCounts" class="item">
                 <span>待办</span>
@@ -18,7 +19,7 @@
           <router-link
             tag="div"
             class="nav-item"
-            :to="{ path: '/dashboard/toberead', query: {name: 'TobeRead', id: 1}}">
+            :to="{ path: '/dashboard/toberead'}">
             <div class="navbar-item">
               <el-badge :value="toReadCounts" class="item">
                 <span>待阅</span>
@@ -28,7 +29,7 @@
           <router-link
             tag="div"
             class="nav-item"
-            :to="{ path: '/dashboard/alldone', query: {name: 'AllDone', id: 2} }">
+            :to="{ path: '/dashboard/alldone' }">
             <div class="navbar-item">
                 <span>已办</span>
             </div>
@@ -36,7 +37,7 @@
           <router-link
             tag="div"
             class="nav-item"
-            :to="{ path: '/dashboard/read', query: {name: 'Read', id: 3} }">
+            :to="{ path: '/dashboard/read' }">
             <div class="navbar-item">
                 <span>已阅</span>
             </div>
@@ -57,7 +58,42 @@ export default {
   data() {
     return {
       routeLists: [
+        {
+          name: '待办',
+          path: '/dashboard/todolist',
+          counts: 0,
+          id: 0
+        },
+        {
+          name: '待阅',
+          path: '/dashboard/toberead',
+          counts: 0,
+          id: 1
+        },
+        {
+          name: '已办',
+          path: '/dashboard/alldone',
+          counts: '',
+          id: 2
+        },
+        {
+          name: '已阅',
+          path: '/dashboard/read',
+          counts: '',
+          id: 3
+        }
       ]
+    }
+  },
+  methods: {
+    handleRouteClick(item) {
+      console.log(item)
+      this.$router.push({
+        path: item.path,
+        params: {
+          id: item.id
+        }
+      })
     }
   },
   computed: {

@@ -6,15 +6,20 @@
       </div>
       <!--底部-->
       <NavBar class="nav-bar"></NavBar>
+      <!--筛选-->
       <transition :name="transitionName">
-        <div class="filter-box" v-show="filterShow" @click="handleHiddenBox">筛选</div>
+        <div class="filter-box" v-show="filterShow" >
+          <div class="filter-left" @click="handleHiddenBox">
+          </div>
+          <FilterBox @handleHiddenBox="handleHiddenBox"></FilterBox>
+        </div>
       </transition>
     </div>
 </template>
 
 <script>
 import NavBar from './components/NavBar'
-
+import FilterBox from '@/components/FilterBox'
 export default {
   name: 'Layout',
   data() {
@@ -26,7 +31,10 @@ export default {
   methods: {
     // 隐藏筛选
     handleHiddenBox() {
-      this.$store.commit('SET_FILTER_SHOW', false)
+      const name = {
+        title: ''
+      }
+      this.$store.commit('SET_FILTER_SHOW', {status: false, inner: name})
     }
   },
   computed: {
@@ -34,7 +42,7 @@ export default {
       return this.$store.getters.filterShow
     }
   },
-  components: { NavBar }
+  components: { NavBar, FilterBox }
 }
 </script>
 
@@ -60,7 +68,11 @@ export default {
     left: 0;
     top:0;
     background: rgba(0,0,0,.4);
-    z-index: 999;
+    z-index: 99;
+    display: flex;
+    .filter-left{
+      flex:0 0 55px;
+    }
   }
 }
 

@@ -6,7 +6,10 @@
 
 <script>
 export default {
-  name: 'TObeRead'
+  name: 'TObeRead',
+  created() {
+    // console.log(this.$route)
+  }
 }
 </script>
 

@@ -15,13 +15,14 @@ import './commom/mintui/style.scss'
 // import 'mint-ui/lib/style.css'
 import './commom/scss/index.scss'
 // import fastclick from 'fastclick'
-import { Actionsheet, Toast } from 'mint-ui'
+import { Actionsheet, Toast, DatetimePicker } from 'mint-ui'
 Vue.use(VueLazyload, {
   loading: require('../static/default/loading.svg'), // 加载的图片
   error: require('../static/default/bpm.jpg')
 })
 Vue.component(Actionsheet.name, Actionsheet)
 Vue.component(Toast.name, Toast)
+Vue.component(DatetimePicker.name, DatetimePicker)
 Vue.use(Button)
 Vue.use(Form)
 Vue.use(FormItem)

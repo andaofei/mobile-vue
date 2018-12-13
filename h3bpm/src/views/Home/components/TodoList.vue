@@ -23,11 +23,11 @@ export default {
     return {}
   },
   created() {
-    console.log(this.$route)
+    // console.log(this.$route)
     for (let i = 0; i < 10; i++) {
       this.items.push(this.$i18n.t('normalScrollListPage.previousTxt') + ++this.itemIndex + this.$i18n.t('normalScrollListPage.followingTxt'))
     }
-    console.log(this.items.length)
+    // console.log(this.items.length)
     const counts = this.items.length
     this.$store.dispatch('setTodoCounts', counts)
   },
