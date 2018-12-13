@@ -42,6 +42,9 @@ export default {
   home: {
     filter: 'Filter'
   },
+  selectPerson: {
+    title: 'Originator'
+  },
   filter: {
     ToDoList: 'ToDoList',
     TobeRead: 'TobeRead',

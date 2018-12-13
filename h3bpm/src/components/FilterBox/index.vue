@@ -7,6 +7,7 @@
         <span class="text">{{$t('home.filter')}}-{{filterTitle}}</span>
         <span>&nbsp;&nbsp;</span>
         </div>
+
       <div class="filter-container">
         <div class="process">
           <p class="item-name">流程名称</p>
@@ -55,14 +56,16 @@
         </div>
 
       </div>
+
       <div class="filter-btm">
         <p class="reset" @click="handleReset">重置</p>
         <p class="sure" @click="handleSearch">确定</p>
       </div>
+
       <mt-datetime-picker
         ref="picker"
-        cancelText="返回"
-        confirmText="选择"
+        cancelText="取消"
+        confirmText="确定"
         type="date"
         @confirm="handleConfirm"
         v-model="value">
@@ -105,15 +108,21 @@ export default {
     handleHiddenBox() {
       this.$emit('handleHiddenBox')
     },
+
     // 发起人
     handleSelect() {
       console.log(111)
+      this.$router.push({
+        path: '/selectPerson'
+      })
     },
+
     // 打开时间选择
     openPicker(e) {
       this.timeStatus = e
       this.$refs.picker.open()
     },
+
     // 确定时间
     handleConfirm(value) {
       const timeStatus = this.timeStatus
@@ -122,7 +131,6 @@ export default {
         // console.log(moment(this.startTime) - moment(this.endTime))
         let times = moment(this.startTime) - moment(this.endTime)
         if (times > 0) {
-          console.log('格式不对')
           this.errorMsg = true
           this.text = '开始时间不能大于结束时间'
         } else {
@@ -140,14 +148,18 @@ export default {
         }
       }
     },
+
     // 加急
     handleClickStatus(item, index) {
       this.active = item
     },
+
     // 搜索
     handleSearch() {
       this.$emit('handleHiddenBox')
+      console.log(this.$route)
     },
+    // 重置
     handleReset() {
       this.input = ''
       this.active = -1

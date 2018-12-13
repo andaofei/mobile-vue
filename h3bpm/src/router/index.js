@@ -89,6 +89,12 @@ export default new Router({
       name: 'HomeSetting',
       hidden: true,
       component: () => import('@/components/HomeSetting/index')
+    },
+    {
+      path: '/selectPerson',
+      name: 'SelectPerson',
+      hidden: true,
+      component: () => import('@/components/SelectPerson/index')
     }
   ]
 })

@@ -42,6 +42,9 @@ export default {
   home: {
     filter: '筛选'
   },
+  selectPerson: {
+    title: '发起人'
+  },
   filter: {
     ToDoList: '待办',
     TobeRead: '待阅',
