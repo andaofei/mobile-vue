@@ -6,6 +6,7 @@ const getters = {
   filterShow: state => state.app.filterShow, // 筛选
   filterTitle: state => state.app.filterTitle, // 筛选名称
   todoCounts: state => state.dataList.todoCounts,
-  toReadCounts: state => state.dataList.toReadCounts
+  toReadCounts: state => state.dataList.toReadCounts,
+  checkedPersonList: state => state.dataList.checkedPersonList
 }
 export default getters

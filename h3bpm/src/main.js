@@ -6,7 +6,7 @@ import router from './router'
 import store from './store'
 import VueLazyload from 'vue-lazyload'
 import './permission'
-import { Button, Form, Input, FormItem, Checkbox, Badge } from 'element-ui'
+import { Button, Form, Input, FormItem, Checkbox, Badge, Radio, Tag, Breadcrumb, BreadcrumbItem } from 'element-ui'
 import i18n from './lang'
 import './icons'
 import 'normalize.css/normalize.css'
@@ -29,6 +29,10 @@ Vue.use(FormItem)
 Vue.use(Input)
 Vue.use(Checkbox)
 Vue.use(Badge)
+Vue.use(Radio)
+Vue.use(Tag)
+Vue.use(Breadcrumb)
+Vue.use(BreadcrumbItem)
 Vue.config.productionTip = false
 // fastclick.attach(document.body)
 /* eslint-disable no-new */

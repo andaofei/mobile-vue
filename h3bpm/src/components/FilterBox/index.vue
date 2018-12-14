@@ -19,8 +19,9 @@
         <div class="process-person">
           <span class="process-person-name">发起人</span>
           <p class="process-person-list" @click="handleSelect">
-            <span class="list-name">[产品经理]李四</span>
-            <span>等9人</span>
+            <span class="list-name"  :key="item.id" v-for="(item, index) in checkedPersonList" v-if="index<2 && item.checked">{{item.name}}</span>
+            <span v-if="checkedPersonList.length>2">等{{checkedPersonList.length}}人</span>
+            <span v-else-if="!checkedPersonList">请选择发起人</span>
             <span class="svg-box">
               <svg-icon icon-class="right" />
           </span>
@@ -111,7 +112,6 @@ export default {
 
     // 发起人
     handleSelect() {
-      console.log(111)
       this.$router.push({
         path: '/selectPerson'
       })
@@ -174,6 +174,9 @@ export default {
       } else {
         return ''
       }
+    },
+    checkedPersonList() {
+      return this.$store.getters.checkedPersonList
     }
   }
 }
@@ -209,14 +212,15 @@ export default {
     @include border-top-1px($borderBottom);
     height: 44px;
     p {
-      flex: 1;
       text-align: center;
       line-height: 44px;
     }
     .reset{
       color: $textColor2;
+      width: 60%;
     }
     .sure{
+      width: 40%;
       background: $mainColor;
       color: $baseColor;
     }

@@ -95,6 +95,33 @@ export default new Router({
       name: 'SelectPerson',
       hidden: true,
       component: () => import('@/components/SelectPerson/index')
+    },
+    {
+      path: '/selectDepart',
+      name: 'selectDepart',
+      hidden: true,
+      redirect: '/selectDepart/selectDepartDefault',
+      component: () => import('@/components/selectDepart/index'),
+      children: [
+        {
+          path: '/selectDepart/selectDepartDefault',
+          name: 'selectDepartDefault',
+          hidden: true,
+          component: () => import('@/components/selectDepart/SelectDepartDedault/index')
+        },
+        {
+          path: '/selectDepart/selectDepartChild',
+          name: 'selectDepartChild',
+          hidden: true,
+          component: () => import('@/components/selectDepartChild/index')
+        },
+        {
+          path: '/selectDepart/selectDepartList',
+          name: 'SelectDepartList',
+          hidden: true,
+          component: () => import('@/components/SelectDepartList/index')
+        }
+      ]
     }
   ]
 })
