@@ -3,17 +3,24 @@
     <div class="scroll-content">
       <div ref="listWrapper">
         <slot>
+
           <!--列表-->
           <ul class="list-content" v-if="data && data.length">
-            <li @click="clickItem($event,item)" :key="item" class="list-item" v-for="(index, item) in data">
-              <div class="item-left"><img src="./images/avator.svg" alt=""></div>
+            <li @click="clickItem(item,index)" class="list-item" v-for="(item,index) in data" :key="index" >
+              <div class="item-left">
+                <span class="svg-box" v-if="item.isChecked" @click.stop="handleSelect(item,index)">
+                  <svg-icon class="checked-icon" icon-class="checked" v-if="item.checked"  />
+                  <svg-icon icon-class="check" v-else/>
+                </span>
+                <img src="./images/avator.svg" alt="" v-else>
+              </div>
               <div class="item-right">
                 <div class="item-right-box">
-                  <div class="right-box-top">系统管理员的报销申请</div>
+                  <div class="right-box-top">{{item.InstanceName}}</div>
                   <div class="right-box-btm">
                     <p class="time">
                       <span class="time-title">接收时间：</span>
-                      <span class="time-inner">{{item}}</span>
+                      <span class="time-inner">{{item.ReceiveTime}}</span>
                     </p>
                     <p class="detail">
                       <svg-icon icon-class="zhang"/>
@@ -24,12 +31,14 @@
               </div>
             </li>
           </ul>
+
           <div class="no-data" v-else>
             <!--<img src="./images/nodata.svg" alt="">-->
             <span>暂无数据</span>
           </div>
         </slot>
       </div>
+
       <slot name="pullup" :pullUpLoad="pullUpLoad" :isPullUpLoad="isPullUpLoad">
         <div class="pullup-wrapper" v-if="pullUpLoad">
           <div class="before-trigger" v-if="!isPullUpLoad">
@@ -41,6 +50,7 @@
         </div>
       </slot>
     </div>
+
     <slot name="pulldown"
           :pullDownRefresh="pullDownRefresh"
           :pullDownStyle="pullDownStyle"
@@ -74,6 +84,14 @@ const DIRECTION_V = 'vertical'
 export default {
   name: COMPONENT_NAME,
   props: {
+    checkStatus: {
+      type: Boolean,
+      default: false
+    },
+    readChecked: {
+      type: Boolean,
+      default: false
+    },
     data: {
       type: Array,
       default: function() {
@@ -164,6 +182,7 @@ export default {
   },
   created() {
     this.pullDownInitTop = -50
+    console.log(this.data, 'data')
   },
   mounted() {
     setTimeout(() => {
@@ -244,9 +263,12 @@ export default {
     scrollToElement() {
       this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
     },
-    clickItem(e, item) {
-      console.log(e)
-      this.$emit('handleClick', item)
+    clickItem(item, index) {
+      this.$emit('handleClick', {item, index})
+    },
+    // 选中
+    handleSelect(item, index) {
+      this.$emit('handleSelect', {item, index})
     },
     destroy() {
       this.scroll.destroy()
@@ -358,6 +380,13 @@ export default {
               width: 40px;
               height: 40px;
               border-radius: 50%;
+            }
+            .svg-box{
+              font-size: 28px;
+              padding-left: 5px;
+              .checked-icon{
+                color: $mainColor;
+              }
             }
           }
           .item-right {

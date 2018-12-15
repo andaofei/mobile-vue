@@ -13,7 +13,13 @@ export default {
   name: 'SelectHeader',
   methods: {
     back() {
-      this.$router.go(-1)
+      console.log(this.$route)
+      // this.$router.go(-1)
+      if (this.$route.name !== 'SelectPerson') {
+        this.$router.push('/selectPerson')
+      } else {
+        this.$router.push('/dashboard')
+      }
     }
   }
 }

@@ -1,13 +1,17 @@
 <template>
   <div class="all-done">
+    <!--回顶部-->
+    <ToTop v-show="topTop" @backTop="backTop"></ToTop>
     <scroll ref="scroll"
-            class="test"
             @handleClick="handleClick"
             :data="items"
+            :probe-type="probeType"
+            :listenScroll="listenScroll"
             :scrollbar="scrollbarObj"
             :pullDownRefresh="pullDownRefreshObj"
             :pullUpLoad="pullUpLoadObj"
             :startY="parseInt(startY)"
+            @scroll="scroll"
             @pullingDown="onPullingDown"
             @pullingUp="onPullingUp">
     </scroll>

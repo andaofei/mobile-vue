@@ -8,8 +8,7 @@
           <router-link
             tag="div"
             class="nav-item"
-            :to="{path: '/dashboard/todolist'}"
-          >
+            :to="{path: '/dashboard/todolist'}">
             <div class="navbar-item">
               <el-badge :value="todoCounts" class="item">
                 <span>待办</span>
@@ -86,15 +85,6 @@ export default {
     }
   },
   methods: {
-    handleRouteClick(item) {
-      console.log(item)
-      this.$router.push({
-        path: item.path,
-        params: {
-          id: item.id
-        }
-      })
-    }
   },
   computed: {
     todoCounts: {

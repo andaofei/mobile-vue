@@ -1,9 +1,13 @@
 import Vue from 'vue'
 import Scroll from '@/components/scroll/scroll.vue'
 import { ease } from '@/commom/js/ease'
+import ToTop from '@/views/Home/commom/ToTop'
 const getListMixin = {
   data() {
     return {
+      topTop: false,
+      probeType: 3,
+      listenScroll: true,
       scrollbar: false, // 滚动条
       scrollbarFade: true,
       pullDownRefresh: true,
@@ -22,6 +26,9 @@ const getListMixin = {
       items: [],
       itemIndex: 0
     }
+  },
+  created() {
+    this.topTop = false
   },
   watch: {
     scrollbarObj: {
@@ -64,6 +71,18 @@ const getListMixin = {
     }
   },
   methods: {
+    scroll(pos) {
+      // console.log(pos.y)
+      if (pos.y < -100) {
+        this.topTop = true
+      } else {
+        this.topTop = false
+      }
+    },
+    backTop() {
+      this.$refs.scroll.scrollTo(0, 0, '500', 'bounce')
+      // this.topTop = false
+    },
     scrollTo() {
       this.$refs.scroll.scrollTo(this.scrollToX, this.scrollToY, this.scrollToTime, ease[this.scrollToEasing])
     },
@@ -75,7 +94,8 @@ const getListMixin = {
     }
   },
   components: {
-    Scroll
+    Scroll,
+    ToTop
   }
 }
 export default getListMixin

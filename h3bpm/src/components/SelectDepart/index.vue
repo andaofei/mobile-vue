@@ -8,12 +8,9 @@
           </div>
           <div class="search-inner">
             <div class="search-inner-header">
+              <!--//面包屑-->
               <div class="breadcrumb">
-                <el-breadcrumb separator-class="el-icon-arrow-right">
-                  <el-breadcrumb-item :to="{ path: '/selectDepart' }">H3BPM</el-breadcrumb-item>
-                  <el-breadcrumb-item :to="{path: '/selectDepart/selectDepartChild'}">{{title}}</el-breadcrumb-item>
-                  <!--<el-breadcrumb-item>活动列表</el-breadcrumb-item>-->
-                </el-breadcrumb>
+                <BreadCrumb></BreadCrumb>
               </div>
               <div class="selected-person">
                 <el-tag
@@ -38,20 +35,19 @@
                         :beforeScroll="beforeScroll"
                         @beforeScroll="listScroll">
                     <div class="depart-list">
-                      <!--<ul>-->
-                        <!--<li :key="item.id" v-for="item in dataList" @click="handleClickChild(item)">-->
-                          <!--<span>{{item.name}}</span>-->
-                          <!--<p>-->
-                            <!--<span>{{item.counts}}</span>-->
-                            <!--<span class="svg-box">-->
-                                  <!--<svg-icon icon-class="right"></svg-icon>-->
-                            <!--</span>-->
-                          <!--</p>-->
-                        <!--</li>-->
-                      <!--</ul>-->
                       <router-view></router-view>
                     </div>
               </BtScroll>
+            </div>
+            <div class="select-btm">
+              <p class="btm-left" @click="handleCheckAll">
+          <span class="svg-box">
+            <svg-icon v-if="listChecked" class="checked-icon" icon-class="checked"/>
+              <svg-icon v-else icon-class="check"/>
+            </span>
+                <span class="allCheck">全选</span>
+              </p>
+              <p class="btm-right" @click="handleSureClick">确定</p>
             </div>
           </div>
         </div>
@@ -63,90 +59,15 @@
 import BtScroll from '@/components/BtScroll/index'
 import SelectHeader from '@/components/SelectCommom/Header/index'
 import SearchInput from '@/components/SelectCommom/InputSearch/index'
+import BreadCrumb from '@/components/SelectCommom/BreadCrumb/index'
+import { mapMutations } from 'vuex'
 export default {
-  name: 'DepartM',
+  name: 'SelectDepart',
   data() {
     return {
       probeType: 0,
       pullingUp: true,
       beforeScroll: true,
-      dataList: [
-        {
-          name: '事业部',
-          counts: 12,
-          id: 0
-        },
-        {
-          name: '事业部',
-          counts: 12,
-          id: 1
-        },
-        {
-          name: '事业部',
-          counts: 12,
-          id: 2
-        },
-        {
-          name: '事业部',
-          counts: 12,
-          id: 3
-        },
-        {
-          name: '事业部',
-          counts: 12,
-          id: 4
-        },
-        {
-          name: '事业部',
-          counts: 12,
-          id: 5
-        },
-        {
-          name: '事业部',
-          counts: 12,
-          id: 6
-        },
-        {
-          name: '事业部',
-          counts: 122,
-          id: 7
-        },
-        {
-          name: '事业部',
-          counts: 132,
-          id: 8
-        },
-        {
-          name: '事业部',
-          counts: 132,
-          id: 9
-        },
-        {
-          name: '事业部',
-          counts: 12,
-          id: 10
-        },
-        {
-          name: '事业部',
-          counts: 12,
-          id: 11
-        },
-        {
-          name: '事业部',
-          counts: 122,
-          id: 12
-        },
-        {
-          name: '事业部',
-          counts: 132,
-          id: 13
-        },
-        {
-          name: '事业部',
-          counts: 132,
-          id: 14
-        }
-      ],
       title: ''
     }
   },
@@ -155,19 +76,37 @@ export default {
     this.listenScroll = true
     this.pullingUp = true
     this.$nextTick(() => {
-      console.log(this.checkedPersonList)
+      // console.log(this.$route)
     })
   },
-  computed: {
-    checkedPersonList() {
-      return this.$store.getters.checkedPersonList
-    }
-  },
   methods: {
-    // handleClickChild(item) {
-    //   this.$router.push('/selectDepart/selectDepartChild')
-    //   this.title = item.name
-    // },
+    ...mapMutations({
+      setAlLChecked: 'SET_ALL_CHECKED_PERSONS'
+    }),
+
+    // 全选
+    handleCheckAll() {
+      const data = this.dataList
+      this.setAlLChecked({data: data, state: this.listChecked})
+    },
+
+    // 关闭tag
+    handleClose(tag, index) {
+      this.$store.commit('SET_DELETE_PERSONS', {data: tag, index: index})
+    },
+
+    // 确定
+    handleSureClick() {
+      console.log(this.checkedPersonList, 'this.checkedPersonList')
+    },
+    addViewTags() {
+      // console.log(this.$route)
+      // const { name } = this.$route
+      // if (name) {
+      //   this.$store.dispatch('addView', this.$route)
+      // }
+      // return false
+    },
     // 下拉
     scroll(pos) {
       // console.log(pos.y)
@@ -183,10 +122,39 @@ export default {
       this.$emit('listScroll')
     }
   },
+  computed: {
+    listChecked: {
+      get() {
+        const dataListChecked = this.$store.getters.checkedPersonList
+        const dataList = this.$store.getters.dataList
+        if (dataListChecked.length === dataList.length) {
+          return true
+        }
+        return false
+      },
+      set() {
+        console.log(this.checkedPersonList, 'this.checkedPersonList')
+      }
+    },
+    // 已选列表
+    checkedPersonList() {
+      return this.$store.getters.checkedPersonList
+    },
+    // 数据列表
+    dataList() {
+      return this.$store.getters.dataList
+    }
+  },
+  watch: {
+    $route() {
+      this.addViewTags()
+    }
+  },
   components: {
     SelectHeader,
     SearchInput,
-    BtScroll
+    BtScroll,
+    BreadCrumb
   }
 }
 </script>
@@ -299,6 +267,45 @@ export default {
           }
           }
         }
+        .select-btm{
+          position: fixed;
+          width: 100%;
+          left: 0;
+          bottom: 0;
+          z-index: 10;
+          background: $baseColor;
+          display: flex;
+          @include border-top-1px($borderBottom);
+          .btm-left{
+            padding-left: 10px;
+            width: 60%;
+            line-height: 44px;
+            display: flex;
+            .svg-box{
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              padding-right: 5px;
+              svg{
+                width: 24px;
+                height: 24px;
+              }
+              .checked-icon{
+                color: $mainColor;
+              }
+            }
+            .allCheck{
+              color: $textColor2;
+            }
+          }
+          .btm-right{
+            width: 40%;
+            line-height: 44px;
+            text-align: center;
+            background: $mainColor;
+            color: $baseColor;
+          }
+        }
         .tag-wrapper {
           position: relative;
           flex: 1 0 auto;
@@ -365,5 +372,6 @@ export default {
       }
     }
   }
+
 }
 </style>

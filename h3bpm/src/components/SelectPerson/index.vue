@@ -83,66 +83,11 @@
 import BtScroll from '@/components/BtScroll/index'
 import SelectHeader from '@/components/SelectCommom/Header/index'
 import SearchInput from '@/components/SelectCommom/InputSearch/index'
+import { mapMutations } from 'vuex'
 export default {
   name: 'SelectPerson',
   data() {
     return {
-      dataList: [
-        {
-          name: '李四',
-          position: '产品经理',
-          id: 0,
-          checked: false
-        },
-        {
-          name: '张三',
-          position: '产品经理',
-          id: 1,
-          checked: false
-        },
-        {
-          name: '王五',
-          position: '产品经理',
-          id: 2,
-          checked: false
-        },
-        {
-          name: '李四',
-          position: '产品经理',
-          id: 3,
-          checked: false
-        },
-        {
-          name: '张三',
-          position: '产品经理',
-          id: 4,
-          checked: false
-        },
-        {
-          name: '王五',
-          position: '产品经理',
-          id: 5,
-          checked: false
-        },
-        {
-          name: '李四',
-          position: '产品经理',
-          id: 6,
-          checked: false
-        },
-        {
-          name: '张三',
-          position: '产品经理',
-          id: 7,
-          checked: false
-        },
-        {
-          name: '王五',
-          position: '产品经理',
-          id: 8,
-          checked: false
-        }
-      ],
       dataListChecked: [],
       dataListAllChecked: [],
       probeType: 0,
@@ -160,53 +105,37 @@ export default {
     this.listenScroll = true
     this.pullingUp = true
     this.$nextTick(() => {
-      console.log(this.checkedPersonList)
+      // console.log(this.checkedPersonList)
     })
   },
 
   methods: {
+    ...mapMutations({
+      setAlLChecked: 'SET_ALL_CHECKED_PERSONS',
+      setCheckedPerson: 'SET_CHECKED_PERSONS',
+      setEmptyPerson: 'SET_EMPTY_PERSONS',
+      setDeletePerson: 'SET_DELETE_PERSONS'
+    }),
     selectDepart() {
       this.$router.push('/selectDepart')
+      // 清空已选
+      this.setEmptyPerson([])
     },
 
     // 单击选中
     handleClickSelect(item, index) {
-      let check = this.dataList[index].checked
-      const status = !check
-      this.dataList[index].checked = status
-      this.dataListChecked = this.dataList
-      // console.log(this.dataListChecked, 'dataListChecked')
-      this.$store.commit('SET_CHECKED_PERSONS', this.dataListChecked)
+      this.setCheckedPerson({data: item, index: index})
     },
 
     // 全选
     handleCheckAll() {
-      // console.log(this.listChecked, 'listChecked')
-      if (!this.listChecked) {
-        this.dataList.forEach((item) => {
-          item.checked = true
-        })
-      } else {
-        this.dataList.forEach((item) => {
-          item.checked = false
-        })
-        this.$refs.userList.scrollTo(0, 0)
-        setTimeout(() => {
-          this.refresh()
-        }, 20)
-      }
-      this.dataListChecked = this.dataList
-      this.$store.commit('SET_CHECKED_PERSONS', this.dataListChecked)
-      // console.log(this.dataListChecked.length, 'dataListChecked')
+      const data = this.dataList
+      this.setAlLChecked({data: data, state: this.listChecked})
     },
 
     // 关闭tag
     handleClose(tag, index) {
-      let check = this.dataList[index].checked
-      const status = !check
-      this.dataList[index].checked = status
-      this.dataListChecked = this.dataList
-      this.$store.commit('SET_CHECKED_PERSONS', this.dataListChecked)
+      this.setDeletePerson({data: tag, index: index})
     },
 
     // 确定
@@ -223,7 +152,7 @@ export default {
 
     // 下拉
     scroll(pos) {
-      // console.log(pos.y)
+      console.log(pos.y)
     },
 
     //  刷新
@@ -237,23 +166,20 @@ export default {
     }
   },
   computed: {
+    dataList() {
+      return this.$store.getters.dataList
+    },
     listChecked: {
       get() {
-        // console.log(this.dataListChecked, 'this.dataListChecked')
-        let arr = []
-        this.dataListChecked.forEach((item) => {
-          if (item.checked) {
-            arr.push(item)
-          }
-        })
-        // console.log(arr, 'arr')
-        if (arr.length === this.dataList.length) {
+        const dataListChecked = this.$store.getters.checkedPersonList
+        const dataList = this.$store.getters.dataList
+        if (dataListChecked.length === dataList.length) {
           return true
         }
         return false
       },
       set() {
-        console.log(this.dataListChecked, 'this.dataListChecked')
+        console.log(this.checkedPersonList, 'this.checkedPersonList')
       }
     },
     checkedPersonList() {

@@ -98,28 +98,31 @@ export default new Router({
     },
     {
       path: '/selectDepart',
-      name: 'selectDepart',
+      name: 'SelectDepart',
       hidden: true,
       redirect: '/selectDepart/selectDepartDefault',
       component: () => import('@/components/selectDepart/index'),
       children: [
         {
           path: '/selectDepart/selectDepartDefault',
-          name: 'selectDepartDefault',
+          name: 'SelectDepartDefault',
           hidden: true,
-          component: () => import('@/components/selectDepart/SelectDepartDedault/index')
+          component: () => import('@/components/selectDepart/SelectDepartDedault/index'),
+          meta: { title: 'selectdepart', icon: 'selectdepart', noCache: true }
         },
         {
           path: '/selectDepart/selectDepartChild',
-          name: 'selectDepartChild',
+          name: 'SelectDepartChild',
           hidden: true,
-          component: () => import('@/components/selectDepartChild/index')
+          component: () => import('@/components/selectDepartChild/index'),
+          meta: { title: 'departchild', icon: 'departchild', noCache: true }
         },
         {
           path: '/selectDepart/selectDepartList',
           name: 'SelectDepartList',
           hidden: true,
-          component: () => import('@/components/SelectDepartList/index')
+          component: () => import('@/components/SelectDepartList/index'),
+          meta: { title: 'departList', icon: 'departList', noCache: true }
         }
       ]
     }

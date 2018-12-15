@@ -17,77 +17,32 @@
 
 <script>
 export default {
-  name: 'selectDepartChild',
+  name: 'selectDepartList',
+
   data() {
     return {
-      dataList: [
-        {
-          name: '李四',
-          position: '产品经理',
-          id: 0,
-          checked: false
-        },
-        {
-          name: '张三',
-          position: '产品经理',
-          id: 1,
-          checked: false
-        },
-        {
-          name: '王五',
-          position: '产品经理',
-          id: 2,
-          checked: false
-        },
-        {
-          name: '李四',
-          position: '产品经理',
-          id: 3,
-          checked: false
-        },
-        {
-          name: '张三',
-          position: '产品经理',
-          id: 4,
-          checked: false
-        },
-        {
-          name: '王五',
-          position: '产品经理',
-          id: 5,
-          checked: false
-        },
-        {
-          name: '李四',
-          position: '产品经理',
-          id: 6,
-          checked: false
-        },
-        {
-          name: '张三',
-          position: '产品经理',
-          id: 7,
-          checked: false
-        },
-        {
-          name: '王五',
-          position: '产品经理',
-          id: 8,
-          checked: false
-        }
-      ],
       selected: -1,
       activeClass: 'activeClass',
       activeClass2: 'activeClass2',
       activeClass3: 'activeClass3'
     }
   },
+  created() {
+    this.$nextTick(() => {
+      console.log(this.$route, 'selectDepartList')
+      this.$store.dispatch('addView', this.$route)
+    })
+  },
+  computed: {
+    dataList() {
+      return this.$store.getters.dataList
+    }
+  },
+
   methods: {
     // 单击选中
     handleClickSelect(item, index) {
-      let check = this.dataList[index].checked
-      const status = !check
-      this.dataList[index].checked = status
+      this.$store.commit('SET_CHECKED_PERSONS', {data: item, index: index})
     }
   }
 }

@@ -98,6 +98,12 @@ export default {
       ]
     }
   },
+  created() {
+    this.$nextTick(() => {
+      console.log(this.$route, 'selectDepartChild')
+      this.$store.dispatch('addView', this.$route)
+    })
+  },
   methods: {
     handleClickChild(item) {
       this.$router.push('/selectDepart/SelectDepartList')
