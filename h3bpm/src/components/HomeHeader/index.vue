@@ -24,7 +24,8 @@ export default {
     // 点击筛选
     handleClickFilter() {
       const name = this.$route.meta
-      this.$store.commit('SET_FILTER_SHOW', {status: true, inner: name})
+      const path = this.$route.path
+      this.$store.commit('SET_FILTER_SHOW', {status: true, inner: name, path: path})
       console.log(this.$route)
     }
   }

@@ -8,62 +8,32 @@ const dataList = {
     dataList: [
       {
         name: '李四',
-        position: '产品经理',
+        position: '后端',
         id: 0,
         checked: false
       },
       {
-        name: '张三',
-        position: '产品经理',
+        name: '关羽',
+        position: 'UI',
         id: 1,
         checked: false
       },
       {
-        name: '王五',
+        name: '张飞',
         position: '产品经理',
         id: 2,
         checked: false
       },
       {
-        name: '李四',
-        position: '产品经理',
+        name: '刘备',
+        position: '开发',
         id: 3,
-        checked: false
-      },
-      {
-        name: '张三',
-        position: '产品经理',
-        id: 4,
-        checked: false
-      },
-      {
-        name: '王五',
-        position: '产品经理',
-        id: 5,
-        checked: false
-      },
-      {
-        name: '李四',
-        position: '产品经理',
-        id: 6,
-        checked: false
-      },
-      {
-        name: '张三',
-        position: '产品经理',
-        id: 7,
-        checked: false
-      },
-      {
-        name: '王五',
-        position: '产品经理',
-        id: 8,
         checked: false
       }
     ],
     checkedPersonList: [],
     // 数据列表
-    itemList: data,
+    itemList: [],
     itemCheckList: [],
     visitedViews: []
   },
@@ -71,6 +41,7 @@ const dataList = {
   mutations: {
     // 初始列表数据
     SET_DATA_LIST: (state, payload) => {
+      console.log(payload, '初始列表数据')
       state.itemList = payload
     },
     // 改变待阅全选状态
@@ -91,33 +62,33 @@ const dataList = {
     },
     // 取消选中待阅单选状态
     SET_CHECKED_LIST: (state, payload) => {
+      console.log(payload, '取消选中待阅单选状态')
       let check = state.itemList[payload.index].checked
       const status = !check
       state.itemList[payload.index].checked = status
-      console.log(payload.item.checked)
       if (payload.item.checked) {
         state.itemCheckList.push(payload.item)
       } else {
-        // const data = state.itemCheckList
-        state.itemCheckList.splice(payload.index, 1)
-        // state.itemCheckList[payload.index].checked = false
+        state.itemCheckList.splice(state.itemCheckList.indexOf(payload.item), 1)
       }
     },
     // 全选待阅
     SET_ALL_CHECKED_TOREAD: (state, payload) => {
       console.log(payload, 'SET_ALL_CHECKED_TOREAD')
       if (!payload.state) {
+        state.itemCheckList = []
         payload.data.map((item) => {
           item.checked = true
+          state.itemCheckList.push(item)
         })
-        state.itemCheckList = payload.data
+        // state.itemCheckList = payload.data  直接塞进去 会 和另一个state联动所以要单个push
       } else {
         payload.data.map((item) => {
           item.checked = false
         })
         state.itemCheckList = []
       }
-      state.itemList = payload.data
+      // state.itemList = payload.data
     },
     // 待办数
     SET_TODO_COUNTS: (state, payload) => {
@@ -140,20 +111,22 @@ const dataList = {
     },
     // 选中/取消发起人
     SET_CHECKED_PERSONS: (state, payload) => {
+      // console.log(payload, 'SET_CHECKED_PERSONS')
       let check = state.dataList[payload.index].checked
       const status = !check
       state.dataList[payload.index].checked = status
       if (payload.data.checked) {
         state.checkedPersonList.push(payload.data)
       } else {
-        state.checkedPersonList.splice(payload.index, 1)
+        // state.checkedPersonList.splice(payload.index, 1)
+        state.checkedPersonList.splice(state.checkedPersonList.indexOf(payload.data), 1)
       }
     },
     // 清空已选发起人
     SET_EMPTY_PERSONS: (state, payload) => {
       state.checkedPersonList = payload
     },
-    // 删除已选发起人
+    // 删除本部门已选发起人
     SET_DELETE_PERSONS: (state, payload) => {
       state.dataList.map((item, index) => {
         // console.log(item, index)
@@ -161,29 +134,30 @@ const dataList = {
           item.checked = false
         }
       })
-      state.checkedPersonList.splice(payload.index, 1)
-      // state.checkedPersonList.splice(state.checkedPersonList.indexOf(payload), 1)
+      // state.checkedPersonList.splice(payload.index, 1)
+      state.checkedPersonList.splice(state.checkedPersonList.indexOf(payload.data), 1)
     },
     // 全选已选发起人
     SET_ALL_CHECKED_PERSONS: (state, payload) => {
       if (!payload.state) {
-        payload.data.forEach((item) => {
+        state.checkedPersonList = []
+        payload.data.map((item) => {
           item.checked = true
+          state.checkedPersonList.push(item)
         })
-        state.checkedPersonList = payload.data
       } else {
         payload.data.forEach((item) => {
           item.checked = false
         })
         state.checkedPersonList = []
       }
-      state.dataList = payload.data
+      // state.dataList = payload.data
     }
   },
 
   actions: {
     getItemList({ commit }, payload) {
-      console.log(data)
+      // console.log(data)
       commit('SET_DATA_LIST', data)
       // return new Promise((resolve, reject) => {
       //   getItemList().then(response => {

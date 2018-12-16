@@ -104,7 +104,7 @@ export default {
   },
   created() {
     this.$nextTick(() => {
-      console.log(this.$route, 'default')
+      // console.log(this.$route, 'default')
       this.$store.dispatch('addView', this.$route)
     })
   },

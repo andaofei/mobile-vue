@@ -182,7 +182,7 @@ export default {
   },
   created() {
     this.pullDownInitTop = -50
-    console.log(this.data, 'data')
+    // console.log(this.data, 'data')
   },
   mounted() {
     setTimeout(() => {
@@ -264,6 +264,7 @@ export default {
       this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
     },
     clickItem(item, index) {
+      console.log(item, index)
       this.$emit('handleClick', {item, index})
     },
     // 选中

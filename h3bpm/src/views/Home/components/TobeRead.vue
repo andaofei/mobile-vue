@@ -51,7 +51,7 @@ export default {
     }
   },
   created() {
-    // this.$store.dispatch('getItemList')
+    this.$store.dispatch('getItemList')
     if (this.itemList.length > 1) {
       this.ReadAll = true
     }
@@ -79,6 +79,9 @@ export default {
         this.$store.commit('CHANGE_DATA_LIST_UNCHEKED', this.itemList)
       }
       this.allCheckedStatus = !this.allCheckedStatus
+      setTimeout(() => {
+        this.refresh()
+      }, 20)
     },
     // 全选
     handleCheckAll() {
@@ -87,7 +90,7 @@ export default {
     },
     // 确定
     handleSureClick() {
-      console.log(this.itemCheckList)
+      console.log(this.itemCheckList, this.itemCheckList.length)
     },
     onPullingDown() {
       // 模拟更新数据
@@ -133,7 +136,7 @@ export default {
   },
   watch: {
     itemList(newValue, oldValue) {
-      console.log(newValue, oldValue)
+      // console.log(newValue, oldValue)
     }
   },
   computed: {

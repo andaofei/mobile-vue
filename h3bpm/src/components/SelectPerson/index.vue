@@ -89,7 +89,6 @@ export default {
   data() {
     return {
       dataListChecked: [],
-      dataListAllChecked: [],
       probeType: 0,
       pullingUp: true,
       beforeScroll: true,
@@ -140,19 +139,11 @@ export default {
 
     // 确定
     handleSureClick() {
-      let arr = []
-      this.dataListChecked.forEach((item) => {
-        if (item.checked) {
-          arr.push(item)
-        }
-      })
-      this.dataListAllChecked = arr
-      console.log(this.dataListAllChecked, 'this.dataListAllChecked')
+      console.log(this.checkedPersonList, 'this.checkedPersonList')
     },
-
     // 下拉
     scroll(pos) {
-      console.log(pos.y)
+      // console.log(pos.y)
     },
 
     //  刷新

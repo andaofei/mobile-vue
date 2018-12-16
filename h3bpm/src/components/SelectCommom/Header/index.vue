@@ -18,8 +18,14 @@ export default {
       if (this.$route.name !== 'SelectPerson') {
         this.$router.push('/selectPerson')
       } else {
-        this.$router.push('/dashboard')
+        this.$router.push(this.filterPath || '/dashboard')
       }
+    }
+  },
+  computed: {
+    // 筛选历史
+    filterPath() {
+      return this.$store.getters.filterPath
     }
   }
 }

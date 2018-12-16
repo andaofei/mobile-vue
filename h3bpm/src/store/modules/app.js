@@ -5,7 +5,8 @@ const app = {
     language: Cookies.get('language') || 'zh',
     ipPath: Cookies.get('sysIp') || '127.0.0.1',
     filterShow: false,
-    filterTitle: ''
+    filterTitle: '',
+    filterPath: ''
   },
   mutations: {
     SET_LANGUAGE: (state, language) => {
@@ -17,9 +18,10 @@ const app = {
     },
     // 筛选
     SET_FILTER_SHOW: (state, payload) => {
-      // console.log(payload)
+      console.log(payload)
       state.filterShow = payload.status
       state.filterTitle = payload.inner.title
+      state.filterPath = payload.path
     }
   },
   actions: {
