@@ -25,7 +25,7 @@
     <div class="select-btm" v-show="allCheckedStatus">
       <p class="btm-left" @click="handleCheckAll">
           <span class="svg-box">
-            <svg-icon v-if="isAllChecked" class="checked-icon" icon-class="checked"/>
+            <svg-icon v-if="allCheckStatus" class="checked-icon" icon-class="checked"/>
              <svg-icon v-else icon-class="check"/>
          </span>
         <span class="allCheck">全选</span>
@@ -47,7 +47,8 @@ export default {
       allCheckedStatus: false,
       items: [],
       checkStatus: false,
-      readChecked: false
+      readChecked: false,
+      allCheckStatus: false
     }
   },
   created() {
@@ -86,7 +87,7 @@ export default {
     // 全选
     handleCheckAll() {
       const data = this.itemList
-      this.setAlLChecked({data: data, state: this.isAllChecked})
+      this.setAlLChecked({data: data, state: this.allCheckStatus})
     },
     // 确定
     handleSureClick() {
@@ -134,9 +135,16 @@ export default {
       setAlLChecked: 'SET_ALL_CHECKED_TOREAD'
     })
   },
-  watch: {
-    itemList(newValue, oldValue) {
-      // console.log(newValue, oldValue)
+  watch: { // 监视双向绑定的数据数组
+    itemCheckList: {
+      handler() { // 数据数组有变化将触发此函数
+        if (this.itemList.length === this.itemCheckList.length) {
+          this.allCheckStatus = true
+        } else {
+          this.allCheckStatus = false
+        }
+      },
+      deep: true // 深度监视
     }
   },
   computed: {
@@ -146,21 +154,21 @@ export default {
     },
     itemCheckList() {
       return this.$store.getters.itemCheckList
-    },
-    // 全选状态
-    isAllChecked: {
-      get() {
-        const checkedData = this.$store.getters.itemCheckList
-        const list = this.$store.getters.itemList
-        if (checkedData.length === list.length) {
-          return true
-        }
-        return false
-      },
-      set() {
-        console.log(this.checkedPersonList, 'this.checkedPersonList')
-      }
     }
+    // 全选状态
+    // allCheckStatus: {
+    //   get() {
+    //     const checkedData = this.$store.getters.itemCheckList
+    //     const list = this.$store.getters.itemList
+    //     if (checkedData.length === list.length) {
+    //       return true
+    //     }
+    //     return false
+    //   },
+    //   set() {
+    //     console.log(this.checkedPersonList, 'this.checkedPersonList')
+    //   }
+    // }
   }
 }
 </script>

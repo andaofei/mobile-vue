@@ -69,7 +69,7 @@
       <div class="select-btm">
         <p class="btm-left" @click="handleCheckAll">
           <span class="svg-box">
-            <svg-icon v-if="listChecked" class="checked-icon" icon-class="checked"/>
+            <svg-icon v-if="allCheckStatus" class="checked-icon" icon-class="checked"/>
              <svg-icon v-else icon-class="check"/>
          </span>
           <span class="allCheck">全选</span>
@@ -95,7 +95,8 @@ export default {
       selected: -1,
       activeClass: 'activeClass',
       activeClass2: 'activeClass2',
-      activeClass3: 'activeClass3'
+      activeClass3: 'activeClass3',
+      allCheckStatus: false
     }
   },
 
@@ -129,7 +130,7 @@ export default {
     // 全选
     handleCheckAll() {
       const data = this.dataList
-      this.setAlLChecked({data: data, state: this.listChecked})
+      this.setAlLChecked({data: data, state: this.allCheckStatus})
     },
 
     // 关闭tag
@@ -160,24 +161,34 @@ export default {
     dataList() {
       return this.$store.getters.dataList
     },
-    listChecked: {
-      get() {
-        const dataListChecked = this.$store.getters.checkedPersonList
-        const dataList = this.$store.getters.dataList
-        if (dataListChecked.length === dataList.length) {
-          return true
-        }
-        return false
-      },
-      set() {
-        console.log(this.checkedPersonList, 'this.checkedPersonList')
-      }
-    },
+    // allCheckStatus: {
+    //   get() {
+    //     const dataListChecked = this.$store.getters.checkedPersonList
+    //     const dataList = this.$store.getters.dataList
+    //     if (dataListChecked.length === dataList.length) {
+    //       return true
+    //     }
+    //     return false
+    //   },
+    //   set() {
+    //     console.log(this.checkedPersonList, 'this.checkedPersonList')
+    //   }
+    // },
     checkedPersonList() {
       return this.$store.getters.checkedPersonList
     }
   },
   watch: {
+    checkedPersonList: {
+      handler() { // 数据数组有变化将触发此函数
+        if (this.dataList.length === this.checkedPersonList.length) {
+          this.allCheckStatus = true
+        } else {
+          this.allCheckStatus = false
+        }
+      },
+      deep: true // 深度监视
+    }
   },
   components: {
     BtScroll,
