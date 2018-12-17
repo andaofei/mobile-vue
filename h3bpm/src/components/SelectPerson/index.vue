@@ -88,7 +88,6 @@ export default {
   name: 'SelectPerson',
   data() {
     return {
-      dataListChecked: [],
       probeType: 0,
       pullingUp: true,
       beforeScroll: true,
@@ -161,19 +160,6 @@ export default {
     dataList() {
       return this.$store.getters.dataList
     },
-    // allCheckStatus: {
-    //   get() {
-    //     const dataListChecked = this.$store.getters.checkedPersonList
-    //     const dataList = this.$store.getters.dataList
-    //     if (dataListChecked.length === dataList.length) {
-    //       return true
-    //     }
-    //     return false
-    //   },
-    //   set() {
-    //     console.log(this.checkedPersonList, 'this.checkedPersonList')
-    //   }
-    // },
     checkedPersonList() {
       return this.$store.getters.checkedPersonList
     }

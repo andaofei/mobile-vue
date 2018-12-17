@@ -7,6 +7,7 @@ import store from './store'
 import VueLazyload from 'vue-lazyload'
 import './permission'
 import { Button, Form, Input, FormItem, Checkbox, Badge, Radio, Tag, Breadcrumb, BreadcrumbItem } from 'element-ui'
+import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
 import i18n from './lang'
 import './icons'
 import 'normalize.css/normalize.css'
@@ -20,6 +21,7 @@ Vue.use(VueLazyload, {
   loading: require('../static/default/loading.svg'), // 加载的图片
   error: require('../static/default/bpm.jpg')
 })
+Vue.component(CollapseTransition.name, CollapseTransition)
 Vue.component(Actionsheet.name, Actionsheet)
 Vue.component(Toast.name, Toast)
 Vue.component(DatetimePicker.name, DatetimePicker)

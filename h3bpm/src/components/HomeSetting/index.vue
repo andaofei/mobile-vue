@@ -1,6 +1,10 @@
 <template>
     <div class="home-settings">
       <sys-setting></sys-setting>
+      <div class="item">
+        <span>{{$t('setting.userName')}}</span>
+        <span class="right">{{userName}}</span>
+      </div>
       <!--注销-->
       <div class="log-out" @click="logOut">{{$t('logout.title')}}</div>
     </div>
@@ -9,11 +13,13 @@
 <script>
 import SysSetting from '@/components/SysSetting'
 import { MessageBox } from 'mint-ui'
+import Cookies from 'js-cookie'
 export default {
   name: 'HomeSetting',
   data() {
     return {
-      tip: '%{logout} title'
+      tip: '%{logout} title',
+      userName: Cookies.get('user') || '无'
     }
   },
   methods: {
@@ -54,7 +60,27 @@ export default {
     text-align: center;
     color: $mainColor;
     font-size: 1rem;
-    background:$baseColor ;
+    background:$baseColor;
     cursor: pointer;
+  }
+  .item {
+    display: flex;
+    background:$baseColor;
+    justify-content: space-between;
+    padding: 12px 10px;
+    @include border-bottom-1px($borderBottom);
+    font-size: $font-size-medium;
+    line-height: 20px;
+    .right {
+      color: $textColor;
+      input {
+        text-align: right;
+        font-size: $font-size-medium;
+        border: 0;
+        outline: none;
+        line-height: 20px;
+        color: $textColor;
+      }
+    }
   }
 </style>

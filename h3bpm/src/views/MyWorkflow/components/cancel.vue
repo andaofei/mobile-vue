@@ -1,5 +1,5 @@
 <template>
-  <div class="todo-List">
+  <div class="Cancel">
     <!--回顶部-->
     <ToTop v-show="topTop" @backTop="backTop"></ToTop>
     <scroll ref="scroll"
@@ -21,20 +21,16 @@
 <script type="text/ecmascript-6">
 import getListMixin from '@/commom/mixins/getList'
 export default {
-  name: 'TodoList',
+  name: 'Done',
   mixins: [getListMixin],
   data() {
     return {}
   },
   created() {
     // console.log(this.$route)
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 8; i++) {
       this.items.push(this.$i18n.t('normalScrollListPage.previousTxt') + ++this.itemIndex + this.$i18n.t('normalScrollListPage.followingTxt'))
     }
-    // console.log(this.items.length)
-    const counts = this.items.length
-    this.$store.dispatch('setTodoCounts', counts)
-    this.$store.dispatch('getItemList')
   },
   methods: {
     handleClick(item) {
@@ -42,14 +38,10 @@ export default {
     },
     onPullingDown() {
       // 模拟更新数据
-      console.log('pulling down and refresh data')
       setTimeout(() => {
         if (Math.random() > 0.5) {
           // 如果有新数据
           this.items.unshift(this.$i18n.t('normalScrollListPage.newDataTxt') + +new Date())
-          console.log(this.items.length)
-          const counts = this.items.length
-          this.$store.dispatch('setTodoCounts', counts)
         } else {
           // 如果没有新数据
           this.$refs.scroll.forceUpdate()
@@ -67,9 +59,6 @@ export default {
             newPage.push(this.$i18n.t('normalScrollListPage.previousTxt') + ++this.itemIndex + this.$i18n.t('normalScrollListPage.followingTxt'))
           }
           this.items = this.items.concat(newPage)
-          console.log(this.items.length)
-          const counts = this.items.length
-          this.$store.dispatch('setTodoCounts', counts)
         } else {
           // 如果没有新数据
           this.$refs.scroll.forceUpdate()
@@ -81,7 +70,7 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  .todo-List{
+  .Cancel{
     width: 100%;
     height: 100%;
     position: absolute;

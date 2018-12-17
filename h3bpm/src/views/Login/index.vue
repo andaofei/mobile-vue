@@ -27,7 +27,7 @@
 
       <div class="login-setting">
         <p>
-          <el-checkbox v-model="checked">{{$t('login.auto')}}</el-checkbox>
+          <el-checkbox v-model="autoLogin" >{{$t('login.auto')}}</el-checkbox>
         </p>
         <p @click="handleSetting" class="settings">
           <svg-icon icon-class="setting" />
@@ -40,13 +40,15 @@
 </template>
 
 <script>
+import { ERR_OK } from '@/api/statusCode'
+import {Toast} from 'mint-ui'
 export default {
-  name: 'index',
+  name: 'Login',
   data() {
     return {
       loginForm: {
-        username: 'admin',
-        password: '1111111'
+        username: 'administrator',
+        password: '000000'
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: '' }],
@@ -55,8 +57,13 @@ export default {
       passwordType: 'password',
       loading: false,
       showDialog: false,
-      redirect: undefined,
-      checked: true
+      redirect: undefined
+    }
+  },
+  mounted() {
+    if (this.autoLogin) {
+      console.log(this.autoLogin)
+      this.handleLogin()
     }
   },
   methods: {
@@ -71,10 +78,19 @@ export default {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
           this.loading = true
-          this.$store.dispatch('LoginSys', this.loginForm).then(() => {
+          this.$store.dispatch('LoginSys', this.loginForm).then((res) => {
+            if (res.code === ERR_OK) {
+              // this.$router.push({ path: this.redirect || '/' })
+              let instance = Toast({
+                message: this.$t('login.success'),
+                iconClass: 'icon el-icon-success'
+              })
+              setTimeout(() => {
+                instance.close()
+                this.$router.push({ path: '/dashboard' })
+              }, 500)
+            }
             this.loading = false
-            // this.$router.push({ path: this.redirect || '/' })
-            this.$router.push({ path: '/dashboard' })
           }).catch(() => {
             this.loading = false
           })
@@ -86,6 +102,16 @@ export default {
     },
     handleSetting() {
       this.$router.push('/setting')
+    }
+  },
+  computed: {
+    autoLogin: {
+      get() {
+        return this.$store.getters.autoLogin
+      },
+      set(value) {
+        this.$store.commit('SET_AUTO_LOGIN', value)
+      }
     }
   },
   watch: {

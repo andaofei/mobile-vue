@@ -1,5 +1,6 @@
-// import {getItemList} from '@/api/dataList'
-import { data } from '@/commom/localdata/index'
+import {getWorkItem} from '@/api/getworkitems'
+// import { listData, searchList } from '@/commom/localdata/index'
+import { searchList } from '@/commom/localdata/index'
 const dataList = {
   state: {
     todoCounts: 0,
@@ -35,11 +36,13 @@ const dataList = {
     // 数据列表
     itemList: [],
     itemCheckList: [],
+    searchUserList: [
+    ], // 搜索列表
     visitedViews: []
   },
 
   mutations: {
-    // 初始列表数据
+    // 初始待阅，待办,已阅，已办列表数据
     SET_DATA_LIST: (state, payload) => {
       console.log(payload, '初始列表数据')
       state.itemList = payload
@@ -152,21 +155,38 @@ const dataList = {
         state.checkedPersonList = []
       }
       // state.dataList = payload.data
+    },
+    // 搜索列表
+    SET_SEARCH_LIST: (state, payload) => {
+      console.log(state.checkedPersonList, 'checkedPersonList')
+      state.checkedPersonList.forEach((item, index) => {
+        console.log(item)
+      })
+      payload.map((item, index) => {
+        console.log(item)
+      })
+      // state.searchUserList = payload
     }
   },
 
   actions: {
+    // 初始待阅，待办,已阅，已办列表数据
     getItemList({ commit }, payload) {
       // console.log(data)
-      commit('SET_DATA_LIST', data)
-      // return new Promise((resolve, reject) => {
-      //   getItemList().then(response => {
-      //     console.log(response)
-      //     resolve(response)
-      //   }).catch(error => {
-      //     reject(error)
-      //   })
-      // })
+      // commit('SET_DATA_LIST', listData)
+      return new Promise((resolve, reject) => {
+        getWorkItem().then(res => {
+          console.log(res)
+          commit('SET_DATA_LIST', res.data.WorkItems)
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 获取搜索列表
+    getSearchList({ commit }, payload) {
+      commit('SET_SEARCH_LIST', searchList)
     },
     // 待办数量
     setTodoCounts({ commit }, count) {

@@ -1,5 +1,5 @@
 import router from './router'
-import store from './store'
+// import store from './store'
 import NProgress from 'nprogress' // progress bar
 import './commom/nprogress/nprogress.css'// progress bar style
 import {getToken} from '@/utils/auth' // getToken from cookie
@@ -7,11 +7,11 @@ import {getToken} from '@/utils/auth' // getToken from cookie
 NProgress.configure({showSpinner: false})// NProgress Configuration
 
 // permission judge function
-function hasPermission(roles, permissionRoles) {
-  if (roles.indexOf('admin') >= 0) return true // admin permission passed directly
-  if (!permissionRoles) return true
-  return roles.some(role => permissionRoles.indexOf(role) >= 0)
-}
+// function hasPermission(roles, permissionRoles) {
+//   if (roles.indexOf('admin') >= 0) return true // admin permission passed directly
+//   if (!permissionRoles) return true
+//   return roles.some(role => permissionRoles.indexOf(role) >= 0)
+// }
 
 const whiteList = ['/login', '/auth-redirect', '/setting']// no redirect whitelist
 
@@ -24,25 +24,28 @@ router.beforeEach((to, from, next) => {
       next({path: '/'})
       NProgress.done()
     } else {
+      next()
+      // next({...to, replace: true})
       // console.log(store.getters.roles)
-      if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
-        store.dispatch('GetUserInfo').then(res => { // 拉取user_info
-          // console.log(to)
-          next({...to, replace: true})
-        }).catch(() => {
-          store.dispatch('FedLogOut').then(() => {
-            next({path: '/'})
-          })
-        })
-      } else {
-        // 没有动态改变权限的需求可直接next() 删除下方权限判断 ↓
-        if (hasPermission(store.getters.roles, to.meta.roles)) {
-          next()
-        } else {
-          // next({path: '/401', replace: true, query: {noGoBack: true}})
-        }
-        // 可删 ↑
-      }
+      // if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完user_info信息
+      //   store.dispatch('GetUserInfo').then(res => { // 拉取user_info
+      //     // console.log(to)
+      //     next({...to, replace: true})
+      //   }).catch(() => {
+      //     store.dispatch('FedLogOut').then(() => {
+      //       next({path: '/'})
+      //     })
+      //   })
+      // }
+      // else {
+      //   // 没有动态改变权限的需求可直接next() 删除下方权限判断 ↓
+      //   if (hasPermission(store.getters.roles, to.meta.roles)) {
+      //     next()
+      //   } else {
+      //     // next({path: '/401', replace: true, query: {noGoBack: true}})
+      //   }
+      //   // 可删 ↑
+      // }
     }
   } else {
     /* has no token */

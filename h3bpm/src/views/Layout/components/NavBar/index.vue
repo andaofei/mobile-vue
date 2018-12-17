@@ -13,7 +13,7 @@
   <router-link
     tag="div"
     class="nav-item"
-    :to="{ path: '/initiworkflow' }">
+    :to="{ path: '/initworkflow' }">
     <span class="svg-box">
       <svg-icon icon-class="start" />
     </span>

@@ -1,4 +1,4 @@
-export const data = [
+export const listData = [
   {
     ActivityName: '审批',
     ActivityStatus: '未启动',
@@ -189,6 +189,32 @@ export const data = [
     RemindStatus: 0,
     Summary: null,
     isChecked: false,
+    checked: false
+  }
+]
+export const searchList = [
+  {
+    name: '李四',
+    position: '后端',
+    id: 0,
+    checked: false
+  },
+  {
+    name: '大红',
+    position: '产品经理',
+    id: 8,
+    checked: false
+  },
+  {
+    name: '吕布',
+    position: '开发',
+    id: 7,
+    checked: false
+  },
+  {
+    name: 'Kna',
+    position: '开发',
+    id: 11,
     checked: false
   }
 ]

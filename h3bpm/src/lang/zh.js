@@ -21,14 +21,18 @@ export default {
     auto: '自动登陆',
     sysSetting: '系统设置',
     thirdparty: '第三方登录',
-    thirdpartyTips: '本地不能模拟，请结合自己业务进行模拟！！！'
+    thirdpartyTips: '本地不能模拟，请结合自己业务进行模拟！！！',
+    success: '登录成功',
+    fail: '登录失败',
+    effect: '登录失效'
   },
   logout: {
     title: '注销',
     tip: '提示',
     cancel: '取消',
     determine: '确定',
-    config: '确定要注销么？'
+    config: '确定要注销么？',
+    text: '登录失效，请重新登录'
   },
   setting: {
     title: '系统设置',
@@ -37,7 +41,8 @@ export default {
     domainName: '域名',
     switchLanguage: '切换语言',
     success: '设置成功',
-    IpError: 'ip格式有误'
+    IpError: 'ip格式有误',
+    userName: '账户名'
   },
   home: {
     filter: '筛选'

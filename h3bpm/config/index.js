@@ -6,18 +6,17 @@ const path = require('path')
 
 module.exports = {
   dev: {
-    // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    proxyTable: {
-      '/apis': {    //将www.exaple.com印射为/apis
-        target: 'https://api.douban.com',  // 接口域名
-        changeOrigin: true,  //是否跨域
-        pathRewrite: {
-          '^/apis': ''   //需要rewrite的,
-        }
-      }
-    },
+    // proxyTable: {
+    //   '/apis': {
+    //     target: 'https://api.douban.com',
+    //     changeOrigin: true,
+    //     pathRewrite: {
+    //       '^/apis': ''
+    //     }
+    //   }
+    // },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

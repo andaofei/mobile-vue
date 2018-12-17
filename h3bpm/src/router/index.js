@@ -19,7 +19,8 @@ export default new Router({
     {
       path: '/login',
       component: () => import('@/views/Login/index'),
-      hidden: true
+      hidden: true,
+      name: 'Login'
     },
     {
       path: '/setting',
@@ -65,16 +66,49 @@ export default new Router({
           ]
         },
         {
-          path: '/initiworkflow',
+          path: '/initworkflow',
+          redirect: '/initworkflow/all',
           component: () => import('@/views/InitiWorkflow/index'),
-          name: 'InitiWorkflow',
-          meta: { title: 'initiworkflow', icon: 'initiworkflow', noCache: true }
+          name: 'Initworkflow',
+          meta: { title: 'initworkflow', icon: 'initworkflow', noCache: true },
+          children: [
+            {
+              path: '/initworkflow/all',
+              name: 'All',
+              component: () => import('@/views/InitiWorkflow/components/all/index'),
+              meta: { title: 'All', noCache: true, id: 0 }
+            },
+            {
+              path: '/initworkflow/hist',
+              name: 'Hist',
+              component: () => import('@/views/InitiWorkflow/components/hist/index'),
+              meta: { title: 'Hist', noCache: true, id: 0 }
+            }
+          ]
         },
         {
           path: '/myworkflow',
           component: () => import('@/views/MyWorkflow/index'),
           name: 'MyWorkflow',
-          meta: { title: 'myworkflow', icon: 'myworkflow', noCache: true }
+          redirect: '/myworkflow/doing',
+          meta: { title: 'myworkflow', icon: 'myworkflow', noCache: true },
+          children: [
+            {
+              path: '/myworkflow/doing',
+              component: () => import('@/views/MyWorkflow/components/doing.vue'),
+              name: 'Doing'
+            },
+            {
+              path: '/myworkflow/done',
+              component: () => import('@/views/MyWorkflow/components/done.vue'),
+              name: 'Done'
+            },
+            {
+              path: '/myworkflow/cancel',
+              component: () => import('@/views/MyWorkflow/components/cancel.vue'),
+              name: 'Cancel'
+            }
+          ]
         },
         {
           path: '/appcenter',
@@ -91,13 +125,13 @@ export default new Router({
       component: () => import('@/components/HomeSetting/index')
     },
     {
-      path: '/selectPerson',
+      path: '/selectPerson', // 选人
       name: 'SelectPerson',
       hidden: true,
       component: () => import('@/components/SelectPerson/index')
     },
     {
-      path: '/selectDepart',
+      path: '/selectDepart', // 选择组织
       name: 'SelectDepart',
       hidden: true,
       redirect: '/selectDepart/selectDepartDefault',
@@ -125,6 +159,16 @@ export default new Router({
           meta: { title: 'departList', icon: 'departList', noCache: true }
         }
       ]
+    },
+    {
+      path: '/appcenter/child', // 应用中心
+      component: () => import('@/views/AppCenter/components/child'),
+      name: 'child'
+    },
+    {
+      path: '/appcenter/detail', // 应用中心
+      component: () => import('@/views/AppCenter/components/detail'),
+      name: 'detail'
     }
   ]
 })

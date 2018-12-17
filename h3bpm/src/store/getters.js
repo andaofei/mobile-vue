@@ -1,6 +1,7 @@
 const getters = {
   token: state => state.user.token,
   roles: state => state.user.roles,
+  autoLogin: state => state.user.autoLogin,
   language: state => state.app.language,
   ipPath: state => state.app.ipPath,
   filterShow: state => state.app.filterShow, // 筛选
@@ -12,6 +13,7 @@ const getters = {
   dataList: state => state.dataList.dataList, // 选人列表
   visitedViews: state => state.dataList.visitedViews, // 路由
   itemList: state => state.dataList.itemList, // 待阅列表
+  searchUserList: state => state.dataList.searchUserList, // 搜索列表
   itemCheckList: state => state.dataList.itemCheckList // 待阅已选
 }
 export default getters

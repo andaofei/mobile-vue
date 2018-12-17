@@ -1,10 +1,11 @@
 import {loginSys, logoutSys, getUserInfo} from '@/api/login'
-import {getToken, setToken, removeToken} from '@/utils/auth'
-
+import {getToken, setToken, getAuto, setAuto, setUserInfo, removeToken, setUserId} from '@/utils/auth'
+import { ERR_OK } from '@/api/statusCode'
 const user = {
   state: {
     roles: [],
-    token: getToken()
+    token: getToken(),
+    autoLogin: getAuto() || false
   },
 
   mutations: {
@@ -13,6 +14,10 @@ const user = {
     },
     SET_ROLES: (state, roles) => {
       state.roles = roles
+    },
+    SET_AUTO_LOGIN: (state, payload) => {
+      state.autoLogin = payload
+      setAuto(payload)
     }
   },
 
@@ -24,9 +29,13 @@ const user = {
         loginSys(username, userInfo.password).then(response => {
           const data = response.data
           console.log(data)
-          commit('SET_TOKEN', data.title)
-          setToken(response.data.title)
-          resolve()
+          if (response.code === ERR_OK) {
+            commit('SET_TOKEN', data.pageId)
+            setToken(data.pageId)
+            setUserInfo(data.User.Name)
+            setUserId(data.User.UnitID)
+          }
+          resolve(response)
         }).catch(error => {
           reject(error)
         })
@@ -57,7 +66,10 @@ const user = {
       return new Promise((resolve, reject) => {
         logoutSys(state.token).then(() => {
           commit('SET_TOKEN', '')
+          commit('SET_AUTO_LOGIN', '')
           removeToken()
+          setUserId('')
+          setUserInfo('')
           resolve()
         }).catch(error => {
           reject(error)
@@ -68,6 +80,9 @@ const user = {
     FedLogOut({commit}) {
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
+        commit('SET_AUTO_LOGIN', '')
+        setUserId('')
+        setUserInfo('')
         removeToken()
         resolve()
       })
