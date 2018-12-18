@@ -1,6 +1,7 @@
-import {getWorkItem} from '@/api/getworkitems'
+import {getWorkItem, getReadItem, getWorkCount} from '@/api/getworkitems'
 // import { listData, searchList } from '@/commom/localdata/index'
 import { searchList } from '@/commom/localdata/index'
+import {ERR_OK} from '../../api/statusCode'
 const dataList = {
   state: {
     todoCounts: 0,
@@ -33,19 +34,65 @@ const dataList = {
       }
     ],
     checkedPersonList: [],
-    // 数据列表
-    itemList: [],
+    itemList: [], // 待办数据列表
+    readList: [], // 待阅数据列表
     itemCheckList: [],
-    searchUserList: [
-    ], // 搜索列表
-    visitedViews: []
+    searchUserList: [], // 搜索列表
+    visitedViews: [],
+    todoOptions: []
+    // todoOptions: { // 待办筛选条件
+    //   IsPriority: '1',
+    //   Originators: '2',
+    //   endDate: '2018-12-11',
+    //   finishedWorkItem: false,
+    //   keyWord: '1',
+    //   sortDirection: 'Desc',
+    //   sortKey: 'ReceiveTime',
+    //   startDate: '2018-12-13',
+    //   userId: '18f923a7-5a5e-426d-94ae-a55ad1a4b239'
+    // }
   },
 
   mutations: {
-    // 初始待阅，待办,已阅，已办列表数据
+    // 初始待办
     SET_DATA_LIST: (state, payload) => {
-      console.log(payload, '初始列表数据')
-      state.itemList = payload
+      switch (payload.tag) {
+        case 'work':
+          state.itemList = payload.data
+          break
+        case 'read':
+          state.readList = payload.data
+          break
+        default:
+          state.itemList = []
+          state.readList = []
+      }
+    },
+    // 待办配置
+    ADD_OPTIONS: (state, payload) => {
+      state.todoOptions = payload
+    },
+    // 上拉数据
+    ADD_DATA_LIST: (state, payload) => {
+      switch (payload.tag) {
+        case 'work':
+          let newPage = []
+          payload.data.WorkItems.forEach((item) => {
+            newPage.push(item)
+          })
+          state.itemList = state.itemList.concat(newPage)
+          break
+        case 'read':
+          let newRead = []
+          payload.data.CirculateItems.forEach((item) => {
+            newRead.push(item)
+          })
+          state.readList = state.readList.concat(newRead)
+          break
+        default:
+          state.itemList = []
+          state.readList = []
+      }
     },
     // 改变待阅全选状态
     CHANGE_DATA_LIST_CHECKED: (state, payload) => {
@@ -63,6 +110,7 @@ const dataList = {
       state.itemCheckList = []
       // state.itemList = payload
     },
+
     // 取消选中待阅单选状态
     SET_CHECKED_LIST: (state, payload) => {
       console.log(payload, '取消选中待阅单选状态')
@@ -75,6 +123,7 @@ const dataList = {
         state.itemCheckList.splice(state.itemCheckList.indexOf(payload.item), 1)
       }
     },
+
     // 全选待阅
     SET_ALL_CHECKED_TOREAD: (state, payload) => {
       console.log(payload, 'SET_ALL_CHECKED_TOREAD')
@@ -93,14 +142,22 @@ const dataList = {
       }
       // state.itemList = payload.data
     },
+
     // 待办数
     SET_TODO_COUNTS: (state, payload) => {
       state.todoCounts = payload
     },
+
     // 待阅数
     SET_TO_READ_COUNTS: (state, payload) => {
       state.toReadCounts = payload
     },
+
+    // 初始待阅数
+    INIT_TO_READ_COUNTS: (state, payload) => {
+      state.toReadCounts = payload
+    },
+
     // 添加面包屑
     ADD_VISITED_VIEW: (state, view) => {
       console.log(view, 'view')
@@ -170,14 +227,60 @@ const dataList = {
   },
 
   actions: {
-    // 初始待阅，待办,已阅，已办列表数据
+    // 初始待办/已办列表数据
     getItemList({ commit }, payload) {
-      // console.log(data)
-      // commit('SET_DATA_LIST', listData)
       return new Promise((resolve, reject) => {
-        getWorkItem().then(res => {
-          console.log(res)
-          commit('SET_DATA_LIST', res.data.WorkItems)
+        getWorkItem(payload).then(res => {
+          console.log(res, '初始待办/已办')
+          commit('SET_DATA_LIST', {
+            data: res.data.WorkItems,
+            tag: 'work'
+          })
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 上拉待办数据
+    pullingUpList({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        getWorkItem(payload).then(res => {
+          console.log(res, '上拉数据')
+          commit('ADD_DATA_LIST', {
+            data: res.data,
+            tag: 'work'
+          })
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 初始待阅/已阅列表数据
+    getReadItem({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        getReadItem(payload).then(res => {
+          console.log(res, '初始待阅')
+          commit('SET_DATA_LIST', {
+            data: res.data.CirculateItems,
+            tag: 'read'
+          })
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 上拉待阅数据
+    pullingUpReadList({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        getReadItem(payload).then(res => {
+          console.log(res, '上拉待阅数据')
+          commit('ADD_DATA_LIST', {
+            data: res.data,
+            tag: 'read'
+          })
           resolve(res)
         }).catch(error => {
           reject(error)
@@ -188,13 +291,20 @@ const dataList = {
     getSearchList({ commit }, payload) {
       commit('SET_SEARCH_LIST', searchList)
     },
-    // 待办数量
-    setTodoCounts({ commit }, count) {
-      commit('SET_TODO_COUNTS', count)
-    },
-    // 待阅数量
-    setToReadCounts({ commit }, count) {
-      commit('SET_TO_READ_COUNTS', count)
+    // 待办数量/ 待阅数量
+    setTagCounts({ commit }, count) {
+      return new Promise((resolve, reject) => {
+        getWorkCount().then(res => {
+          if (res.code === ERR_OK) {
+            const data = res.data
+            // commit('SET_TODO_COUNTS', data.UnfinishedWorkItemCount)
+            commit('INIT_TO_READ_COUNTS', data.UnreadWorkItemCount)
+          }
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
+      })
     },
     // 添加面包屑路由
     addView({ commit }, view) {

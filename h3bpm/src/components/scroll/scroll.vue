@@ -9,24 +9,49 @@
             <li @click="clickItem(item,index)" class="list-item" v-for="(item,index) in data" :key="index" >
               <div class="item-left">
                 <span class="svg-box" v-if="item.isChecked" @click.stop="handleSelect(item,index)">
-                  <svg-icon class="checked-icon" icon-class="checked" v-if="item.checked"  />
-                  <svg-icon icon-class="check" v-else/>
+                    <svg-icon class="checked-icon" icon-class="checked" v-if="item.checked"/>
+                    <svg-icon icon-class="check" v-else/>
                 </span>
-                <img src="./images/avator.svg" alt="" v-else>
+
+                <img v-lazy="baseUrl + item.OriginatorImageURL" alt="" v-else>
               </div>
+
               <div class="item-right">
                 <div class="item-right-box">
                   <div class="right-box-top">{{item.InstanceName}}</div>
                   <div class="right-box-btm">
-                    <p class="time">
+
+                    <p class="time" v-if="routeId === 0 || routeId === 1">
                       <span class="time-title">接收时间：</span>
                       <span class="time-inner">{{item.ReceiveTime}}</span>
                     </p>
-                    <p class="detail">
+                    <p class="time" v-else>
+                      <span class="time-title">处理时间：</span>
+                      <span class="time-inner">{{item.ReceiveTime}}</span>
+                    </p>
+
+                    <p class="time" v-if="item.Summary" :key="index" v-for="(list, index) in item.Summary">
+                      <span class="time-title">{{list.DisplayName}}:</span>
+                      <span class="time-inner">{{list.Value}}</span>
+                    </p>
+
+                    <p class="detail" v-if="routeId === 0 || routeId === 1 || routeId === 3">
                       <svg-icon icon-class="zhang"/>
-                      <span class="detail-inner">填写报销申请</span>
+                      <span class="detail-inner">{{item.ActivityName}}</span>
+                    </p>
+
+                    <!--已办才有-->
+                    <p class="detail" v-else>
+                      <svg-icon icon-class="zhang"/>
+                      <span class="detail-inner">{{item.ActivityName}}</span>
+                      <span class="detail-inner" :class="item.ApprovelStatus === '1'? 'orange' : 'red'">({{item.ApprovelStatueName}})</span>
                     </p>
                   </div>
+                </div>
+
+                <div class="item-right-img">
+                    <img v-lazy="language === 'zh' ? jiaji: jiaji2" alt="" v-if="item.RemindStatus === 1">
+                    <img v-lazy="language === 'zh' ? cuiban: cuiban2" alt="" v-else-if="item.RemindStatus === 2">
                 </div>
               </div>
             </li>
@@ -84,6 +109,10 @@ const DIRECTION_V = 'vertical'
 export default {
   name: COMPONENT_NAME,
   props: {
+    isChecked: {
+      type: Boolean,
+      default: false
+    },
     checkStatus: {
       type: Boolean,
       default: false
@@ -165,10 +194,20 @@ export default {
       isPullUpLoad: false,
       pullUpDirty: true,
       pullDownStyle: '',
-      bubbleY: 0
+      bubbleY: 0,
+      baseUrl: process.env.BASE_API,
+      jiaji: 'static/images/jiaji.png',
+      jiaji2: 'static/images/jiaji2.svg',
+      cuiban: 'static/images/cuiban.png',
+      cuiban2: 'static/images/cuiban2.svg',
+      routeId: -1
     }
   },
   computed: {
+    // 国际化
+    language() {
+      return this.$store.getters.language
+    },
     pullUpTxt() {
       const moreTxt = (this.pullUpLoad && this.pullUpLoad.txt && this.pullUpLoad.txt.more) || this.$i18n.t('scrollComponent.defaultLoadTxtMore')
 
@@ -182,7 +221,8 @@ export default {
   },
   created() {
     this.pullDownInitTop = -50
-    // console.log(this.data, 'data')
+    // console.log(this.$route.meta.id, 'route')
+    this.routeId = this.$route.meta.id
   },
   mounted() {
     setTimeout(() => {
@@ -373,7 +413,7 @@ export default {
           @include border-bottom-1px($borderBottom);
           display: flex;
           .item-left {
-            flex: 0 0 60px;
+            flex: 0 0 15%;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -391,21 +431,44 @@ export default {
             }
           }
           .item-right {
-            flex: 1 0 auto;
+            width: 85%;
+            display: flex;
+            justify-content: space-between;
             .item-right-box {
+              width: 85%;
               display: flex;
               flex-direction: column;
               justify-content: space-between;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+            .item-right-img{
+              flex:0 0 15%;
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              text-align: center;
+              img{
+                width:100%;
+                height: 40px;
+              }
             }
             .right-box-top {
               color: $textColor;
               font-size: 1rem;
               line-height: 1.5rem;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
             }
             .right-box-btm {
               .time {
                 font-size: 14px;
                 line-height: 1.3rem;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
               }
             }
             .time-title {
@@ -420,6 +483,9 @@ export default {
             }
             .detail-inner {
               font-size: 14px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
             }
           }
         }
@@ -465,5 +531,11 @@ export default {
     span{
       font-size: 14px; color: $textColor2;
     }
+  }
+  .orange{
+    color: $blueColor!important;
+  }
+  .red{
+    color: $errorColor!important;
   }
 </style>

@@ -3,11 +3,13 @@
     <!--回顶部-->
     <ToTop v-show="topTop" @backTop="backTop"></ToTop>
     <!--批量阅读-->
-    <div class="read-all" @click="readAll" v-show="ReadAll">批量阅读</div>
+    <div class="read-all" @click="readAll" v-show="readList.length && readList.length > 1">批量阅读</div>
     <scroll ref="scroll"
             @handleClick="handleClick"
             @handleSelect="handleSelect"
-            :data="itemList"
+            :data="readList"
+            :isChecked="isChecked"
+            :checked="checked"
             :checkStatus="checkStatus"
             :readChecked="readChecked"
             :probe-type="probeType"
@@ -38,6 +40,8 @@
 <script type="text/ecmascript-6">
 import getListMixin from '@/commom/mixins/getList'
 import {mapMutations} from 'vuex'
+import {getUserInfo} from '@/utils/auth'
+import { ERR_OK } from '@/api/statusCode'
 export default {
   name: 'AllDone',
   mixins: [getListMixin],
@@ -48,45 +52,61 @@ export default {
       items: [],
       checkStatus: false,
       readChecked: false,
-      allCheckStatus: false
+      allCheckStatus: false,
+      isChecked: false,
+      checked: false
     }
   },
   created() {
-    this.$store.dispatch('getItemList')
-    if (this.itemList.length > 1) {
-      this.ReadAll = true
+    this.setOptions({}) // 清空搜索条件
+    let options = {
+      readWorkItem: false,
+      keyWord: '',
+      sortDirection: 'Desc',
+      sortKey: 'ReceiveTime',
+      userCode: getUserInfo().userCode,
+      userId: getUserInfo().id
     }
-    for (let i = 0; i < 8; i++) {
-      this.items.push(this.$i18n.t('normalScrollListPage.previousTxt') + ++this.itemIndex + this.$i18n.t('normalScrollListPage.followingTxt'))
-    }
-    const counts = this.items.length
-    this.$store.dispatch('setToReadCounts', counts)
+    this.$store.dispatch('getReadItem', options)
+      .then((res) => {
+        if (res.code === ERR_OK) {
+          this.setToReadCount(res.data.TotalCount)
+        }
+      })
   },
   methods: {
+    ...mapMutations({
+      setAlLChecked: 'SET_ALL_CHECKED_TOREAD',
+      setToReadCount: 'SET_TO_READ_COUNTS',
+      setOptions: 'ADD_OPTIONS'
+    }),
     // 单击
     handleClick(data) {
       console.log('单击')
     },
     // 单击选中
     handleSelect(data) {
+      // console.log(data)
+      // this.checked = data.item
       this.$store.commit('SET_CHECKED_LIST', data)
     },
     // 批量阅读
     readAll() {
-      // this.checkStatus = !this.checkStatus
+      // this.isChecked = !this.isChecked
       if (!this.allCheckedStatus) {
-        this.$store.commit('CHANGE_DATA_LIST_CHECKED', this.itemList)
+        this.$store.commit('CHANGE_DATA_LIST_CHECKED', this.readList)
       } else {
-        this.$store.commit('CHANGE_DATA_LIST_UNCHEKED', this.itemList)
+        this.$store.commit('CHANGE_DATA_LIST_UNCHEKED', this.readList)
       }
       this.allCheckedStatus = !this.allCheckedStatus
       setTimeout(() => {
+        this.$refs.scroll.scrollTo(0, -1, '500', 'bounce')
         this.refresh()
       }, 20)
     },
     // 全选
     handleCheckAll() {
-      const data = this.itemList
+      const data = this.readList
       this.setAlLChecked({data: data, state: this.allCheckStatus})
     },
     // 确定
@@ -94,81 +114,95 @@ export default {
       console.log(this.itemCheckList, this.itemCheckList.length)
     },
     onPullingDown() {
-      // 模拟更新数据
+      let that = this
+      // 下拉更新数据
       setTimeout(() => {
-        if (Math.random() > 0.5) {
-          // 如果有新数据
-          this.items.unshift(this.$i18n.t('normalScrollListPage.newDataTxt') + +new Date())
-          const counts = this.items.length
-          this.$store.dispatch('setToReadCounts', counts)
-        } else {
-          // 如果没有新数据
-          this.$refs.scroll.forceUpdate()
+        let options = {
+          readWorkItem: false,
+          keyWord: '',
+          existsLength: this.readList.length || 0,
+          sortDirection: 'Desc',
+          sortKey: 'ReceiveTime',
+          userCode: getUserInfo().userCode,
+          userId: getUserInfo().id
         }
-      }, 2000)
+        // console.log(options, 'options')
+        let newOptions = Object.assign(options, this.todoOptions)
+        // console.log(newOptions, 'newOptions')
+        that.$store.dispatch('getReadItem', newOptions)
+          .then((res) => {
+            if (res.code === ERR_OK) {
+              this.setToReadCount(res.data.TotalCount)
+              if (res.data.LoadComplete) {
+                this.$refs.scroll.forceUpdate()
+              }
+            }
+          })
+      }, 1500)
     },
     onPullingUp() {
       // 更新数据
       console.log('pulling up and load data')
       setTimeout(() => {
-        if (Math.random() > 0.5) {
-          // 如果有新数据
-          let newPage = []
-          for (let i = 0; i < 10; i++) {
-            newPage.push(this.$i18n.t('normalScrollListPage.previousTxt') + ++this.itemIndex + this.$i18n.t('normalScrollListPage.followingTxt'))
-          }
-          this.items = this.items.concat(newPage)
-          const counts = this.items.length
-          this.$store.dispatch('setToReadCounts', counts)
-        } else {
-          // 如果没有新数据
-          this.$refs.scroll.forceUpdate()
+        let options = {
+          IsPriority: '',
+          Originators: [],
+          endDate: '',
+          readWorkItem: false,
+          keyWord: '',
+          loadStart: this.readList.length || 0,
+          sortDirection: 'Desc',
+          sortKey: 'ReceiveTime',
+          startDate: '',
+          userId: getUserInfo().id
         }
+        let newOptions = Object.assign(options, this.todoOptions)
+        this.$store.dispatch('pullingUpReadList', newOptions)
+          .then((res) => {
+            if (res.code === ERR_OK) {
+              this.setToReadCount(res.data.TotalCount)
+              if (res.data.LoadComplete) {
+                this.$refs.scroll.forceUpdate()
+              }
+            }
+          })
       }, 1500)
     },
     //  刷新
     refresh() {
       this.$refs.scroll.refresh()
       console.log('refresh')
-    },
-    ...mapMutations({
-      setAlLChecked: 'SET_ALL_CHECKED_TOREAD'
-    })
+    }
   },
   watch: { // 监视双向绑定的数据数组
     itemCheckList: {
       handler() { // 数据数组有变化将触发此函数
-        if (this.itemList.length === this.itemCheckList.length) {
+        if (this.readList.length === this.itemCheckList.length) {
           this.allCheckStatus = true
         } else {
           this.allCheckStatus = false
         }
       },
       deep: true // 深度监视
+    },
+    readList: {
+      handler() { // 数据数组有变化将触发此函数
+        console.log('change')
+      },
+      deep: true // 深度监视
     }
   },
   computed: {
     // 数据列表
-    itemList() {
-      return this.$store.getters.itemList
+    readList() {
+      return this.$store.getters.readList
     },
     itemCheckList() {
       return this.$store.getters.itemCheckList
+    },
+    todoOptions() {
+      return this.$store.getters.todoOptions
     }
-    // 全选状态
-    // allCheckStatus: {
-    //   get() {
-    //     const checkedData = this.$store.getters.itemCheckList
-    //     const list = this.$store.getters.itemList
-    //     if (checkedData.length === list.length) {
-    //       return true
-    //     }
-    //     return false
-    //   },
-    //   set() {
-    //     console.log(this.checkedPersonList, 'this.checkedPersonList')
-    //   }
-    // }
   }
 }
 </script>

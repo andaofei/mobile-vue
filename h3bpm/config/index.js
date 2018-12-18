@@ -1,6 +1,4 @@
 'use strict'
-// Template version: 1.3.1
-// see http://vuejs-templates.github.io/webpack for documentation.
 
 const path = require('path')
 
@@ -8,15 +6,15 @@ module.exports = {
   dev: {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
-    // proxyTable: {
-    //   '/apis': {
-    //     target: 'https://api.douban.com',
-    //     changeOrigin: true,
-    //     pathRewrite: {
-    //       '^/apis': ''
-    //     }
-    //   }
-    // },
+    proxyTable: {
+      '/apis': {
+        target: 'http://192.168.9.235:80',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/apis': ''
+        }
+      }
+    },
 
     // Various Dev Server settings
     host: 'localhost', // can be overwritten by process.env.HOST

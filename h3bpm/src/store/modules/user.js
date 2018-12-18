@@ -1,5 +1,5 @@
 import {loginSys, logoutSys, getUserInfo} from '@/api/login'
-import {getToken, setToken, getAuto, setAuto, setUserInfo, removeToken, setUserId} from '@/utils/auth'
+import {getToken, setToken, getAuto, setAuto, setUserInfo, removeToken, removeUserInfo} from '@/utils/auth'
 import { ERR_OK } from '@/api/statusCode'
 const user = {
   state: {
@@ -32,8 +32,7 @@ const user = {
           if (response.code === ERR_OK) {
             commit('SET_TOKEN', data.pageId)
             setToken(data.pageId)
-            setUserInfo(data.User.Name)
-            setUserId(data.User.UnitID)
+            setUserInfo({name: data.User.Name, id: data.User.UnitID, userCode: data.User.Code})
           }
           resolve(response)
         }).catch(error => {
@@ -62,14 +61,13 @@ const user = {
       })
     },
     // 登出
-    LogoutSys({commit, state}) {
+    LogoutSys({commit}) {
       return new Promise((resolve, reject) => {
-        logoutSys(state.token).then(() => {
+        logoutSys().then(() => {
           commit('SET_TOKEN', '')
           commit('SET_AUTO_LOGIN', '')
           removeToken()
-          setUserId('')
-          setUserInfo('')
+          removeUserInfo()
           resolve()
         }).catch(error => {
           reject(error)
@@ -81,8 +79,7 @@ const user = {
       return new Promise(resolve => {
         commit('SET_TOKEN', '')
         commit('SET_AUTO_LOGIN', '')
-        setUserId('')
-        setUserInfo('')
+        removeUserInfo()
         removeToken()
         resolve()
       })

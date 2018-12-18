@@ -7,12 +7,14 @@ const getters = {
   filterShow: state => state.app.filterShow, // 筛选
   filterTitle: state => state.app.filterTitle, // 筛选名称
   filterPath: state => state.app.filterPath, // 筛选路径
+  todoOptions: state => state.dataList.todoOptions, // 待办筛选
   todoCounts: state => state.dataList.todoCounts, // 待办数量
   toReadCounts: state => state.dataList.toReadCounts, // 待阅数量
   checkedPersonList: state => state.dataList.checkedPersonList, // 已选发起人列表
   dataList: state => state.dataList.dataList, // 选人列表
   visitedViews: state => state.dataList.visitedViews, // 路由
-  itemList: state => state.dataList.itemList, // 待阅列表
+  itemList: state => state.dataList.itemList, // 待办列表
+  readList: state => state.dataList.readList, // 待阅列表
   searchUserList: state => state.dataList.searchUserList, // 搜索列表
   itemCheckList: state => state.dataList.itemCheckList // 待阅已选
 }

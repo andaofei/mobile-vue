@@ -55,7 +55,6 @@
             </p>
           </div>
         </div>
-
       </div>
 
       <div class="filter-btm">
@@ -75,7 +74,10 @@
 </template>
 
 <script>
+import {getUserInfo} from '@/utils/auth'
+import {mapMutations} from 'vuex'
 import moment from 'moment'
+import { ERR_OK } from '@/api/statusCode'
 export default {
   name: 'FilterBox',
   data() {
@@ -90,21 +92,27 @@ export default {
       statusList: [
         {
           name: '是',
-          id: 0
+          id: 2
         },
         {
           name: '否',
-          id: 1
+          id: 0
         },
         {
           name: '不限',
-          id: 2
+          id: -1
         }
       ],
-      active: -1
+      active: -1,
+      IsPriority: ''
     }
   },
   methods: {
+    ...mapMutations({
+      setToDoCounts: 'SET_TODO_COUNTS',
+      setToReadCounts: 'SET_TO_READ_COUNTS',
+      addOptions: 'ADD_OPTIONS'
+    }),
     // close
     handleHiddenBox() {
       this.$emit('handleHiddenBox')
@@ -152,12 +160,62 @@ export default {
     // 加急
     handleClickStatus(item, index) {
       this.active = item
+      this.IsPriority = item.id
     },
 
     // 搜索
     handleSearch() {
       this.$emit('handleHiddenBox')
-      console.log(this.$route)
+      // console.log(this.$route.meta.id, 'filter')
+      const routeId = this.$route.meta.id
+      let options = {
+        IsPriority: this.IsPriority,
+        Originators: '', // 发起人
+        endDate: this.endTime,
+        keyWord: this.input,
+        startDate: this.startTime,
+        userId: getUserInfo().id
+      }
+      switch (routeId) {
+        case 0: // 待办
+          options.finishedWorkItem = false
+          options.sortDirection = 'Desc'
+          options.sortKey = 'ReceiveTime'
+          this.addOptions(options)
+          this.$store.dispatch('getItemList', options)
+            .then((res) => {
+              if (res.code === ERR_OK) {
+                this.setToDoCounts(res.data.TotalCount)
+              }
+            })
+          break
+        case 1: // 待阅
+          options.readWorkItem = false
+          options.sortDirection = 'Desc'
+          options.sortKey = 'ReceiveTime'
+          this.addOptions(options)
+          this.$store.dispatch('getReadItem', options)
+            .then((res) => {
+              this.setToReadCounts(res.data.TotalCount)
+            })
+          break
+        case 2: // 已办
+          options.finishedWorkItem = true
+          options.sortDirection = 'Desc'
+          options.sortKey = 'ReceiveTime'
+          this.addOptions(options)
+          this.$store.dispatch('getItemList', options)
+          break
+        case 3: // 已阅
+          options.readWorkItem = true
+          options.sortDirection = 'Desc'
+          options.sortKey = 'ReceiveTime'
+          this.addOptions(options)
+          this.$store.dispatch('getReadItem', options)
+          break
+        default:
+          return false
+      }
     },
     // 重置
     handleReset() {

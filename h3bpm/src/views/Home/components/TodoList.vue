@@ -4,7 +4,7 @@
     <ToTop v-show="topTop" @backTop="backTop"></ToTop>
     <scroll ref="scroll"
             @handleClick="handleClick"
-            :data="items"
+            :data="itemList"
             :probe-type="probeType"
             :listenScroll="listenScroll"
             :scrollbar="scrollbarObj"
@@ -20,6 +20,9 @@
 
 <script type="text/ecmascript-6">
 import getListMixin from '@/commom/mixins/getList'
+import {getUserInfo} from '@/utils/auth'
+import { ERR_OK } from '@/api/statusCode'
+import {mapMutations} from 'vuex'
 export default {
   name: 'TodoList',
   mixins: [getListMixin],
@@ -27,53 +30,87 @@ export default {
     return {}
   },
   created() {
-    // console.log(this.$route)
-    for (let i = 0; i < 10; i++) {
-      this.items.push(this.$i18n.t('normalScrollListPage.previousTxt') + ++this.itemIndex + this.$i18n.t('normalScrollListPage.followingTxt'))
+    this.setOptions({}) // 清空搜索条件
+    let options = {
+      keyWord: '',
+      finishedWorkItem: false,
+      sortDirection: 'Desc',
+      sortKey: 'ReceiveTime',
+      userId: getUserInfo().id
     }
-    // console.log(this.items.length)
-    const counts = this.items.length
-    this.$store.dispatch('setTodoCounts', counts)
-    this.$store.dispatch('getItemList')
+    this.$store.dispatch('setTagCounts') // 待阅数
+    this.$store.dispatch('getItemList', options)
+      .then((res) => {
+        if (res.code === ERR_OK) {
+          this.setToDoCounts(res.data.TotalCount)
+        }
+      })
+  },
+  computed: {
+    itemList() {
+      return this.$store.getters.itemList
+    },
+    todoOptions() {
+      return this.$store.getters.todoOptions
+    }
   },
   methods: {
+    ...mapMutations({
+      setToDoCounts: 'SET_TODO_COUNTS',
+      setOptions: 'ADD_OPTIONS'
+    }),
     handleClick(item) {
       console.log(item)
     },
     onPullingDown() {
-      // 模拟更新数据
-      console.log('pulling down and refresh data')
+      // 下拉更新数据
+      // console.log('pulling down and refresh data')
       setTimeout(() => {
-        if (Math.random() > 0.5) {
-          // 如果有新数据
-          this.items.unshift(this.$i18n.t('normalScrollListPage.newDataTxt') + +new Date())
-          console.log(this.items.length)
-          const counts = this.items.length
-          this.$store.dispatch('setTodoCounts', counts)
-        } else {
-          // 如果没有新数据
-          this.$refs.scroll.forceUpdate()
+        let options = {
+          finishedWorkItem: false,
+          existsLength: this.itemList.length || 0,
+          sortDirection: 'Desc',
+          sortKey: 'ReceiveTime',
+          userId: getUserInfo().id
         }
-      }, 2000)
+        // console.log(options, 'options')
+        let newOptions = Object.assign(options, this.todoOptions)
+        // console.log(newOptions, 'newOptions')
+        this.$store.dispatch('getItemList', newOptions)
+          .then((res) => {
+            if (res.code === ERR_OK) {
+              this.setToDoCounts(res.data.TotalCount)
+              if (res.data.LoadComplete) {
+                this.$refs.scroll.forceUpdate()
+              }
+            }
+          })
+      }, 1500)
     },
     onPullingUp() {
-      // 更新数据
-      console.log('pulling up and load data')
+      // 上拉更新数据
+      // console.log('pulling up and load data')
+      let that = this
       setTimeout(() => {
-        if (Math.random() > 0.5) {
-          // 如果有新数据
-          let newPage = []
-          for (let i = 0; i < 10; i++) {
-            newPage.push(this.$i18n.t('normalScrollListPage.previousTxt') + ++this.itemIndex + this.$i18n.t('normalScrollListPage.followingTxt'))
-          }
-          this.items = this.items.concat(newPage)
-          console.log(this.items.length)
-          const counts = this.items.length
-          this.$store.dispatch('setTodoCounts', counts)
-        } else {
-          // 如果没有新数据
-          this.$refs.scroll.forceUpdate()
+        let options = {
+          finishedworkItem: false,
+          loadStart: this.itemList.length || 0,
+          sortDirection: 'Desc',
+          sortKey: 'ReceiveTime',
+          userId: getUserInfo().id
         }
+        // console.log(options, 'options')
+        let newOptions = Object.assign(options, this.todoOptions)
+        // console.log(newOptions, 'newOptions')
+        that.$store.dispatch('pullingUpList', newOptions)
+          .then((res) => {
+            if (res.code === ERR_OK) {
+              this.setToDoCounts(res.data.TotalCount)
+              if (res.data.LoadComplete) {
+                this.$refs.scroll.forceUpdate()
+              }
+            }
+          })
       }, 1500)
     }
   }

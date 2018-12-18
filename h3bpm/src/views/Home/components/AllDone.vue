@@ -4,7 +4,7 @@
     <ToTop v-show="topTop" @backTop="backTop"></ToTop>
     <scroll ref="scroll"
             @handleClick="handleClick"
-            :data="items"
+            :data="itemList"
             :probe-type="probeType"
             :listenScroll="listenScroll"
             :scrollbar="scrollbarObj"
@@ -20,6 +20,9 @@
 
 <script type="text/ecmascript-6">
 import getListMixin from '@/commom/mixins/getList'
+import {getUserInfo} from '@/utils/auth'
+import { ERR_OK } from '@/api/statusCode'
+import {mapMutations} from 'vuex'
 export default {
   name: 'AllDone',
   mixins: [getListMixin],
@@ -27,42 +30,73 @@ export default {
     return {}
   },
   created() {
-    // console.log(this.$route)
-    for (let i = 0; i < 8; i++) {
-      this.items.push(this.$i18n.t('normalScrollListPage.previousTxt') + ++this.itemIndex + this.$i18n.t('normalScrollListPage.followingTxt'))
+    this.setOptions({}) // 清空搜索条件
+    let options = {
+      keyWord: '',
+      finishedWorkItem: true,
+      sortDirection: 'Desc',
+      sortKey: 'OT_WorkItemFinished.FinishTime',
+      userId: getUserInfo().id
+    }
+    this.$store.dispatch('getItemList', options)
+  },
+  computed: {
+    itemList() {
+      return this.$store.getters.itemList
+    },
+    todoOptions() {
+      return this.$store.getters.todoOptions
     }
   },
   methods: {
+    ...mapMutations({
+      setOptions: 'ADD_OPTIONS'
+    }),
     handleClick(item) {
       console.log(item)
     },
     onPullingDown() {
-      // 模拟更新数据
+      // 下拉更新数据
       setTimeout(() => {
-        if (Math.random() > 0.5) {
-          // 如果有新数据
-          this.items.unshift(this.$i18n.t('normalScrollListPage.newDataTxt') + +new Date())
-        } else {
-          // 如果没有新数据
-          this.$refs.scroll.forceUpdate()
+        let options = {
+          finishedWorkItem: true,
+          existsLength: this.itemList.length || 0,
+          sortDirection: 'Desc',
+          sortKey: 'ReceiveTime',
+          userId: getUserInfo().id
         }
+        let newOptions = Object.assign(options, this.todoOptions)
+        this.$store.dispatch('getItemList', newOptions)
+          .then((res) => {
+            if (res.code === ERR_OK) {
+              if (res.data.LoadComplete) {
+                this.$refs.scroll.forceUpdate()
+              }
+            }
+          })
       }, 2000)
     },
     onPullingUp() {
       // 更新数据
       console.log('pulling up and load data')
+      let that = this
       setTimeout(() => {
-        if (Math.random() > 0.5) {
-          // 如果有新数据
-          let newPage = []
-          for (let i = 0; i < 10; i++) {
-            newPage.push(this.$i18n.t('normalScrollListPage.previousTxt') + ++this.itemIndex + this.$i18n.t('normalScrollListPage.followingTxt'))
-          }
-          this.items = this.items.concat(newPage)
-        } else {
-          // 如果没有新数据
-          this.$refs.scroll.forceUpdate()
+        let options = {
+          finishedworkItem: true,
+          loadStart: this.itemList.length || 0,
+          sortDirection: 'Desc',
+          sortKey: 'ReceiveTime',
+          userId: getUserInfo().id
         }
+        let newOptions = Object.assign(options, this.todoOptions)
+        that.$store.dispatch('pullingUpList', newOptions)
+          .then((res) => {
+            if (res.code === ERR_OK) {
+              if (res.data.LoadComplete) {
+                this.$refs.scroll.forceUpdate()
+              }
+            }
+          })
       }, 1500)
     }
   }

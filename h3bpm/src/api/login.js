@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 import md5 from 'blueimp-md5'
-import {LoginUrl} from '@/api/urls'
+import {LoginUrl, LoginOutUrl} from '@/api/urls'
 export function loginSys(username, password) {
   const data = {
     isMobile: '1',
@@ -10,22 +10,22 @@ export function loginSys(username, password) {
   return request({
     // url: '/v2/movie/in_theaters',
     url: LoginUrl,
-    method: 'post',
+    method: 'POST',
     data
   })
 }
 
 export function logoutSys() {
   return request({
-    url: '/login/logout',
-    method: 'post'
+    url: LoginOutUrl,
+    method: 'GET'
   })
 }
 
 export function getUserInfo(token) {
   return request({
     url: '/v2/movie/in_theaters',
-    method: 'get'
+    method: 'GET'
     // params: { token }
   })
 }

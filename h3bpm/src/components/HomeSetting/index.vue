@@ -13,13 +13,13 @@
 <script>
 import SysSetting from '@/components/SysSetting'
 import { MessageBox } from 'mint-ui'
-import Cookies from 'js-cookie'
+import {getUserInfo} from '@/utils/auth'
 export default {
   name: 'HomeSetting',
   data() {
     return {
       tip: '%{logout} title',
-      userName: Cookies.get('user') || '无'
+      userName: getUserInfo().name || '无'
     }
   },
   methods: {
@@ -32,7 +32,7 @@ export default {
         showCancelButton: true
       })
         .then(action => {
-          this.$store.dispatch('FedLogOut').then(() => {
+          this.$store.dispatch('LogoutSys').then(() => {
             location.reload()
           })
         })

@@ -2,8 +2,7 @@ import Cookies from 'js-cookie'
 
 const TokenKey = 'H3BPM-Token'
 const AutoLogin = 'AutoLogin'
-const User = 'user'
-const UserId = 'UserId'
+const User = 'userInfo'
 
 export function getToken() {
   return Cookies.get(TokenKey)
@@ -27,10 +26,14 @@ export function setAuto(token) {
   return Cookies.set(AutoLogin, token)
 }
 
-export function setUserInfo(token) {
-  return Cookies.set(User, token)
+export function setUserInfo(data) {
+  return Cookies.set(User, data)
 }
 
-export function setUserId(data) {
-  return Cookies.set(UserId, data)
+export function removeUserInfo(data) {
+  return Cookies.remove(User)
+}
+
+export function getUserInfo(data) {
+  return Cookies.getJSON(User)
 }

@@ -1,16 +1,25 @@
 import request from '@/utils/request'
-import {GetWorkItems} from '@/api/urls'
-export function getWorkItem(token) {
-  const data = {
-    finishedWorkItem: false,
-    keyWord: '',
-    sortDirection: 'Desc',
-    sortKey: 'ReceiveTime',
-    userId: '18f923a7-5a5e-426d-94ae-a55ad1a4b239'
-  }
+import {GetWorkItems, GetReadItems, GetWorkCount} from '@/api/urls'
+// 待办数据
+export function getWorkItem(data) {
   return request({
     url: GetWorkItems,
-    method: 'post',
-    params: data
+    method: 'POST',
+    data
+  })
+}
+// 待阅数据
+export function getReadItem(data) {
+  return request({
+    url: GetReadItems,
+    method: 'POST',
+    data
+  })
+}
+// 待阅 已办数量
+export function getWorkCount() {
+  return request({
+    url: GetWorkCount,
+    method: 'GET'
   })
 }
