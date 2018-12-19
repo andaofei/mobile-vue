@@ -12,14 +12,16 @@
                 @beforeScroll="listScroll">
         <ul class="inner-box">
           <li :key="index" v-for="(item, index) in workFlowLst" @click="handleClickSelect(item, index)" >
-            <div class="item-box">
-              <div class="department">
+            <div class="item-box" >
+              <div class="department" >
                 <span class="vertical-line"></span>
                 <p class="text">{{item.DisplayName}}</p>
               </div>
-              <div class="item-right" :key="index" v-for="(inner, index) in item.Workflows">
+
+              <div class="item-right"  :key="index" v-for="(inner, index) in item.Workflows">
                 <span class="svg-box">
-                      <svg-icon icon-class="star"/>
+                      <svg-icon icon-class="star-f" v-if="inner.IsFavorite"/>
+                   <svg-icon icon-class="star" v-else/>
                     </span>
                 <p class="inner-right">
                   <span class="inner-text">{{inner.DisplayName}}</span>

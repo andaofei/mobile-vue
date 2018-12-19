@@ -7,6 +7,7 @@
             size="small"
             placeholder="搜索"
             clearable
+            @input="handleSearch"
             v-model="inputValue">
             <i slot="suffix" class="el-input__icon el-icon-search"></i>
           </el-input>
@@ -28,6 +29,36 @@ export default {
   data() {
     return {
       inputValue: ''
+    }
+  },
+
+  methods: {
+    handleSearch() {
+      // console.log(this.searchList)
+      // console.log(this.workFlowLst)
+      let articlesArray = this.searchList
+      let searchString = this.inputValue
+
+      if (!searchString) {
+        return articlesArray
+      }
+
+      articlesArray = articlesArray.filter(function(item) {
+        if (item.DisplayName.toLowerCase().indexOf(searchString) !== -1) {
+          return item
+        }
+      })
+      // this.$store.dispatch('setWorkFlowLst', articlesArray)
+      console.log(articlesArray, 'articlesArray')
+    }
+  },
+
+  computed: {
+    searchList() {
+      return this.$store.getters.searchList
+    },
+    workFlowLst() {
+      return this.$store.getters.workFlowLst
     }
   }
 }

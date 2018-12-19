@@ -23,6 +23,7 @@ const getters = {
   appList: state => state.appCenter.appList, // 应用中心
   appTitle: state => state.appCenter.appTitle, // 应用中心child
   appCode: state => state.appCenter.appCode, // 应用中心child
-  workFlowLst: state => state.WorkFlow.workFlowLst // 我的流程
+  workFlowLst: state => state.WorkFlow.workFlowLst, // 我的流程
+  searchList: state => state.WorkFlow.searchList // 我的流程
 }
 export default getters
