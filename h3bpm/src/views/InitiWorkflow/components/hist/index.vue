@@ -13,10 +13,10 @@
         <ul class="inner-box">
           <li :key="item.id" v-for="(item, index) in workFlowLst" @click="handleClickSelect(item, index)">
             <div class="item-box">
-              <div class="department">
-                <span class="vertical-line"></span>
-                <p class="text">{{item.DisplayName}}</p>
-              </div>
+              <!--<div class="department">-->
+                <!--<span class="vertical-line"></span>-->
+                <!--<p class="text">{{item.DisplayName}}</p>-->
+              <!--</div>-->
               <div class="item-right" :key="index" v-for="(inner, index) in item.Workflows" v-if="inner.IsFavorite">
                 <span class="svg-box">
                   <svg-icon icon-class="star-f" v-if="inner.IsFavorite"/>
