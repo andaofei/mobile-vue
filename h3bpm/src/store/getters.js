@@ -16,6 +16,13 @@ const getters = {
   itemList: state => state.dataList.itemList, // 待办列表
   readList: state => state.dataList.readList, // 待阅列表
   searchUserList: state => state.dataList.searchUserList, // 搜索列表
-  itemCheckList: state => state.dataList.itemCheckList // 待阅已选
+  itemCheckList: state => state.dataList.itemCheckList, // 待阅已选
+  instanceList: state => state.instance.instanceList, // 我的流程
+  listCounts: state => state.instance.listCounts, // 数量
+  instanceOptions: state => state.instance.instanceOptions, // 过滤条件
+  appList: state => state.appCenter.appList, // 应用中心
+  appTitle: state => state.appCenter.appTitle, // 应用中心child
+  appCode: state => state.appCenter.appCode, // 应用中心child
+  workFlowLst: state => state.WorkFlow.workFlowLst // 我的流程
 }
 export default getters

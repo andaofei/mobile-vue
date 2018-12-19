@@ -45,7 +45,12 @@ export default {
     userName: 'UserName'
   },
   home: {
-    filter: 'Filter'
+    filter: 'Filter',
+    success: 'operate successfully'
+  },
+  appCenter: {
+    noData: 'no App',
+    name: 'App Center'
   },
   selectPerson: {
     title: 'Originator'

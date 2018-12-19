@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 import md5 from 'blueimp-md5'
-import {LoginUrl, LoginOutUrl} from '@/api/urls'
+import {LoginUrl, LoginOutUrl} from '@/api/options/urls'
 export function loginSys(username, password) {
   const data = {
     isMobile: '1',

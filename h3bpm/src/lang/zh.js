@@ -45,7 +45,12 @@ export default {
     userName: '账户名'
   },
   home: {
-    filter: '筛选'
+    filter: '筛选',
+    success: '操作成功'
+  },
+  appCenter: {
+    noData: '暂无数据',
+    name: '应用中心'
   },
   selectPerson: {
     title: '发起人'

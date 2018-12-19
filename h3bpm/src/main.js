@@ -16,8 +16,9 @@ import '../theme/index.css'
 import './commom/mintui/style.scss'
 // import 'mint-ui/lib/style.css'
 import './commom/scss/index.scss'
-// import fastclick from 'fastclick'
+import fastclick from 'fastclick'
 import { Actionsheet, Toast, DatetimePicker } from 'mint-ui'
+fastclick.attach(document.body)
 Vue.use(VueLazyload, {
   loading: require('../static/default/loading.svg'), // 加载的图片
   error: require('../static/default/bpm.jpg')

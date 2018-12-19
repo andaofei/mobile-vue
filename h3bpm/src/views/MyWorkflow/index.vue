@@ -13,7 +13,7 @@
         <div class="container-nav">
           <router-link  tag="div" class="nav-item" :to="{ path: '/myworkflow/doing'}">
             <div class="navbar-item">
-              <el-badge :value="12" class="item">
+              <el-badge :value="listCounts" class="item">
                 <span>进行中</span>
               </el-badge>
             </div>
@@ -25,7 +25,7 @@
           </router-link>
           <router-link tag="div" class="nav-item" :to="{ path: '/myworkflow/cancel'}">
             <div class="navbar-item">
-              <span>已完成</span>
+              <span>已取消</span>
             </div>
           </router-link>
         </div>
@@ -64,6 +64,11 @@ export default {
     },
     handleSearch() {
       console.log('search')
+    }
+  },
+  computed: {
+    listCounts() {
+      return this.$store.getters.listCounts
     }
   },
   components: { FilterBox }

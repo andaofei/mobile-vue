@@ -42,7 +42,7 @@ service.interceptors.response.use(
         instance.close()
       }, 2000)
       if (res.code === 401) {
-        return MessageBox.confirm('', {
+        MessageBox.confirm('', {
           title: '提示',
           message: '登录态失效,即将退出',
           confirmButtonText: '确定',
@@ -57,6 +57,7 @@ service.interceptors.response.use(
           })
           .catch(() => {
           })
+        return
       }
       return Promise.reject('error')
     } else {

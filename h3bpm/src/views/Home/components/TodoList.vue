@@ -21,7 +21,7 @@
 <script type="text/ecmascript-6">
 import getListMixin from '@/commom/mixins/getList'
 import {getUserInfo} from '@/utils/auth'
-import { ERR_OK } from '@/api/statusCode'
+import { ERR_OK } from '@/api/options/statusCode'
 import {mapMutations} from 'vuex'
 export default {
   name: 'TodoList',
@@ -93,7 +93,7 @@ export default {
       let that = this
       setTimeout(() => {
         let options = {
-          finishedworkItem: false,
+          finishedWorkItem: false,
           loadStart: this.itemList.length || 0,
           sortDirection: 'Desc',
           sortKey: 'ReceiveTime',
@@ -102,7 +102,7 @@ export default {
         // console.log(options, 'options')
         let newOptions = Object.assign(options, this.todoOptions)
         // console.log(newOptions, 'newOptions')
-        that.$store.dispatch('pullingUpList', newOptions)
+        that.$store.dispatch('pullingUpWorkList', newOptions)
           .then((res) => {
             if (res.code === ERR_OK) {
               this.setToDoCounts(res.data.TotalCount)

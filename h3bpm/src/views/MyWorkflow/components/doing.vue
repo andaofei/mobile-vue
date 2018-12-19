@@ -4,7 +4,7 @@
     <ToTop v-show="topTop" @backTop="backTop"></ToTop>
     <scroll ref="scroll"
             @handleClick="handleClick"
-            :data="items"
+            :data="instanceList"
             :probe-type="probeType"
             :listenScroll="listenScroll"
             :scrollbar="scrollbarObj"
@@ -20,49 +20,79 @@
 
 <script type="text/ecmascript-6">
 import getListMixin from '@/commom/mixins/getList'
+import getInstanceMixin from '@/commom/mixins/isntanceMixin'
+import {getUserInfo} from '@/utils/auth'
+import { ERR_OK } from '@/api/options/statusCode'
+// import {mapMutations} from 'vuex'
 export default {
   name: 'Doing',
-  mixins: [getListMixin],
+
+  mixins: [getListMixin, getInstanceMixin],
+
   data() {
     return {}
   },
+
   created() {
-    // console.log(this.$route)
-    for (let i = 0; i < 8; i++) {
-      this.items.push(this.$i18n.t('normalScrollListPage.previousTxt') + ++this.itemIndex + this.$i18n.t('normalScrollListPage.followingTxt'))
+    this.setInstanceOptions({}) // 清空搜索条件
+    let options = {
+      status: 2,
+      userId: getUserInfo().id
     }
+    this.$store.dispatch('getInstanceDoing', options)
+      .then((res) => {
+        if (res.code === ERR_OK) {
+          this.setCounts(res.data.TotalCount)
+        }
+      })
   },
+
   methods: {
     handleClick(item) {
       console.log(item)
     },
+
     onPullingDown() {
-      // 模拟更新数据
-      setTimeout(() => {
-        if (Math.random() > 0.5) {
-          // 如果有新数据
-          this.items.unshift(this.$i18n.t('normalScrollListPage.newDataTxt') + +new Date())
-        } else {
-          // 如果没有新数据
-          this.$refs.scroll.forceUpdate()
-        }
-      }, 2000)
-    },
-    onPullingUp() {
       // 更新数据
-      console.log('pulling up and load data')
+      let options = {
+        returnCount: 10,
+        loadStart: 0,
+        status: 2,
+        userId: getUserInfo().id
+      }
+      let newOptions = Object.assign(options, this.instanceOptions)
+      console.log(newOptions)
       setTimeout(() => {
-        if (Math.random() > 0.5) {
-          // 如果有新数据
-          let newPage = []
-          for (let i = 0; i < 10; i++) {
-            newPage.push(this.$i18n.t('normalScrollListPage.previousTxt') + ++this.itemIndex + this.$i18n.t('normalScrollListPage.followingTxt'))
-          }
-          this.items = this.items.concat(newPage)
-        } else {
-          // 如果没有新数据
-          this.$refs.scroll.forceUpdate()
+        this.$store.dispatch('getInstanceDoing', newOptions)
+          .then((res) => {
+            if (res.code === ERR_OK) {
+              this.setCounts(res.data.TotalCount)
+              if (res.data.LoadComplete) {
+                this.$refs.scroll.forceUpdate()
+              }
+            }
+          })
+      }, 1500)
+    },
+
+    onPullingUp() {
+      // 上拉更新数据
+      setTimeout(() => {
+        let options = {
+          loadStart: this.instanceList.length || 0,
+          status: 2,
+          userId: getUserInfo().id
         }
+        let newOptions = Object.assign(options, this.instanceOptions)
+        this.$store.dispatch('pullingUpInstanceList', newOptions)
+          .then((res) => {
+            if (res.code === ERR_OK) {
+              this.setCounts(res.data.TotalCount)
+              if (res.data.LoadComplete) {
+                this.$refs.scroll.forceUpdate()
+              }
+            }
+          })
       }, 1500)
     }
   }

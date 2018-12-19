@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import {GetWorkItems, GetReadItems, GetWorkCount} from '@/api/urls'
+import {GetWorkItems, GetReadItems, GetWorkCount, BatchRead} from '@/api/options/urls'
 // 待办数据
 export function getWorkItem(data) {
   return request({
@@ -21,5 +21,12 @@ export function getWorkCount() {
   return request({
     url: GetWorkCount,
     method: 'GET'
+  })
+}
+export function setBatchRead(data) {
+  return request({
+    url: BatchRead,
+    method: 'POST',
+    data
   })
 }

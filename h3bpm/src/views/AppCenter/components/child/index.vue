@@ -11,53 +11,35 @@
                   :pullingUp="pullingUp"
                   :beforeScroll="beforeScroll"
                   @beforeScroll="listScroll">
-          <ul class="list">
-            <li class="item">
-              <div class="item-title" @click.stop="handleListShow">
-                <span>其他
-                <span class="count">({{counts}})</span>
-                </span>
-                <span>
-                 <svg-icon icon-class="top-d" v-if="listShow"/>
-                 <svg-icon v-else icon-class="arrow-bottom" />
-                </span>
-              </div>
-              <el-collapse-transition>
-              <div class="item-box" v-show="listShow">
-                <div class="item-inner"  @click="appDetail">
-                      <p class="img-box">
-                  <img v-lazy="img" class="img"/>
-                </p>
-                <span class="text">应用1</span>
-              </div>
-                <div class="item-inner" @click="appDetail">
-                  <p class="img-box">
-                    <img v-lazy="img" class="img"/>
-                  </p>
-                  <span class="text">应用1</span>
+            <ul v-if="appChildList" class="list">
+              <li class="item" :key="index" v-for="(item, index) in appChildList">
+                <div class="item-title" @click.stop="handleListShow">
+                  <span>{{item.DisplayName}}
+                      <span class="count">({{item.Children.length}})</span>
+                  </span>
+                  <span>
+                   <svg-icon icon-class="top-d" v-if="listShow"/>
+                      <svg-icon v-else icon-class="arrow-bottom" />
+                  </span>
                 </div>
-                <div class="item-inner"  @click="appDetail">
-                  <p class="img-box">
-                    <img v-lazy="img" class="img"/>
+                <el-collapse-transition>
+                <div class="item-box" v-show="listShow">
+                  <div class="item-inner"  @click="appDetail" v-if="item.Children.length" :key="index" v-for="(inner, index) in item.Children">
+                    <p class="img-box">
+                        <!--<img v-lazy="inner.IconUrl" class="img"/>-->
+                      <span class="img" :class="[index%2 === 1 ? activeClass : '', index%3 === 1 ? activeClass2 : '', index%4 === 1 ? activeClass3 : '']"></span>
+                      <!--<span class="img" :class="[index%2 === 1 ? activeClass : '', index%3 === 1 ? activeClass2 : '', index%4 === 1 ? activeClass3 : '']"></span>-->
                   </p>
-                  <span class="text">应用1</span>
+                  <span class="text">{{inner.DisplayName}}</span>
                 </div>
-                <div class="item-inner"  @click="appDetail">
-                  <p class="img-box">
-                    <img v-lazy="img" class="img"/>
-                  </p>
-                  <span class="text">应用1</span>
                 </div>
-                <div class="item-inner" @click="appDetail">
-                  <p class="img-box">
-                    <img v-lazy="img" class="img"/>
-                  </p>
-                  <span class="text">应用1</span>
-                </div>
-              </div>
-                </el-collapse-transition>
-            </li>
-          </ul>
+                  </el-collapse-transition>
+              </li>
+            </ul>
+            <div v-else class="noApp">
+              <p class="svg-box" ><svg-icon icon-class="empty-box"/></p>
+              <p class="text">{{$t('appCenter.noData')}}</p>
+            </div>
         </BtScroll>
       </div>
     </div>
@@ -73,15 +55,22 @@ export default {
       probeType: 0,
       pullingUp: true,
       beforeScroll: true,
-      img: 'static/images/Workflow.png',
+      img: 'static/images/caidan.svg',
       listShow: true,
-      counts: 0
+      counts: 0,
+      activeClass: 'activeClass',
+      activeClass2: 'activeClass2',
+      activeClass3: 'activeClass3'
     }
   },
   created() {
     this.probeType = 3
     this.listenScroll = true
     this.pullingUp = true
+    let options = {
+      AppCode: this.appCode
+    }
+    this.$store.dispatch('getAppChildLst', options)
   },
   methods: {
     appDetail() {
@@ -105,6 +94,14 @@ export default {
     //  下拉监听
     listScroll() {
       this.$emit('listScroll')
+    }
+  },
+  computed: {
+    appCode() {
+      return this.$store.getters.appCode
+    },
+    appChildList() {
+      return this.$store.getters.appChildList
     }
   },
   components: {
@@ -150,10 +147,14 @@ export default {
             flex-direction: column;
             .img-box {
               text-align: center;
-            }
-            img {
-              width: 3.5rem;
-              height: 3.5rem;
+              .img{
+                width: 3.5rem;
+                height: 3.5rem;
+                display: inline-block;
+                border-radius: 10px;
+                background: url(/static/images/menu.svg) $blueColor no-repeat center;
+                background-size: 60% 60%;
+              }
             }
             .text {
               text-align: center;
@@ -167,6 +168,29 @@ export default {
           }
         }
       }
+    }
+    .noApp{
+      width:100%;
+      height: 100px;
+      text-align: center;
+      padding-top: 30px;
+      .svg-box{
+        font-size: 3rem;
+      }
+      .text{
+        font-size: 14px;
+        line-height: 24px;
+        color: $textColor2;
+      }
+    }
+    .activeClass{
+      background-color: $mainColor!important;
+    }
+    .activeClass1{
+      background-color: $warningColor!important;
+    }
+    .activeClass2{
+      background-color: $redColor!important;
     }
   }
 </style>

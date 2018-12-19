@@ -21,7 +21,7 @@
 <script type="text/ecmascript-6">
 import getListMixin from '@/commom/mixins/getList'
 import {getUserInfo} from '@/utils/auth'
-import { ERR_OK } from '@/api/statusCode'
+import { ERR_OK } from '@/api/options/statusCode'
 import {mapMutations} from 'vuex'
 export default {
   name: 'Read',
@@ -95,7 +95,7 @@ export default {
         }
         let newOptions = Object.assign(options, this.todoOptions)
         console.log(newOptions, 'newOptions')
-        that.$store.dispatch('pullingUpReadList', newOptions)
+        that.$store.dispatch('pullingUpReadList', {options: newOptions, allCheck: false})
           .then((res) => {
             if (res.code === ERR_OK) {
               if (res.data.LoadComplete) {

@@ -8,11 +8,10 @@
           <ul class="list-content" v-if="data && data.length">
             <li @click="clickItem(item,index)" class="list-item" v-for="(item,index) in data" :key="index" >
               <div class="item-left">
-                <span class="svg-box" v-if="item.isChecked" @click.stop="handleSelect(item,index)">
+                <span class="svg-box" @click.stop="handleSelect(item, index, $event)" v-if="item.isChecked" >
                     <svg-icon class="checked-icon" icon-class="checked" v-if="item.checked"/>
                     <svg-icon icon-class="check" v-else/>
                 </span>
-
                 <img v-lazy="baseUrl + item.OriginatorImageURL" alt="" v-else>
               </div>
 
@@ -39,7 +38,10 @@
                       <svg-icon icon-class="zhang"/>
                       <span class="detail-inner">{{item.ActivityName}}</span>
                     </p>
-
+                    <p class="detail" v-else-if="routeId === 4 || routeId === 5 || routeId === 6">
+                      <svg-icon icon-class="zhang"/>
+                      <span class="detail-inner" v-for="(inner, index) in item.ActivityNames" :key="index">{{inner}}</span>
+                    </p>
                     <!--已办才有-->
                     <p class="detail" v-else>
                       <svg-icon icon-class="zhang"/>
@@ -308,8 +310,9 @@ export default {
       this.$emit('handleClick', {item, index})
     },
     // 选中
-    handleSelect(item, index) {
-      this.$emit('handleSelect', {item, index})
+    handleSelect(item, index, e) {
+      console.log(item, index, e)
+      this.$emit('handleSelect', {item, index, e})
     },
     destroy() {
       this.scroll.destroy()
@@ -423,8 +426,9 @@ export default {
               border-radius: 50%;
             }
             .svg-box{
-              font-size: 28px;
+              font-size: 32px;
               padding-left: 5px;
+              cursor: pointer;
               .checked-icon{
                 color: $mainColor;
               }

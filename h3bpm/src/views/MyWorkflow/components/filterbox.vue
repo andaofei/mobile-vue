@@ -4,7 +4,7 @@
         <span class="svg-box" @click="handleHiddenBox">
           <svg-icon icon-class="close" />
         </span>
-      <span class="text">{{$t('home.filter')}}-{{filterTitle}}</span>
+      <span class="text">{{$t('home.filter')}}</span>
       <span>&nbsp;&nbsp;</span>
     </div>
 
@@ -17,15 +17,6 @@
       </div>
 
       <div class="process-person">
-        <!--<span class="process-person-name">发起人</span>-->
-        <!--<p class="process-person-list" @click="handleSelect">-->
-          <!--<span class="list-name"  :key="item.id" v-for="(item, index) in checkedPersonList" v-if="index<2 && item.checked">{{item.name}}</span>-->
-          <!--<span v-if="checkedPersonList.length>2">等{{checkedPersonList.length}}人</span>-->
-          <!--<span v-else-if="!checkedPersonList">请选择发起人</span>-->
-          <!--<span class="svg-box">-->
-              <!--<svg-icon icon-class="right" />-->
-          <!--</span>-->
-        <!--</p>-->
       </div>
 
       <div class="process-time">
@@ -76,6 +67,8 @@
 
 <script>
 import moment from 'moment'
+import {getUserInfo} from '@/utils/auth'
+import {mapMutations} from 'vuex'
 export default {
   name: 'FilterBox',
   data() {
@@ -101,10 +94,15 @@ export default {
           id: 2
         }
       ],
-      active: -1
+      active: -1,
+      IsPriority: ''
     }
   },
   methods: {
+    ...mapMutations({
+      setInstanceOptions: 'SET_FILTER_OPTIONS',
+      setCounts: 'SET_INSTANCE_COUNT'
+    }),
     // close
     handleHiddenBox() {
       this.$emit('handleHiddenBox')
@@ -152,12 +150,48 @@ export default {
     // 加急
     handleClickStatus(item, index) {
       this.active = item
+      this.IsPriority = item.id
     },
 
     // 搜索
     handleSearch() {
       this.$emit('handleHiddenBox')
       this.$emit('handleSearch')
+      const routeId = this.$route.meta.id
+      let options = {
+        IsPriority: this.IsPriority,
+        endDate: this.endTime,
+        keyWord: this.input,
+        startDate: this.startTime,
+        userId: getUserInfo().id
+      }
+      console.log(options)
+      switch (routeId) {
+        case 4: // 待办
+          options.status = 2
+          this.setInstanceOptions(options)
+          this.$store.dispatch('getInstanceDoing', options)
+            .then((res) => {
+              if (res.code === 200) {
+                this.setCounts(res.data.TotalCount)
+              }
+            })
+          break
+        case 5: // 待办
+          options.status = 4
+          this.setInstanceOptions(options)
+          this.$store.dispatch('getInstanceDoing', options)
+            .then((res) => {
+            })
+          break
+        case 6: // 待办
+          options.status = 5
+          this.setInstanceOptions(options)
+          this.$store.dispatch('getInstanceDoing', options)
+            .then((res) => {
+            })
+          break
+      }
     },
     // 重置
     handleReset() {

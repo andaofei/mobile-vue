@@ -24,7 +24,7 @@
             @pullingUp="onPullingUp">
    </scroll>
     <!--全选-->
-    <div class="select-btm" v-show="allCheckedStatus">
+    <div class="select-btm" v-show="BatchStatus">
       <p class="btm-left" @click="handleCheckAll">
           <span class="svg-box">
             <svg-icon v-if="allCheckStatus" class="checked-icon" icon-class="checked"/>
@@ -41,68 +41,76 @@
 import getListMixin from '@/commom/mixins/getList'
 import {mapMutations} from 'vuex'
 import {getUserInfo} from '@/utils/auth'
-import { ERR_OK } from '@/api/statusCode'
+import { ERR_OK } from '@/api/options/statusCode'
+import { Toast } from 'mint-ui'
 export default {
   name: 'AllDone',
   mixins: [getListMixin],
   data() {
     return {
       ReadAll: false,
-      allCheckedStatus: false,
+      BatchStatus: false,
       items: [],
       checkStatus: false,
       readChecked: false,
       allCheckStatus: false,
       isChecked: false,
-      checked: false
+      checked: false,
+      scrollY: 0
     }
   },
   created() {
-    this.setOptions({}) // 清空搜索条件
-    let options = {
-      readWorkItem: false,
-      keyWord: '',
-      sortDirection: 'Desc',
-      sortKey: 'ReceiveTime',
-      userCode: getUserInfo().userCode,
-      userId: getUserInfo().id
-    }
-    this.$store.dispatch('getReadItem', options)
-      .then((res) => {
-        if (res.code === ERR_OK) {
-          this.setToReadCount(res.data.TotalCount)
-        }
-      })
+    this._initList()
   },
   methods: {
     ...mapMutations({
       setAlLChecked: 'SET_ALL_CHECKED_TOREAD',
       setToReadCount: 'SET_TO_READ_COUNTS',
-      setOptions: 'ADD_OPTIONS'
+      setOptions: 'ADD_OPTIONS',
+      clearChecked: 'CLEAR_ALL_CHECKED',
+      setListCheck: 'CHANGE_DATA_LIST_CHECKED',
+      setListUnCheck: 'CHANGE_DATA_LIST_UNCHEKED',
+      setListChecked: 'SET_CHECKED_LIST'
     }),
+    _initList() {
+      this.setOptions({}) // 清空搜索条件
+      this.clearChecked([]) // 清空搜索条件
+      let options = {
+        readWorkItem: false,
+        keyWord: '',
+        sortDirection: 'Desc',
+        sortKey: 'ReceiveTime',
+        userCode: getUserInfo().userCode,
+        userId: getUserInfo().id
+      }
+      this.$store.dispatch('getReadItem', options)
+        .then((res) => {
+          if (res.code === ERR_OK) {
+            this.setToReadCount(res.data.TotalCount)
+          }
+        })
+    },
     // 单击
     handleClick(data) {
       console.log('单击')
     },
     // 单击选中
     handleSelect(data) {
-      // console.log(data)
-      // this.checked = data.item
-      this.$store.commit('SET_CHECKED_LIST', data)
+      console.log(data)
+      this.setListChecked(data)
+      setTimeout(() => {
+        this.$refs.scroll.scrollTo(0, this.scrollY + 0.5, '200', 'bounce')
+      }, 20)
     },
     // 批量阅读
     readAll() {
       // this.isChecked = !this.isChecked
-      if (!this.allCheckedStatus) {
-        this.$store.commit('CHANGE_DATA_LIST_CHECKED', this.readList)
+      if (!this.BatchStatus) {
+        this.setListCheck(this.readList)
       } else {
-        this.$store.commit('CHANGE_DATA_LIST_UNCHEKED', this.readList)
+        this.setListUnCheck(this.readList)
       }
-      this.allCheckedStatus = !this.allCheckedStatus
-      setTimeout(() => {
-        this.$refs.scroll.scrollTo(0, -1, '500', 'bounce')
-        this.refresh()
-      }, 20)
+      this.BatchStatus = !this.BatchStatus
     },
     // 全选
     handleCheckAll() {
@@ -111,10 +119,38 @@ export default {
     },
     // 确定
     handleSureClick() {
-      console.log(this.itemCheckList, this.itemCheckList.length)
+      console.log(this.itemCheckList, 'itemCheckList')
+      if (this.itemCheckList.length) {
+        let arr = []
+        this.itemCheckList.forEach((item) => {
+          arr.push(item.ObjectID)
+        })
+        let options = {
+          circulateItemIds: arr,
+          readAll: false
+          // userCode: getUserInfo().userCode,
+          // userId: getUserInfo().id
+        }
+        this.$store.dispatch('BatchReading', options)
+          .then((res) => {
+            if (res.code === ERR_OK) {
+              let instance = Toast({
+                message: this.$t('home.success'),
+                iconClass: 'icon el-icon-success'
+              })
+              setTimeout(() => {
+                instance.close()
+                this._initList()
+              }, 1000)
+            } else {
+              console.log('error')
+            }
+          })
+      }
     },
     onPullingDown() {
       let that = this
+      that.BatchStatus = false
       // 下拉更新数据
       setTimeout(() => {
         let options = {
@@ -143,6 +179,9 @@ export default {
     onPullingUp() {
       // 更新数据
       console.log('pulling up and load data')
+      console.log(this.BatchStatus, '是否批量状态')
+      console.log(this.allCheckStatus, '是否全选状态')
+      let that = this
       setTimeout(() => {
         let options = {
           IsPriority: '',
@@ -157,12 +196,12 @@ export default {
           userId: getUserInfo().id
         }
         let newOptions = Object.assign(options, this.todoOptions)
-        this.$store.dispatch('pullingUpReadList', newOptions)
+        that.$store.dispatch('pullingUpReadList', {options: newOptions, batch: this.BatchStatus, allChecked: this.allCheckStatus})
           .then((res) => {
             if (res.code === ERR_OK) {
-              this.setToReadCount(res.data.TotalCount)
+              that.setToReadCount(res.data.TotalCount)
               if (res.data.LoadComplete) {
-                this.$refs.scroll.forceUpdate()
+                that.$refs.scroll.forceUpdate()
               }
             }
           })
@@ -172,11 +211,17 @@ export default {
     refresh() {
       this.$refs.scroll.refresh()
       console.log('refresh')
+    },
+    scroll(pos) {
+      this.scrollY = pos.y
+      // console.log(pos.y)
     }
   },
   watch: { // 监视双向绑定的数据数组
-    itemCheckList: {
+    readList: {
       handler() { // 数据数组有变化将触发此函数
+        console.log(this.itemCheckList, 'itemCheckList')
+        // console.log(this.$store.getters.readList, 'readList')
         if (this.readList.length === this.itemCheckList.length) {
           this.allCheckStatus = true
         } else {
@@ -184,13 +229,13 @@ export default {
         }
       },
       deep: true // 深度监视
-    },
-    readList: {
-      handler() { // 数据数组有变化将触发此函数
-        console.log('change')
-      },
-      deep: true // 深度监视
     }
+    // readList: {
+    //   handler() { // 数据数组有变化将触发此函数
+    //     console.log('change')
+    //   },
+    //   deep: true // 深度监视
+    // }
   },
   computed: {
     // 数据列表
@@ -248,13 +293,15 @@ export default {
           display: flex;
           flex-direction: column;
           justify-content: center;
-          padding-right: 5px;
+          padding-left: 5px;
+          padding-right: 8px;
           svg{
-            width: 24px;
-            height: 24px;
+            width: 32px;
+            height: 32px;
           }
           .checked-icon{
             color: $mainColor;
+            cursor: pointer;
           }
         }
         .allCheck{

@@ -1,7 +1,7 @@
-import {getWorkItem, getReadItem, getWorkCount} from '@/api/getworkitems'
+import {getWorkItem, getReadItem, getWorkCount, setBatchRead} from '@/api/getworkitems'
 // import { listData, searchList } from '@/commom/localdata/index'
 import { searchList } from '@/commom/localdata/index'
-import {ERR_OK} from '../../api/statusCode'
+import {ERR_OK} from '@/api/options/statusCode'
 const dataList = {
   state: {
     todoCounts: 0,
@@ -40,20 +40,10 @@ const dataList = {
     searchUserList: [], // 搜索列表
     visitedViews: [],
     todoOptions: []
-    // todoOptions: { // 待办筛选条件
-    //   IsPriority: '1',
-    //   Originators: '2',
-    //   endDate: '2018-12-11',
-    //   finishedWorkItem: false,
-    //   keyWord: '1',
-    //   sortDirection: 'Desc',
-    //   sortKey: 'ReceiveTime',
-    //   startDate: '2018-12-13',
-    //   userId: '18f923a7-5a5e-426d-94ae-a55ad1a4b239'
-    // }
   },
 
   mutations: {
+
     // 初始待办
     SET_DATA_LIST: (state, payload) => {
       switch (payload.tag) {
@@ -68,10 +58,12 @@ const dataList = {
           state.readList = []
       }
     },
+
     // 待办配置
     ADD_OPTIONS: (state, payload) => {
       state.todoOptions = payload
     },
+
     // 上拉数据
     ADD_DATA_LIST: (state, payload) => {
       switch (payload.tag) {
@@ -89,39 +81,67 @@ const dataList = {
           })
           state.readList = state.readList.concat(newRead)
           break
+        case 'batch':
+          let newBatch = []
+          payload.data.CirculateItems.map((item) => {
+            item.isChecked = true
+            item.checked = false
+            newBatch.push(item)
+          })
+          state.readList = state.readList.concat(newBatch)
+          break
+        case 'readCheck':
+          let newCheckRead = []
+          payload.data.CirculateItems.map((item) => {
+            console.log(item)
+            item.isChecked = true
+            item.checked = true
+            newCheckRead.push(item)
+          })
+          state.readList = state.readList.concat(newCheckRead)
+          state.itemCheckList = state.itemCheckList.concat(newCheckRead)
+          break
         default:
           state.itemList = []
           state.readList = []
       }
     },
+
     // 改变待阅全选状态
     CHANGE_DATA_LIST_CHECKED: (state, payload) => {
+      state.readList = []
       payload.map((item, index) => {
         item.isChecked = true
+        state.readList.push(item)
       })
-      state.itemList = payload
-    },
-    // 取消待阅全选状态
-    CHANGE_DATA_LIST_UNCHEKED: (state, payload) => {
-      payload.map((item, index) => {
-        item.isChecked = false
-        item.checked = false
-      })
-      state.itemCheckList = []
       // state.itemList = payload
     },
 
-    // 取消选中待阅单选状态
+    // 取消待阅全选状态
+    CHANGE_DATA_LIST_UNCHEKED: (state, payload) => {
+      state.readList = []
+      payload.map((item, index) => {
+        item.isChecked = false
+        item.checked = false
+        state.readList.push(item)
+      })
+      state.itemCheckList = []
+    },
+
+    // 取消/选中待阅单选状态
     SET_CHECKED_LIST: (state, payload) => {
-      console.log(payload, '取消选中待阅单选状态')
-      let check = state.itemList[payload.index].checked
+      const list = state.readList
+      let check = list[payload.index].checked
       const status = !check
-      state.itemList[payload.index].checked = status
+      list[payload.index].checked = status
+      console.log(payload, '取消/选中待阅单选状态')
       if (payload.item.checked) {
         state.itemCheckList.push(payload.item)
       } else {
         state.itemCheckList.splice(state.itemCheckList.indexOf(payload.item), 1)
       }
+      state.readList = []
+      state.readList = list
     },
 
     // 全选待阅
@@ -129,18 +149,27 @@ const dataList = {
       console.log(payload, 'SET_ALL_CHECKED_TOREAD')
       if (!payload.state) {
         state.itemCheckList = []
+        state.readList = []
         payload.data.map((item) => {
           item.checked = true
           state.itemCheckList.push(item)
+          state.readList.push(item)
         })
         // state.itemCheckList = payload.data  直接塞进去 会 和另一个state联动所以要单个push
       } else {
+        state.readList = []
         payload.data.map((item) => {
           item.checked = false
+          state.readList.push(item)
         })
         state.itemCheckList = []
       }
       // state.itemList = payload.data
+    },
+
+    // 清空已选待阅
+    CLEAR_ALL_CHECKED: (state, payload) => {
+      state.itemCheckList = payload
     },
 
     // 待办数
@@ -169,6 +198,7 @@ const dataList = {
         })
       )
     },
+
     // 选中/取消发起人
     SET_CHECKED_PERSONS: (state, payload) => {
       // console.log(payload, 'SET_CHECKED_PERSONS')
@@ -182,10 +212,20 @@ const dataList = {
         state.checkedPersonList.splice(state.checkedPersonList.indexOf(payload.data), 1)
       }
     },
+
     // 清空已选发起人
     SET_EMPTY_PERSONS: (state, payload) => {
       state.checkedPersonList = payload
     },
+
+    // 批量删除
+    SET_BATCH_READ: (state, payload) => {
+      // state.readList[] // 清空已选
+      state.itemCheckList.forEach((item) => {
+        console.log(state.readList[item])
+      })
+    },
+
     // 删除本部门已选发起人
     SET_DELETE_PERSONS: (state, payload) => {
       state.dataList.map((item, index) => {
@@ -197,6 +237,7 @@ const dataList = {
       // state.checkedPersonList.splice(payload.index, 1)
       state.checkedPersonList.splice(state.checkedPersonList.indexOf(payload.data), 1)
     },
+
     // 全选已选发起人
     SET_ALL_CHECKED_PERSONS: (state, payload) => {
       if (!payload.state) {
@@ -213,6 +254,7 @@ const dataList = {
       }
       // state.dataList = payload.data
     },
+
     // 搜索列表
     SET_SEARCH_LIST: (state, payload) => {
       console.log(state.checkedPersonList, 'checkedPersonList')
@@ -232,10 +274,12 @@ const dataList = {
       return new Promise((resolve, reject) => {
         getWorkItem(payload).then(res => {
           console.log(res, '初始待办/已办')
-          commit('SET_DATA_LIST', {
-            data: res.data.WorkItems,
-            tag: 'work'
-          })
+          if (res.code === ERR_OK) {
+            commit('SET_DATA_LIST', {
+              data: res.data.WorkItems,
+              tag: 'work'
+            })
+          }
           resolve(res)
         }).catch(error => {
           reject(error)
@@ -243,14 +287,16 @@ const dataList = {
       })
     },
     // 上拉待办数据
-    pullingUpList({ commit }, payload) {
+    pullingUpWorkList({ commit }, payload) {
       return new Promise((resolve, reject) => {
         getWorkItem(payload).then(res => {
           console.log(res, '上拉数据')
-          commit('ADD_DATA_LIST', {
-            data: res.data,
-            tag: 'work'
-          })
+          if (res.code === ERR_OK) {
+            commit('ADD_DATA_LIST', {
+              data: res.data,
+              tag: 'work'
+            })
+          }
           resolve(res)
         }).catch(error => {
           reject(error)
@@ -262,10 +308,12 @@ const dataList = {
       return new Promise((resolve, reject) => {
         getReadItem(payload).then(res => {
           console.log(res, '初始待阅')
-          commit('SET_DATA_LIST', {
-            data: res.data.CirculateItems,
-            tag: 'read'
-          })
+          if (res.code === ERR_OK) {
+            commit('SET_DATA_LIST', {
+              data: res.data.CirculateItems,
+              tag: 'read'
+            })
+          }
           resolve(res)
         }).catch(error => {
           reject(error)
@@ -274,13 +322,42 @@ const dataList = {
     },
     // 上拉待阅数据
     pullingUpReadList({ commit }, payload) {
+      console.log(payload)
       return new Promise((resolve, reject) => {
-        getReadItem(payload).then(res => {
+        getReadItem(payload.options).then(res => {
           console.log(res, '上拉待阅数据')
-          commit('ADD_DATA_LIST', {
-            data: res.data,
-            tag: 'read'
-          })
+          if (payload.batch && !payload.allChecked) { // 批量
+            commit('ADD_DATA_LIST', {
+              data: res.data,
+              tag: 'batch'
+            })
+          } else if (payload.batch && payload.allChecked) {
+            commit('ADD_DATA_LIST', {
+              data: res.data,
+              tag: 'readCheck'
+            })
+          } else {
+            commit('ADD_DATA_LIST', {
+              data: res.data,
+              tag: 'read'
+            })
+          }
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 批量阅读
+    BatchReading({ commit }, payload) {
+      console.log(payload)
+      // commit('SET_BATCH_READ', payload)
+      return new Promise((resolve, reject) => {
+        setBatchRead(payload).then(res => {
+          if (res.code === ERR_OK) {
+            const data = res.data
+            commit('SET_BATCH_READ', data)
+          }
           resolve(res)
         }).catch(error => {
           reject(error)

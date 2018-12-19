@@ -32,11 +32,21 @@ export default {
         showCancelButton: true
       })
         .then(action => {
-          this.$store.dispatch('LogoutSys').then(() => {
-            location.reload()
-          })
+          // 后台注销
+          this.$store.dispatch('LogoutSys')
+            .then(() => {
+              location.reload()
+            })
+            .catch((error) => {
+              console.log(error)
+              // 前端登出
+              this.$store.dispatch('FedLogOut').then(() => {
+                location.reload()
+              })
+            })
         })
-        .catch(() => {
+        .catch((error) => {
+          console.log(error)
         })
     }
   },

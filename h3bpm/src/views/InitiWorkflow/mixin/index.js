@@ -15,8 +15,10 @@ const InitWorkflowMixin = {
     this.probeType = 3
     this.listenScroll = true
     this.pullingUp = true
+    this.$store.dispatch('getWorkFlowLst')
   },
   methods: {
+    handleClickSelect() {},
     // 下拉
     scroll(pos) {
       // console.log(pos.y)
@@ -33,8 +35,8 @@ const InitWorkflowMixin = {
     }
   },
   computed: {
-    dataList() {
-      return this.$store.getters.dataList
+    workFlowLst() {
+      return this.$store.getters.workFlowLst
     }
   },
   components: {

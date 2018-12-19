@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { ERR_OK } from '@/api/statusCode'
+import { ERR_OK } from '@/api/options/statusCode'
 import {Toast} from 'mint-ui'
 export default {
   name: 'Login',

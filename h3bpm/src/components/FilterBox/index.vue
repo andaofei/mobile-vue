@@ -77,7 +77,7 @@
 import {getUserInfo} from '@/utils/auth'
 import {mapMutations} from 'vuex'
 import moment from 'moment'
-import { ERR_OK } from '@/api/statusCode'
+import { ERR_OK } from '@/api/options/statusCode'
 export default {
   name: 'FilterBox',
   data() {

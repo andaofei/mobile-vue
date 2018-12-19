@@ -1,6 +1,7 @@
 import {loginSys, logoutSys, getUserInfo} from '@/api/login'
 import {getToken, setToken, getAuto, setAuto, setUserInfo, removeToken, removeUserInfo} from '@/utils/auth'
-import { ERR_OK } from '@/api/statusCode'
+import { ERR_OK } from '@/api/options/statusCode'
+
 const user = {
   state: {
     roles: [],
@@ -12,9 +13,11 @@ const user = {
     SET_TOKEN: (state, token) => {
       state.token = token
     },
+
     SET_ROLES: (state, roles) => {
       state.roles = roles
     },
+
     SET_AUTO_LOGIN: (state, payload) => {
       state.autoLogin = payload
       setAuto(payload)
@@ -40,6 +43,7 @@ const user = {
         })
       })
     },
+
     // 获取用户信息
     GetUserInfo({commit, state}) {
       return new Promise((resolve, reject) => {
@@ -60,6 +64,7 @@ const user = {
         })
       })
     },
+
     // 登出
     LogoutSys({commit}) {
       return new Promise((resolve, reject) => {
@@ -74,6 +79,7 @@ const user = {
         })
       })
     },
+
     // 前端 登出
     FedLogOut({commit}) {
       return new Promise(resolve => {

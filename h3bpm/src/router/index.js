@@ -82,7 +82,7 @@ export default new Router({
               path: '/initworkflow/hist',
               name: 'Hist',
               component: () => import('@/views/InitiWorkflow/components/hist/index'),
-              meta: { title: 'Hist', noCache: true, id: 0 }
+              meta: { title: 'Hist', noCache: true, id: 1 }
             }
           ]
         },
@@ -96,17 +96,20 @@ export default new Router({
             {
               path: '/myworkflow/doing',
               component: () => import('@/views/MyWorkflow/components/doing.vue'),
-              name: 'Doing'
+              name: 'Doing',
+              meta: { title: 'Doing', noCache: true, id: 4 }
             },
             {
               path: '/myworkflow/done',
               component: () => import('@/views/MyWorkflow/components/done.vue'),
-              name: 'Done'
+              name: 'Done',
+              meta: { title: 'Done', noCache: true, id: 5 }
             },
             {
               path: '/myworkflow/cancel',
               component: () => import('@/views/MyWorkflow/components/cancel.vue'),
-              name: 'Cancel'
+              name: 'Cancel',
+              meta: { title: 'Cancel', noCache: true, id: 6 }
             }
           ]
         },
