@@ -13,7 +13,9 @@ export default {
       levelList: ''
     }
   },
-  methods: {},
+  create() {
+    console.log(this.$route)
+  },
   computed: {
     visitedViews() {
       return this.$store.getters.visitedViews

@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-      <app-header/>
+      <app-header :childName="childName"/>
       <div class="wrapper">
         <BtScroll class="tag-scroll"
                   ref="userList"
@@ -11,19 +11,19 @@
                   :pullingUp="pullingUp"
                   :beforeScroll="beforeScroll"
                   @beforeScroll="listScroll">
-            <ul v-if="appChildList" class="list">
+            <ul v-if="appChildList.length > 0" class="list">
               <li class="item" :key="index" v-for="(item, index) in appChildList">
-                <div class="item-title" @click.stop="handleListShow">
+                <div class="item-title" @click.stop="toggle(item, index)">
                   <span>{{item.DisplayName}}
                       <span class="count">({{item.Children.length}})</span>
                   </span>
                   <span>
-                   <svg-icon icon-class="top-d" v-if="listShow"/>
+                   <svg-icon icon-class="top-d" v-if="item.show"/>
                       <svg-icon v-else icon-class="arrow-bottom" />
                   </span>
                 </div>
                 <el-collapse-transition>
-                <div class="item-box" v-show="listShow">
+                <div class="item-box" v-show="item.show">
                   <div class="item-inner"  @click="appDetail" v-if="item.Children.length" :key="index" v-for="(inner, index) in item.Children">
                     <p class="img-box">
                         <!--<img v-lazy="inner.IconUrl" class="img"/>-->
@@ -49,7 +49,7 @@
 import BtScroll from '@/components/BtScroll/index'
 import AppHeader from '../header'
 export default {
-  name: 'child',
+  name: 'AppChild',
   data() {
     return {
       probeType: 0,
@@ -60,15 +60,19 @@ export default {
       counts: 0,
       activeClass: 'activeClass',
       activeClass2: 'activeClass2',
-      activeClass3: 'activeClass3'
+      activeClass3: 'activeClass3',
+      childName: ''
     }
   },
   created() {
     this.probeType = 3
     this.listenScroll = true
     this.pullingUp = true
+
+    const code = this.$route.params.code
+    this.childName = this.$route.params.name
     let options = {
-      AppCode: this.appCode
+      AppCode: code
     }
     this.$store.dispatch('getAppChildLst', options)
   },
@@ -78,8 +82,8 @@ export default {
         path: '/appcenter/detail'
       })
     },
-    handleListShow() {
-      this.listShow = !this.listShow
+    toggle(item) {
+      this.$set(item, 'show', this.show = !this.show)
     },
     // 下拉
     scroll(pos) {
@@ -191,6 +195,9 @@ export default {
     }
     .activeClass2{
       background-color: $redColor!important;
+    }
+    .open{
+      display: none!important;
     }
   }
 </style>

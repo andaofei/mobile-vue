@@ -128,9 +128,6 @@ export default {
     }
   },
   computed: {
-    // dataList() {
-    //   return this.$store.getters.dataList
-    // },
     checkedPersonList() {
       return this.$store.getters.checkedPersonList
     },

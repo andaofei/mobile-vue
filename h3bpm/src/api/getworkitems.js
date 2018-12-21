@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import {GetWorkItems, GetReadItems, GetWorkCount, BatchRead} from '@/api/options/urls'
+import {GetWorkItems, GetReadItems, GetWorkCount, BatchRead, LoadOrgTreeNodes} from '@/api/options/urls'
 // 待办数据
 export function getWorkItem(data) {
   return request({
@@ -23,10 +23,21 @@ export function getWorkCount() {
     method: 'GET'
   })
 }
+
+// 批量阅读
 export function setBatchRead(data) {
   return request({
     url: BatchRead,
     method: 'POST',
     data
+  })
+}
+
+// 获取发起人
+export function getSelectPerson(data) {
+  return request({
+    url: LoadOrgTreeNodes,
+    method: 'GET',
+    params: data
   })
 }

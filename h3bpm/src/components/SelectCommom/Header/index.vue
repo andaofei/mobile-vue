@@ -13,13 +13,13 @@ export default {
   name: 'SelectHeader',
   methods: {
     back() {
-      console.log(this.$route)
-      // this.$router.go(-1)
-      if (this.$route.name !== 'SelectPerson') {
-        this.$router.push('/selectPerson')
-      } else {
-        this.$router.push(this.filterPath || '/dashboard')
-      }
+      // console.log(this.$route)
+      this.$router.go(-1)
+      // if (this.$route.name !== 'SelectPerson') {
+      //   this.$router.push('/selectPerson')
+      // } else {
+      //   this.$router.push(this.filterPath || '/dashboard')
+      // }
     }
   },
   computed: {

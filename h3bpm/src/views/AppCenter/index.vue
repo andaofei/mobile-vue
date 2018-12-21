@@ -36,7 +36,6 @@
 
 <script>
 import BtScroll from '@/components/BtScroll/index'
-import {mapMutations} from 'vuex'
 export default {
   name: 'AppCenter',
   data() {
@@ -62,14 +61,14 @@ export default {
     this.$store.dispatch('getAppList', options)
   },
   methods: {
-    ...mapMutations({
-      setAppTitle: 'SET_APP_TITLE'
-    }),
     appChild(item) {
-      console.log(item)
-      this.setAppTitle({title: item.DisplayName, appCode: item.AppCode})
       this.$router.push({
-        path: '/appcenter/child'
+        // path: '/appcenter/child',
+        name: 'AppChild',
+        params: {
+          name: item.DisplayName,
+          code: item.AppCode
+        }
       })
     },
     // 下拉

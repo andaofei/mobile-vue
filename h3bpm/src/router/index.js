@@ -166,12 +166,12 @@ export default new Router({
     {
       path: '/appcenter/child', // 应用中心
       component: () => import('@/views/AppCenter/components/child'),
-      name: 'child'
+      name: 'AppChild'
     },
     {
       path: '/appcenter/detail', // 应用中心
       component: () => import('@/views/AppCenter/components/detail'),
-      name: 'detail'
+      name: 'AppDetail'
     }
   ]
 })

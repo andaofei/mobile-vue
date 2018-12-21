@@ -36,7 +36,7 @@
                 closable
                 :disable-transitions="false"
                 @close="handleClose(tag, index)">
-                   {{tag.name}}
+                  <span> {{tag.sortedType}}</span>
                 </el-tag>
             </div>
             <div class="tag-wrapper" >
@@ -48,17 +48,29 @@
                     :listenScroll="listenScroll"
                     :pullingUp="pullingUp"
                     :beforeScroll="beforeScroll"
-                    @beforeScroll="listScroll">
+                    @beforeScroll="listScroll"
+                    :scrollbar="scrollbarObj"
+                    :pullDownRefresh="pullDownRefreshObj"
+                    :pullUpLoad="pullUpLoadObj"
+                    :startY="parseInt(startY)"
+                     @pullingDown="onPullingDown"
+                    @pullingUp="onPullingUp">
                 <ul class="inner-box">
-                    <li :key="item.id" v-for="(item, index) in dataList" @click="handleClickSelect(item, index)">
-                <span class="svg-box">
-                  <svg-icon icon-class="check" v-if="!item.checked"/>
-                  <svg-icon class="checked-icon" v-else icon-class="checked"/>
-                </span>
-                <p class="inner-right">
-                  <span class="icon-text" :class="[index%2 === 1 ? activeClass : '', index%3 === 1 ? activeClass2 : '', index%4 === 1 ? activeClass3 : '']">{{item.name}}</span>
-                  <span class="inner-text">{{item.position}}{{item.name}}</span>
-                </p>
+                  <li :key="item.id" v-for="(item, index) in personList" @click="handleClickSelect(item, index)">
+                  <span class="svg-box">
+                    <svg-icon icon-class="check" v-if="!item.checked"/>
+                    <svg-icon class="checked-icon" v-else icon-class="checked"/>
+                  </span>
+                <div class="inner-right">
+                  <!--<span class="icon-text" :class="[index%2 === 1 ? activeClass : '', index%3 === 1 ? activeClass2 : '', index%4 === 1 ? activeClass3 : '']">{{item.name}}</span>-->
+                  <div class="inner-right-box">
+                  <span class="img-box">
+                   <img v-if="item.ExtendObject ? item.ExtendObject.UserImageUrl.length > 0 : ''" v-lazy="baseUrl + item.ExtendObject.UserImageUrl" alt="" class="icon-text">
+                    <img v-else  v-lazy="item.ExtendObject.UserGender===2? woman : man" alt="" class="icon-text">
+                  </span>
+                  <span class="inner-text">{{item.Text}}</span>
+                </div>
+                </div>
               </li>
                </ul>
               </BtScroll>
@@ -72,7 +84,10 @@
             <svg-icon v-if="allCheckStatus" class="checked-icon" icon-class="checked"/>
              <svg-icon v-else icon-class="check"/>
          </span>
-          <span class="allCheck">全选</span>
+          <span class="allCheck">
+            <span>全选</span>
+            <span class="count">({{this.checkedPersonList ? this.checkedPersonList.length : 0 }})</span>
+          </span>
         </p>
         <p class="btm-right" @click="handleSureClick">确定</p>
       </div>
@@ -80,22 +95,30 @@
 </template>
 
 <script>
-import BtScroll from '@/components/BtScroll/index'
+import getListMixin from '@/commom/mixins/getList'
+// import BtScroll from '@/components/BtScroll/index'
+import BtScroll from '@/components/scroll/new-scroll'
 import SelectHeader from '@/components/SelectCommom/Header/index'
 import SearchInput from '@/components/SelectCommom/InputSearch/index'
+import {getUserInfo} from '@/utils/auth'
 import { mapMutations } from 'vuex'
 export default {
   name: 'SelectPerson',
+  mixins: [getListMixin],
   data() {
     return {
+      baseUrl: process.env.BASE_API,
       probeType: 0,
+      scrollY: 0,
       pullingUp: true,
       beforeScroll: true,
       selected: -1,
       activeClass: 'activeClass',
       activeClass2: 'activeClass2',
       activeClass3: 'activeClass3',
-      allCheckStatus: false
+      allCheckStatus: false,
+      man: '/static/images/man.svg', // 男头像
+      woman: '/static/images/woman.svg'
     }
   },
 
@@ -103,9 +126,12 @@ export default {
     this.probeType = 3
     this.listenScroll = true
     this.pullingUp = true
-    this.$nextTick(() => {
-      // console.log(this.checkedPersonList)
-    })
+    let options = {
+      IsMobile: true,
+      ParentID: getUserInfo().ParentID,
+      o: 'U'
+    }
+    this.$store.dispatch('getSelectPersonList', options)
   },
 
   methods: {
@@ -128,7 +154,7 @@ export default {
 
     // 全选
     handleCheckAll() {
-      const data = this.dataList
+      const data = this.personList
       this.setAlLChecked({data: data, state: this.allCheckStatus})
     },
 
@@ -141,11 +167,23 @@ export default {
     handleSureClick() {
       console.log(this.checkedPersonList, 'this.checkedPersonList')
     },
-    // 下拉
+
+    // 滑动
     scroll(pos) {
       // console.log(pos.y)
     },
 
+    onPullingDown() {
+      setTimeout(() => {
+        this.$refs.userList.forceUpdate()
+      }, 1000)
+    },
+
+    onPullingUp() {
+      setTimeout(() => {
+        this.$refs.userList.forceUpdate()
+      }, 1000)
+    },
     //  刷新
     refresh() {
       this.$refs.userList.refresh()
@@ -156,18 +194,20 @@ export default {
       this.$emit('listScroll')
     }
   },
+
   computed: {
-    dataList() {
-      return this.$store.getters.dataList
+    personList() {
+      return this.$store.getters.personList
     },
     checkedPersonList() {
       return this.$store.getters.checkedPersonList
     }
   },
+
   watch: {
     checkedPersonList: {
       handler() { // 数据数组有变化将触发此函数
-        if (this.dataList.length === this.checkedPersonList.length) {
+        if (this.personList.length === this.checkedPersonList.length) {
           this.allCheckStatus = true
         } else {
           this.allCheckStatus = false
@@ -176,6 +216,7 @@ export default {
       deep: true // 深度监视
     }
   },
+
   components: {
     BtScroll,
     SelectHeader,
@@ -250,12 +291,16 @@ export default {
             padding: 4px 10px 0 10px;
             justify-content: flex-start;
             background: $baseColor;
-            span{
+            max-height: 100px;
+            overflow: scroll;
+            .el-tag{
               color: $textColor2;
-              /*font-size: 14px;*/
               padding: 0 5px;
-              margin-left: 4px;
-              margin-bottom: 5px;
+              margin-bottom: 8px;
+              margin-left: 3px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
             }
           }
           .tag-wrapper {
@@ -267,39 +312,50 @@ export default {
               height: 100%;
               overflow: hidden;
               .inner-box {
+                background: $baseColor;
                 li {
                   display: flex;
                   padding: 10px;
                   @include border-bottom-1px($borderBottom);
+                  justify-content: space-between;
                   .svg-box {
-                    line-height: 40px;
                     display: flex;
                     flex-direction: column;
                     justify-content: center;
+                    height: 40px;
                     padding-right: 5px;
+                    width: 8%;
+                    min-width: 30px;
                     svg {
-                      width: 24px;
-                      height: 24px;
+                      font-size: 26px;
                     }
                     .checked-icon{
                       color: $mainColor;
                     }
                   }
                   .inner-right {
-                    display: flex;
+                   width: 92%;
+                    .inner-right-box{
+                      display: flex;
+                      width: 100%;
+                    }
+                    .img-box{
+                      width: 12%;
+                      display: flex;
+                      justify-content: center;
+                      flex-direction: column;
+                      text-align: center;
+                      min-width: 35px;
                     .icon-text {
                       display: inline-block;
                       text-align: center;
-                      width: 40px;
-                      height: 40px;
+                      width: 35px;
+                      height: 35px;
                       font-size: 1rem;
                       line-height: 40px;
                       border-radius: 50%;
-                      overflow: hidden;
-                      text-overflow: ellipsis;
-                      white-space: nowrap;
                       color: $baseColor;
-                      background: $errorColor;
+                    }
                     }
                     .activeClass{
                       background: $mainColor!important;
@@ -311,10 +367,14 @@ export default {
                       background: $blueColor!important;
                     }
                     .inner-text {
+                      width: 92%;
                       padding-left: 5px;
                       font-size: 1rem;
                       line-height: 40px;
                       color: $textColor2;
+                      overflow: hidden;
+                      text-overflow: ellipsis;
+                      white-space: nowrap;
                     }
                   }
                 }
@@ -344,8 +404,7 @@ export default {
           justify-content: center;
           padding-right: 5px;
           svg{
-            width: 24px;
-            height: 24px;
+           font-size: 28px;
           }
           .checked-icon{
             color: $mainColor;
@@ -353,6 +412,9 @@ export default {
         }
         .allCheck{
           color: $textColor2;
+        }
+        .count{
+          color: $mainColor;
         }
       }
       .btm-right{

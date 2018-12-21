@@ -64,7 +64,8 @@ export default {
     .svg-box{
       color: $textColor;
       flex: 1;
-      line-height: 22px;
+      line-height: 25px;
+      font-size: 18px;
     }
     p{
       font-size: $font-size-medium;

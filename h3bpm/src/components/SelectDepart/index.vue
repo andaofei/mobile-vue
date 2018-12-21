@@ -6,6 +6,7 @@
           <div class="search-header">
           <SearchInput></SearchInput>
           </div>
+
           <div class="search-inner">
             <div class="search-inner-header">
               <!--//面包屑-->
@@ -15,15 +16,16 @@
               <div class="selected-person">
                 <el-tag
                   :key="tag.id"
-                  v-for="(tag, index) in checkedPersonList"
+                  v-for="(tag, index) in checkedDepartList"
                   v-if="tag.checked"
                   closable
                   :disable-transitions="false"
                   @close="handleClose(tag, index)">
-                  {{tag.name}}
+                  {{tag.Text}}
                 </el-tag>
               </div>
             </div>
+
             <div class="search-inner-body">
               <BtScroll class="tag-scroll"
                         ref="userList"
@@ -39,9 +41,10 @@
                     </div>
               </BtScroll>
             </div>
+
             <div class="select-btm">
               <p class="btm-left" @click="handleCheckAll">
-          <span class="svg-box">
+                <span class="svg-box">
             <svg-icon v-if="allCheckStatus" class="checked-icon" icon-class="checked"/>
               <svg-icon v-else icon-class="check"/>
             </span>
@@ -76,32 +79,30 @@ export default {
     this.probeType = 3
     this.listenScroll = true
     this.pullingUp = true
-    this.$nextTick(() => {
-      // console.log(this.$route)
-    })
   },
   methods: {
     ...mapMutations({
-      setAlLChecked: 'SET_ALL_CHECKED_PERSONS'
+      setAlLChecked: 'SET_ALL_CHECKED_DEPART'
     }),
 
     // 全选
     handleCheckAll() {
-      const data = this.dataList
+      const data = this.departChildUsList
+      console.log(data)
       this.setAlLChecked({data: data, state: this.allCheckStatus})
     },
 
     // 关闭tag
     handleClose(tag, index) {
-      this.$store.commit('SET_DELETE_PERSONS', {data: tag, index: index})
+      this.$store.commit('SET_DELETE_DEPART', {data: tag, index: index})
     },
 
     // 确定
     handleSureClick() {
-      console.log(this.checkedPersonList, 'this.checkedPersonList')
+      console.log(this.checkedDepartList, 'this.checkedDepartList')
     },
     addViewTags() {
-      // console.log(this.$route)
+      console.log(this.$route, 'addViewTags')
       // const { name } = this.$route
       // if (name) {
       //   this.$store.dispatch('addView', this.$route)
@@ -125,21 +126,21 @@ export default {
   },
   computed: {
     // 已选列表
-    checkedPersonList() {
-      return this.$store.getters.checkedPersonList
+    checkedDepartList() {
+      return this.$store.getters.checkedDepartList
     },
-    // 数据列表
-    dataList() {
-      return this.$store.getters.dataList
+    // 用户数据列表
+    departChildUsList() {
+      return this.$store.getters.departChildUsList
     }
   },
   watch: {
     $route() {
       this.addViewTags()
     },
-    checkedPersonList: {
+    checkedDepartList: {
       handler() { // 数据数组有变化将触发此函数
-        if (this.dataList.length === this.checkedPersonList.length) {
+        if (this.departChildUsList.length === this.checkedDepartList.length && this.checkedDepartList.length !== 0) {
           this.allCheckStatus = true
         } else {
           this.allCheckStatus = false
@@ -232,6 +233,8 @@ export default {
             padding: 4px 10px 0 10px;
             justify-content: flex-start;
             background: $baseColor;
+            max-height: 100px;
+            overflow: scroll;
             span {
               color: $textColor2;
               /*font-size: 14px;*/

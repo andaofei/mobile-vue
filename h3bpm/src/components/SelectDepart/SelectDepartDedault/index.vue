@@ -1,20 +1,24 @@
 <template>
-    <div class="selectDepartChild">
+    <div class="selectDepartDefault">
+      <div :key="index" v-for="(item, index) in departList" v-if="item.ExtendObject.UnitType=== 'O'" class="wrapper">
+        <div class="title">{{item.Text}}</div>
       <ul>
-        <li :key="item.id" v-for="item in dataList" @click="handleClickChild(item)">
-          <span>{{item.name}}</span>
-          <p>
-            <span>{{item.counts}}</span>
-            <span class="svg-box">
+        <li :key="index" v-for="(inner, index) in item.children"  @click="handleClickChild(item)">
+           <span>{{inner.Text}}</span>
+           <p>
+             <span>{{inner.ExtendObject.ChildrenCount}}</span>
+             <span class="svg-box">
                <svg-icon icon-class="right"></svg-icon>
             </span>
-          </p>
+           </p>
         </li>
       </ul>
+      </div>
     </div>
 </template>
 
 <script>
+import {getUserInfo} from '@/utils/auth'
 export default {
   name: 'selectDepartDefault',
   data() {
@@ -22,96 +26,39 @@ export default {
       probeType: 0,
       pullingUp: true,
       beforeScroll: true,
-      dataList: [
-        {
-          name: '事业部',
-          counts: 12,
-          id: 0
-        },
-        {
-          name: '事业部',
-          counts: 12,
-          id: 1
-        },
-        {
-          name: '事业部',
-          counts: 12,
-          id: 2
-        },
-        {
-          name: '事业部',
-          counts: 12,
-          id: 3
-        },
-        {
-          name: '事业部',
-          counts: 12,
-          id: 4
-        },
-        {
-          name: '事业部',
-          counts: 12,
-          id: 5
-        },
-        {
-          name: '事业部',
-          counts: 12,
-          id: 6
-        },
-        {
-          name: '事业部',
-          counts: 122,
-          id: 7
-        },
-        {
-          name: '事业部',
-          counts: 132,
-          id: 8
-        },
-        {
-          name: '事业部',
-          counts: 132,
-          id: 9
-        },
-        {
-          name: '事业部',
-          counts: 12,
-          id: 10
-        },
-        {
-          name: '事业部',
-          counts: 12,
-          id: 11
-        },
-        {
-          name: '事业部',
-          counts: 122,
-          id: 12
-        },
-        {
-          name: '事业部',
-          counts: 132,
-          id: 13
-        },
-        {
-          name: '事业部',
-          counts: 132,
-          id: 14
-        }
-      ],
       title: ''
     }
   },
   created() {
-    this.$nextTick(() => {
-      // console.log(this.$route, 'default')
-      this.$store.dispatch('addView', this.$route)
-    })
+    let options = {
+      IsMobile: true,
+      LoadTree: true,
+      Recursive: true,
+      ParentID: getUserInfo().ParentID,
+      o: 'U'
+    }
+    this.$store.dispatch('getSelectDepartList', options)
+  },
+  computed: {
+    // 数据列表
+    departList() {
+      return this.$store.getters.departList
+    }
   },
   methods: {
     handleClickChild(item) {
-      this.$router.push('/selectDepart/selectDepartChild')
-      this.title = item.name
+      // this.$router.push({
+      //   path: `/selectDepart/selectDepartDefault/${item.ObjectID}`
+      // })
+      this.$router.push({
+        path: '/selectDepart/selectDepartChild',
+        name: 'SelectDepartChild',
+        params: {
+          objId: item.ObjectID,
+          title: item.Text
+        }
+      })
+      this.title = item.Text
     }
   }
 }
@@ -120,15 +67,25 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
   @import "../../../commom/scss/mixin";
   @import "../../../commom/scss/varible";
-  .selectDepartChild{
-    ul {
-      li {
-        display: flex;
-        justify-content: space-between;
-        padding: 5px 10px;
-        line-height: 30px;
-        color: $textColor2;
-        @include border-bottom-1px($borderBottom);
+  .selectDepartDefault{
+    position: relative;
+    .wrapper{
+      width: 100%;
+      .title{
+        padding: 0 10px;
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 2rem;
+      }
+      ul {
+        li {
+          display: flex;
+          justify-content: space-between;
+          padding: 5px 10px;
+          line-height: 30px;
+          color: $textColor2;
+          @include border-bottom-1px($borderBottom);
+        }
       }
     }
   }

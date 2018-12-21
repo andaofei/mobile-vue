@@ -1,16 +1,9 @@
 export default {
   route: {
-    dashboard: 'Dashboard',
-    introduction: 'Introduction',
-    documentation: 'Documentation'
   },
   navbar: {
     logOut: 'Log Out',
-    dashboard: 'Dashboard',
-    github: 'Github',
-    screenfull: 'Screenfull',
-    theme: 'Theme',
-    size: 'Global Size'
+    dashboard: 'Dashboard'
   },
   login: {
     title: 'Login Form',
@@ -20,11 +13,9 @@ export default {
     any: 'any',
     auto: 'AutoLogin',
     sysSetting: 'SystemSet',
-    thirdparty: 'Or connect with',
     success: 'Login successfully',
     fail: 'Login failed',
-    effect: 'Logon effect',
-    thirdpartyTips: 'Can not be simulated on local, so please combine you own business simulation! ! !'
+    effect: 'Logon effect'
   },
   logout: {
     title: 'LogOff',
@@ -61,10 +52,7 @@ export default {
     AllDone: 'AllDone',
     Read: 'Read'
   },
-  tagsView: {
-    refresh: 'Refresh',
-    close: 'Close',
-    closeOthers: 'Close Others',
-    closeAll: 'Close All'
+  workList: {
+    loadAll: 'Load ALL'
   }
 }

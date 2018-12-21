@@ -3,8 +3,6 @@ import {ERR_OK} from '@/api/options/statusCode'
 const appCenter = {
   state: {
     appList: [], // 数据列表
-    appTitle: '',
-    appCode: '',
     appChildList: [] // 数据列表
   },
 
@@ -12,12 +10,9 @@ const appCenter = {
     SET_APP_LIST: (state, payload) => {
       state.appList = payload.AllApps
     },
+    // 应用中心child
     SET_APP_CHILD_LIST: (state, payload) => {
-      state.appList = payload.AllApps
-    },
-    SET_APP_TITLE: (state, payload) => {
-      state.appTitle = payload.title
-      state.appCode = payload.appCode
+      state.appChildList = payload
     }
   },
 
@@ -36,7 +31,7 @@ const appCenter = {
         })
       })
     },
-    // 应用中心
+    // 应用中心child
     getAppChildLst({ commit }, payload) {
       return new Promise((resolve, reject) => {
         getAppChildLst(payload).then(res => {

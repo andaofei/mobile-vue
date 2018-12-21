@@ -4,7 +4,7 @@ const instance = {
   state: {
     instanceList: [], // 数据列表
     listCounts: 0, // 数据量
-    instanceOptions: {} // 数据量
+    instanceOptions: {} // 筛选条件
   },
 
   mutations: {

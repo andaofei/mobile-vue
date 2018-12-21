@@ -19,6 +19,7 @@
 </template>
 
 <script type="text/ecmascript-6">
+import vue from 'vue'
 import getInstanceMixin from '@/commom/mixins/isntanceMixin'
 import getListMixin from '@/commom/mixins/getList'
 import {getUserInfo} from '@/utils/auth'
@@ -49,7 +50,8 @@ export default {
         status: 5,
         userId: getUserInfo().id
       }
-      let newOptions = Object.assign(options, this.instanceOptions)
+      // let newOptions = Object.assign(options, this.instanceOptions)
+      let newOptions = vue.userProfile = Object.assign(options, this.todoOptions)
       setTimeout(() => {
         this.$store.dispatch('getInstanceDoing', newOptions)
           .then((res) => {
@@ -70,7 +72,8 @@ export default {
           status: 5,
           userId: getUserInfo().id
         }
-        let newOptions = Object.assign(options, this.instanceOptions)
+        // let newOptions = Object.assign(options, this.instanceOptions)
+        let newOptions = vue.userProfile = Object.assign(options, this.todoOptions)
         this.$store.dispatch('pullingUpInstanceList', newOptions)
           .then((res) => {
             if (res.code === ERR_OK) {

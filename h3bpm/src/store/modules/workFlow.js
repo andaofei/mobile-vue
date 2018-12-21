@@ -3,7 +3,7 @@ import {ERR_OK} from '@/api/options/statusCode'
 const WorkFlow = {
   state: {
     workFlowLst: [], // 数据列表
-    searchList: []
+    searchList: [] // 搜索列表
   },
   mutations: {
     // 初始列表
@@ -27,6 +27,7 @@ const WorkFlow = {
     }
   },
   actions: {
+    // 获取我的流程
     getWorkFlowLst({ commit }, payload) {
       return new Promise((resolve, reject) => {
         getWorkFlowLst(payload).then(res => {

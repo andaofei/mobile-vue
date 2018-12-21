@@ -1,7 +1,7 @@
 <template>
   <div class="selectDepartChild">
     <ul class="inner-box">
-      <li :key="item.id" v-for="(item, index) in dataList" @click="handleClickSelect(item, index)">
+      <li :key="item.id" v-for="(item, index) in personList" @click="handleClickSelect(item, index)">
                 <span class="svg-box">
                   <svg-icon icon-class="check" v-if="!item.checked"/>
                   <svg-icon class="checked-icon" v-else icon-class="checked"/>
@@ -34,8 +34,8 @@ export default {
     })
   },
   computed: {
-    dataList() {
-      return this.$store.getters.dataList
+    personList() {
+      return this.$store.getters.personList
     }
   },
 

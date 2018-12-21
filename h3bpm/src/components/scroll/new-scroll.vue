@@ -2,68 +2,7 @@
   <div ref="wrapper" class="list-wrapper">
     <div class="scroll-content">
       <div ref="listWrapper">
-        <slot>
-
-          <!--列表-->
-          <ul class="list-content" v-if="data && data.length">
-            <li @click="clickItem(item,index)" class="list-item" v-for="(item,index) in data" :key="index" >
-              <div class="item-left">
-                <span class="svg-box" @click.stop="handleSelect(item, index, $event)" v-if="item.isChecked" >
-                    <svg-icon class="checked-icon" icon-class="checked" v-if="item.checked"/>
-                    <svg-icon icon-class="check" v-else/>
-                </span>
-                <img v-lazy="baseUrl + item.OriginatorImageURL" alt="" v-else>
-              </div>
-
-              <div class="item-right">
-                <div class="item-right-box">
-                  <div class="right-box-top">{{item.InstanceName}}</div>
-                  <div class="right-box-btm">
-
-                    <p class="time" v-if="routeId === 0 || routeId === 1">
-                      <span class="time-title">接收时间：</span>
-                      <span class="time-inner">{{item.ReceiveTime}}</span>
-                    </p>
-                    <p class="time" v-else>
-                      <span class="time-title">处理时间：</span>
-                      <span class="time-inner">{{item.ReceiveTime}}</span>
-                    </p>
-
-                    <p class="time" v-if="item.Summary" :key="index" v-for="(list, index) in item.Summary">
-                      <span class="time-title">{{list.DisplayName}}:</span>
-                      <span class="time-inner">{{list.Value}}</span>
-                    </p>
-
-                    <p class="detail" v-if="routeId === 0 || routeId === 1 || routeId === 3">
-                      <svg-icon icon-class="zhang"/>
-                      <span class="detail-inner">{{item.ActivityName}}</span>
-                    </p>
-                    <p class="detail" v-else-if="routeId === 4 || routeId === 5 || routeId === 6">
-                      <svg-icon icon-class="zhang"/>
-                      <span class="detail-inner" v-for="(inner, index) in item.ActivityNames" :key="index">{{inner}}</span>
-                    </p>
-                    <!--已办才有-->
-                    <p class="detail" v-else>
-                      <svg-icon icon-class="zhang"/>
-                      <span class="detail-inner">{{item.ActivityName}}</span>
-                      <span class="detail-inner" :class="item.ApprovelStatus === '1'? 'orange' : 'red'">({{item.ApprovelStatueName}})</span>
-                    </p>
-                  </div>
-                </div>
-
-                <div class="item-right-img">
-                    <img v-lazy="language === 'zh' ? jiaji: jiaji2" alt="" v-if="item.RemindStatus === 1">
-                    <img v-lazy="language === 'zh' ? cuiban: cuiban2" alt="" v-else-if="item.RemindStatus === 2">
-                </div>
-              </div>
-            </li>
-          </ul>
-
-          <div class="no-data" v-else>
-            <!--<img src="./images/nodata.svg" alt="">-->
-            <span>暂无数据</span>
-          </div>
-        </slot>
+        <slot></slot>
       </div>
 
       <slot name="pullup" :pullUpLoad="pullUpLoad" :isPullUpLoad="isPullUpLoad">
@@ -196,13 +135,7 @@ export default {
       isPullUpLoad: false,
       pullUpDirty: true,
       pullDownStyle: '',
-      bubbleY: 0,
-      baseUrl: process.env.BASE_API,
-      jiaji: 'static/images/jiaji.png',
-      jiaji2: 'static/images/jiaji2.svg',
-      cuiban: 'static/images/cuiban.png',
-      cuiban2: 'static/images/cuiban2.svg',
-      routeId: -1
+      bubbleY: 0
     }
   },
   computed: {
@@ -223,8 +156,6 @@ export default {
   },
   created() {
     this.pullDownInitTop = -50
-    // console.log(this.$route.meta.id, 'route')
-    this.routeId = this.$route.meta.id
   },
   mounted() {
     setTimeout(() => {
@@ -304,15 +235,6 @@ export default {
     },
     scrollToElement() {
       this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
-    },
-    clickItem(item, index) {
-      console.log(item, index)
-      this.$emit('handleClick', {item, index})
-    },
-    // 选中
-    handleSelect(item, index, e) {
-      // console.log(item, index, e)
-      this.$emit('handleSelect', {item, index, e})
     },
     destroy() {
       this.scroll.destroy()
@@ -538,11 +460,5 @@ export default {
     span{
       font-size: 14px; color: $textColor2;
     }
-  }
-  .orange{
-    color: $blueColor!important;
-  }
-  .red{
-    color: $errorColor!important;
   }
 </style>

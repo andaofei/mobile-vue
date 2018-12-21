@@ -2,7 +2,7 @@
   <div class="header">
     <p class="svg-box" @click="back"><svg-icon icon-class="back"/></p>
 
-    <p class="title">{{appTitle}}</p>
+    <p class="title">{{childName}}</p>
 
     <p class="sure">&nbsp;</p>
   </div>
@@ -10,14 +10,13 @@
 <script>
 export default {
   name: 'AppHeader',
+  props: {
+    childName: String,
+    default: ''
+  },
   methods: {
     back() {
       this.$router.go(-1)
-    }
-  },
-  computed: {
-    appTitle() {
-      return this.$store.getters.appTitle
     }
   }
 }

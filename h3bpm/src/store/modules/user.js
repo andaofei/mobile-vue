@@ -31,11 +31,11 @@ const user = {
       return new Promise((resolve, reject) => {
         loginSys(username, userInfo.password).then(response => {
           const data = response.data
-          console.log(data)
+          // console.log(data)
           if (response.code === ERR_OK) {
             commit('SET_TOKEN', data.pageId)
             setToken(data.pageId)
-            setUserInfo({name: data.User.Name, id: data.User.UnitID, userCode: data.User.Code})
+            setUserInfo({name: data.User.Name, id: data.User.UnitID, userCode: data.User.Code, ParentID: data.User.ParentID})
           }
           resolve(response)
         }).catch(error => {
@@ -65,7 +65,7 @@ const user = {
       })
     },
 
-    // 登出
+    // 后台 登出
     LogoutSys({commit}) {
       return new Promise((resolve, reject) => {
         logoutSys().then(() => {

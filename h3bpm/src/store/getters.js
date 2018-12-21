@@ -11,7 +11,12 @@ const getters = {
   todoCounts: state => state.dataList.todoCounts, // 待办数量
   toReadCounts: state => state.dataList.toReadCounts, // 待阅数量
   checkedPersonList: state => state.dataList.checkedPersonList, // 已选发起人列表
-  dataList: state => state.dataList.dataList, // 选人列表
+  checkedDepartList: state => state.dataList.checkedDepartList, // 已选部门发起人列表
+  personList: state => state.dataList.personList, // 选人列表
+  departList: state => state.dataList.departList, // 选人部门列表
+  departChildList: state => state.dataList.departChildList, // 选人部门列表
+  departChildOgList: state => state.dataList.departChildOgList, // 选人部门组织列表
+  departChildUsList: state => state.dataList.departChildUsList, // 选人部门用户列表
   visitedViews: state => state.dataList.visitedViews, // 路由
   itemList: state => state.dataList.itemList, // 待办列表
   readList: state => state.dataList.readList, // 待阅列表
@@ -21,9 +26,8 @@ const getters = {
   listCounts: state => state.instance.listCounts, // 数量
   instanceOptions: state => state.instance.instanceOptions, // 过滤条件
   appList: state => state.appCenter.appList, // 应用中心
-  appTitle: state => state.appCenter.appTitle, // 应用中心child
-  appCode: state => state.appCenter.appCode, // 应用中心child
-  workFlowLst: state => state.WorkFlow.workFlowLst, // 我的流程
-  searchList: state => state.WorkFlow.searchList // 我的流程
+  appChildList: state => state.appCenter.appChildList, // 应用中心
+  workFlowLst: state => state.workFlow.workFlowLst, // 我的流程
+  searchList: state => state.workFlow.searchList // 我的流程
 }
 export default getters

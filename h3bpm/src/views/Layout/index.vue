@@ -2,7 +2,7 @@
     <div class="layout-container">
       <!--主视图-->
       <div class="layout-box">
-        <router-view/>
+          <router-view :key="key"/>
       </div>
       <!--底部-->
       <NavBar class="nav-bar"></NavBar>
@@ -40,6 +40,12 @@ export default {
   computed: {
     filterShow() {
       return this.$store.getters.filterShow
+    },
+    cachedViews() {
+      return true
+    },
+    key() {
+      return this.$route.fullPath
     }
   },
   components: { NavBar, FilterBox }
@@ -58,7 +64,7 @@ export default {
     flex: 1 1 auto;
   }
   .nav-bar{
-    height: 44px;
+    height: 50px;
     width: 100%;
   }
   .filter-box{
