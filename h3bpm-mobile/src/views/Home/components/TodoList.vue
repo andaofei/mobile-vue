@@ -22,6 +22,7 @@
 import getListMixin from '@/commom/mixins/getList'
 import {getUserInfo} from '@/utils/auth'
 import { ERR_OK } from '@/api/options/statusCode'
+import {getWorkItem} from '@/api/getworkitems'
 import {mapMutations} from 'vuex'
 export default {
   name: 'TodoList',
@@ -45,6 +46,7 @@ export default {
           this.setToDoCounts(res.data.TotalCount)
         }
       })
+    this.getList(options)
   },
   computed: {
     itemList() {
@@ -59,6 +61,18 @@ export default {
       setToDoCounts: 'SET_TODO_COUNTS',
       setOptions: 'ADD_OPTIONS'
     }),
+    getList(options) {
+      return new Promise((resolve, reject) => {
+        getWorkItem(options).then(res => {
+          if (res.code === ERR_OK) {
+            console.log(res, '初始待办/已办')
+          }
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
     handleClick(item) {
       console.log(item)
     },

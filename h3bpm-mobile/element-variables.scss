@@ -15,7 +15,7 @@ $--color-white: #fff !default;
 $--color-black: #000 !default;
 
 //$--color-primary: #409EFF !default;
-$--color-primary: rgba(81, 188, 1, 1) !default;
+$--color-primary: #2970FF !default;
 $--color-primary-light-1: mix($--color-white, $--color-primary, 10%) !default; /* 53a8ff */
 $--color-primary-light-2: mix($--color-white, $--color-primary, 20%) !default; /* 66b1ff */
 $--color-primary-light-3: mix($--color-white, $--color-primary, 30%) !default; /* 79bbff */
@@ -32,8 +32,8 @@ $--color-primary-light-9: mix($--color-white, $--color-primary, 90%) !default; /
 //$--color-info: #909399 !default;
 $--color-success: rgba(81, 188, 1, 1) !default;
 //$--color-warning: #e6a23c !default;
-$--color-warning: rgba(250, 173, 20, 1) !default;
-$--color-danger: rgba(245, 34, 45, 1) !default;
+$--color-warning: #FAAD14 !default;
+$--color-danger: #FF3B30 !default;
 //$--color-danger: #f56c6c !default;
 $--color-info: rgba(232, 232, 232, 1) !default;
 $--color-success-light: mix($--color-white, $--color-success, 80%) !default;

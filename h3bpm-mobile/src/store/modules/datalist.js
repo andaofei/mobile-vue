@@ -332,7 +332,7 @@ const dataList = {
     getItemList({ commit }, payload) {
       return new Promise((resolve, reject) => {
         getWorkItem(payload).then(res => {
-          console.log(res, '初始待办/已办')
+          // console.log(res, '初始待办/已办')
           if (res.code === ERR_OK) {
             commit('SET_DATA_LIST', {
               data: res.data.WorkItems,

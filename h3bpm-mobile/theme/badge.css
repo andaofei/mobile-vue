@@ -233,7 +233,7 @@
   vertical-align: middle;
   display: inline-block; }
   .el-badge__content {
-    background-color: #f5222d;
+    background-color: #FF3B30;
     border-radius: 10px;
     color: #fff;
     display: inline-block;
@@ -259,12 +259,12 @@
       right: 0;
       border-radius: 50%; }
     .el-badge__content--primary {
-      background-color: #51bc01; }
+      background-color: #2970FF; }
     .el-badge__content--success {
       background-color: #51bc01; }
     .el-badge__content--warning {
-      background-color: #faad14; }
+      background-color: #FAAD14; }
     .el-badge__content--info {
       background-color: #e8e8e8; }
     .el-badge__content--danger {
-      background-color: #f5222d; }
+      background-color: #FF3B30; }

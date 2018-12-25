@@ -1,6 +1,11 @@
 <template>
   <div class="select-header">
-    <p @click="back"><svg-icon icon-class="back"/></p>
+    <div @click="back" class="back">
+     <p>
+       <svg-icon icon-class="left"/>
+       <span>返回</span>
+     </p>
+    </div>
 
     <p class="title">{{$t('selectPerson.title')}}</p>
 
@@ -33,18 +38,26 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
   @import "../../../commom/scss/mixin";
-  $mainColor: #51BC01; // 主颜色
+  $mainColor: #2970FF; // 主颜色
   $baseColor: #fff;
   $font-size-medium-x: 16px;
   $borderBottom:rgba(232, 232, 232, 1);
   .select-header {
-    padding: 14px 10px;
+    padding: 0 10px;
     display: flex;
     justify-content: space-between;
     background: $baseColor;
   @include border-bottom-1px($borderBottom);
-  .title, .sure {
+  .title,
+  .back,
+  .sure {
+    line-height: 44px;
     font-size: $font-size-medium-x;
+  }
+  .back{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
   }
   .sure {
     color: $mainColor;

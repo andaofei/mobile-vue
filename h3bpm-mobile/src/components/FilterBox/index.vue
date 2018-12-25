@@ -255,12 +255,13 @@ export default {
     justify-content: space-between;
   }
   .filter-title{
-    padding: 12px;
+    padding: 0 12px;
     @include border-bottom-1px($borderBottom);
     font-size: 1rem;
-    line-height: 20px;
+    line-height: 44px;
     .svg-box{
       color: $mainColor;
+      width: 20px;
     }
     .text{
       color: $textColor2;

@@ -282,11 +282,11 @@
   .el-notification .el-icon-success {
     color: #51bc01; }
   .el-notification .el-icon-error {
-    color: #f5222d; }
+    color: #FF3B30; }
   .el-notification .el-icon-info {
     color: #e8e8e8; }
   .el-notification .el-icon-warning {
-    color: #faad14; }
+    color: #FAAD14; }
 
 .el-notification-fade-enter.right {
   right: 0;

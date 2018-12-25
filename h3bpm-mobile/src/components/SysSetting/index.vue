@@ -1,7 +1,10 @@
 <template>
   <div >
     <div class="setting-header">
-      <p @click="back"><svg-icon icon-class="back"/></p>
+      <p @click="back" class="svg-box">
+        <svg-icon icon-class="left"/>
+        <span>返回</span>
+      </p>
 
       <p class="title">{{$t('setting.title')}}</p>
 
@@ -114,11 +117,15 @@ export default {
   @import "../../commom/scss/mixin";
   @import "../../commom/scss/varible";
   .setting-header {
-    padding: 14px 10px;
+    padding: 0 10px;
     display: flex;
     justify-content: space-between;
     background: $baseColor;
+    line-height: 44px;
     @include border-bottom-1px($borderBottom);
+    .svg-box{
+      color: $mainColor;
+    }
     .title, .sure {
       font-size: $font-size-medium-x;
     }

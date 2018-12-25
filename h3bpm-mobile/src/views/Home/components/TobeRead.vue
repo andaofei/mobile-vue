@@ -284,14 +284,14 @@ export default {
       right: 0;
       top:60px;
       box-shadow: 0 2px 4px 0 rgba(0,0,0,0.12);
-      border: 1px solid #F2F2F2;
+      border: 1px solid $mainBgColor;
       z-index: 20;
       padding: 5px 15px 5px 10px;
-      background: #fff;
+      background: $baseColor;
       font-size: 14px;
       border-bottom-left-radius: 14px;
       border-top-left-radius: 14px;
-      color: #51BC01;
+      color: $mainColor;
     }
     .select-btm{
       position: fixed;

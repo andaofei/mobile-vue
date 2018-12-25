@@ -27,8 +27,16 @@ time, mark, audio, video, input {
 }
 
 /* HTML5 display-role reset for older browsers */
-article, aside, details, figcaption, figure,
-footer, header, menu, nav, section {
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+menu,
+nav,
+section {
   display: block;
 }
 
@@ -40,7 +48,8 @@ blockquote, q {
   quotes: none
 }
 
-blockquote:before, blockquote:after,
+blockquote:before,
+blockquote:after,
 q:before, q:after {
   content: none;
 }

@@ -273,12 +273,12 @@
     background-color: #fff7e8;
     border-color: #feefd0; }
     .el-message--warning .el-message__content {
-      color: #faad14; }
+      color: #FAAD14; }
   .el-message--error {
-    background-color: #fee9ea;
-    border-color: #fdd3d5; }
+    background-color: #ffebea;
+    border-color: #ffd8d6; }
     .el-message--error .el-message__content {
-      color: #f5222d; }
+      color: #FF3B30; }
   .el-message__icon {
     margin-right: 10px; }
   .el-message__content {
@@ -303,11 +303,11 @@
   .el-message .el-icon-success {
     color: #51bc01; }
   .el-message .el-icon-error {
-    color: #f5222d; }
+    color: #FF3B30; }
   .el-message .el-icon-info {
     color: #e8e8e8; }
   .el-message .el-icon-warning {
-    color: #faad14; }
+    color: #FAAD14; }
 
 .el-message-fade-enter,
 .el-message-fade-leave-active {

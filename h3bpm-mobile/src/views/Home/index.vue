@@ -143,7 +143,7 @@ export default {
         }
       }
       .router-link-active{
-        color: $mainColor;
+        color: $textColor3;
         border-bottom: 2px solid $mainColor;
       }
     }

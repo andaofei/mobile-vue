@@ -24,7 +24,6 @@ import getListMixin from '@/commom/mixins/getList'
 import getInstanceMixin from '@/commom/mixins/isntanceMixin'
 import {getUserInfo} from '@/utils/auth'
 import { ERR_OK } from '@/api/options/statusCode'
-// import {mapMutations} from 'vuex'
 export default {
   name: 'Doing',
 
@@ -52,7 +51,6 @@ export default {
     handleClick(item) {
       console.log(item)
     },
-
     onPullingDown() {
       // 更新数据
       let options = {

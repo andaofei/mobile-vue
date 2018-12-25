@@ -1,7 +1,7 @@
 <template>
 <div class="login-container">
   <div class="login-logo">
-    <img src="/static/default/bpm.jpg" alt="">
+    <img v-lazy="img" alt="">
   </div>
   <div class="login-form">
     <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
@@ -30,7 +30,9 @@
           <el-checkbox v-model="autoLogin" >{{$t('login.auto')}}</el-checkbox>
         </p>
         <p @click="handleSetting" class="settings">
-          <svg-icon icon-class="setting" />
+         <span class="sv-box">
+            <svg-icon  icon-class="setting" />
+         </span>
          <span>{{$t('login.sysSetting')}}</span>
         </p>
       </div>
@@ -46,6 +48,7 @@ export default {
   name: 'Login',
   data() {
     return {
+      img: '/static/default/bpm.jpg',
       loginForm: {
         username: 'administrator',
         password: '000000'
@@ -175,9 +178,8 @@ export default {
   }
 </style>
 <style rel="stylesheet/scss" lang="scss" scoped>
-$bg:#2d3a4b;
-$dark_gray:#889aa4;
-$light_gray:#eee;
+@import "../../commom/scss/mixin";
+@import "../../commom/scss/varible";
 
 .login-container {
   height: 100%;
@@ -253,6 +255,9 @@ $light_gray:#eee;
       span{
         color:$dark_gray;
         font-size: 14px;
+      }
+      .sv-box{
+        color: $mainColor;
       }
     }
   }

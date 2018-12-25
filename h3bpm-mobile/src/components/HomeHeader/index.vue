@@ -1,7 +1,7 @@
 <template>
   <div class="home-header">
     <p @click="handleClickSetting" class="home-header-setting">
-      <svg-icon icon-class="setting" />
+      <span class="svg-box"><svg-icon icon-class="setting" /></span>
       <span>&nbsp;&nbsp;&nbsp;&nbsp;</span>
     </p>
     <p class="home-header-logo">
@@ -39,14 +39,17 @@ export default {
   width: 100%;
   display: flex;
   justify-content: space-between;
-  padding: 12px;
+  padding: 0 12px;
   @include border-bottom-1px($borderBottom);
-  .home-header-setting{
-    line-height: 20px;
+  .home-header-setting {
+    line-height: 44px;
+    .svg-box {
+      color: $textColor2;
+    }
   }
   .home-header-filter{
-    color: $mainColor;
-    line-height: 20px;
+    color: $textColor2;
+    line-height: 44px;
     .filter-text{
       font-size: 1rem;
     }
@@ -54,6 +57,7 @@ export default {
   .home-header-logo{
     width: 100px;
     height: 18px;
+    line-height: 44px;
     img{
       width: 100%;
       height: 100%;

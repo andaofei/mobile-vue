@@ -1,6 +1,12 @@
 <template>
   <div class="header">
-    <p class="svg-box" @click="back"><svg-icon icon-class="back"/></p>
+    <div  @click="back" class="back">
+      <p>
+        <span class="svg-box">
+        <svg-icon icon-class="back"/>
+      </span>
+      </p>
+    </div>
 
     <p class="title">{{childName}}</p>
 
@@ -26,15 +32,21 @@ export default {
   @import "../../../../commom/scss/mixin";
   @import "../../../../commom/scss/varible";
   .header {
-    padding: 14px 10px;
+    padding: 0 10px;
     display: flex;
     justify-content: space-between;
     background: $baseColor;
     @include border-bottom-1px($borderBottom);
-    .svg-box{
+    line-height: 44px;
+    .back{
+      font-size: 14px;
+      line-height: 44px;
       display: flex;
       flex-direction: column;
       justify-content: center;
+    }
+    .title{
+      font-size: 16px;
     }
   }
 </style>

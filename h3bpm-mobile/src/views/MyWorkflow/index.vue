@@ -96,7 +96,7 @@ export default {
         line-height: 44px;
       }
       .home-header-filter{
-        color: $mainColor;
+        color: $textColor3;
         line-height: 44px;
         .filter-text{
           font-size: 1rem;
@@ -146,7 +146,7 @@ export default {
             }
           }
           .router-link-active{
-            color: $mainColor;
+            color: $textColor3;
             border-bottom: 2px solid $mainColor;
           }
         }

@@ -263,14 +263,14 @@
       color: #e8e8e8; }
   .el-alert--warning {
     background-color: #fff7e8;
-    color: #faad14; }
+    color: #FAAD14; }
     .el-alert--warning .el-alert__description {
-      color: #faad14; }
+      color: #FAAD14; }
   .el-alert--error {
-    background-color: #fee9ea;
-    color: #f5222d; }
+    background-color: #ffebea;
+    color: #FF3B30; }
     .el-alert--error .el-alert__description {
-      color: #f5222d; }
+      color: #FF3B30; }
   .el-alert__content {
     display: table-cell;
     padding: 0 8px; }

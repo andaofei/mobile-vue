@@ -26,7 +26,7 @@ export default {
   .svg-box{
     padding: 0 15px 0 0;
     font-size: 32px;
-    color: #51BC01;
+    color: #2970FF;
   }
   }
 </style>
