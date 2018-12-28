@@ -12,7 +12,7 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss">
 .login-header{
-  padding: 10px 0;
+  padding: 20px 0 0 0;
   text-align: center;
 }
   .login-img{

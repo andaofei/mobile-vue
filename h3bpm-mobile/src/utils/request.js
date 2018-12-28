@@ -43,10 +43,10 @@ service.interceptors.response.use(
       }, 2000)
       if (res.code === 401) {
         MessageBox.confirm('', {
-          title: '提示',
-          message: '登录态失效,即将退出',
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+          title: 'Note',
+          message: 'Login status is invalid, will exit',
+          confirmButtonText: 'YES',
+          cancelButtonText: 'NO',
           showCancelButton: false,
           closeOnClickModal: false
         })
@@ -67,7 +67,7 @@ service.interceptors.response.use(
   error => {
     console.log(error) // for debug
     let instance = Toast({
-      message: '网络错误',
+      message: 'Network Error',
       iconClass: 'icon el-icon-error'
     })
     setTimeout(() => {

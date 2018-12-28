@@ -22,7 +22,7 @@
 import getListMixin from '@/commom/mixins/getList'
 import {getUserInfo} from '@/utils/auth'
 import { ERR_OK } from '@/api/options/statusCode'
-import {mapMutations} from 'vuex'
+// import {mapMutations} from 'vuex'
 export default {
   name: 'AllDone',
   mixins: [getListMixin],
@@ -49,12 +49,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({
-      setOptions: 'ADD_OPTIONS'
-    }),
-    handleClick(item) {
-      console.log(item)
-    },
+
     onPullingDown() {
       // 下拉更新数据
       setTimeout(() => {

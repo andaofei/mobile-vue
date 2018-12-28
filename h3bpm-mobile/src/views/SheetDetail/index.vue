@@ -76,8 +76,6 @@ export default {
 
 <style rel="stylesheet/scss" lang="scss" scoped>
   @import "../../commom/scss/mixin";
-  /*@import "MvcSheetMobileNew.css";*/
-  /*@import "./ionic/css/ionic.css";*/
   $mainColor: #2970FF; // 主颜色
   $baseColor: #fff;
   $font-size-medium-x: 16px;

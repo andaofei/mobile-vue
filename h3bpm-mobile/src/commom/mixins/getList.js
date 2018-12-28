@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Scroll from '@/components/scroll/scroll.vue'
 import { ease } from '@/commom/js/ease'
 import ToTop from '@/views/Home/commom/ToTop'
-
+import {mapMutations} from 'vuex'
 const getListMixin = {
   data() {
     return {
@@ -72,6 +72,16 @@ const getListMixin = {
     }
   },
   methods: {
+    // 点击元素事件
+    handleClick(item) {
+      // console.log(item, 'data')
+      this.$router.push({
+        name: 'SheetDetail',
+        params: {
+          data: item
+        }
+      })
+    },
     scroll(pos) {
       // console.log(pos.y)
       if (pos.y < -100) {
@@ -92,7 +102,17 @@ const getListMixin = {
         this.$refs.scroll.destroy()
         this.$refs.scroll.initScroll()
       })
-    }
+    },
+    ...mapMutations({
+      setToDoCounts: 'SET_TODO_COUNTS', // 待办数量
+      setAlLChecked: 'SET_ALL_CHECKED_TOREAD', // 选择所有待阅
+      setToReadCount: 'SET_TO_READ_COUNTS', // 待阅数量
+      setOptions: 'ADD_OPTIONS', // 列表配置
+      clearChecked: 'CLEAR_ALL_CHECKED', // 清空所有选择
+      setListCheck: 'CHANGE_DATA_LIST_CHECKED', // 设置选中 false属性
+      setListUnCheck: 'CHANGE_DATA_LIST_UNCHEKED', // 取消待阅选中
+      setListChecked: 'SET_CHECKED_LIST' // 选中待阅
+    })
   },
   components: {
     Scroll,

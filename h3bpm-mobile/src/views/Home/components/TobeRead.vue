@@ -44,7 +44,7 @@
 <script type="text/ecmascript-6">
 import vue from 'vue'
 import getListMixin from '@/commom/mixins/getList'
-import {mapMutations} from 'vuex'
+// import {mapMutations} from 'vuex'
 import {getUserInfo} from '@/utils/auth'
 import { ERR_OK } from '@/api/options/statusCode'
 import { Toast } from 'mint-ui'
@@ -68,15 +68,6 @@ export default {
     this._initList()
   },
   methods: {
-    ...mapMutations({
-      setAlLChecked: 'SET_ALL_CHECKED_TOREAD',
-      setToReadCount: 'SET_TO_READ_COUNTS',
-      setOptions: 'ADD_OPTIONS',
-      clearChecked: 'CLEAR_ALL_CHECKED',
-      setListCheck: 'CHANGE_DATA_LIST_CHECKED',
-      setListUnCheck: 'CHANGE_DATA_LIST_UNCHEKED',
-      setListChecked: 'SET_CHECKED_LIST'
-    }),
     _initList() {
       this.setOptions({}) // 清空搜索条件
       this.clearChecked([]) // 清空搜索条件
@@ -95,17 +86,10 @@ export default {
           }
         })
     },
-    // 单击
-    handleClick(data) {
-      console.log(data)
-    },
     // 单击选中
     handleSelect(data) {
       console.log(data)
       this.setListChecked(data)
-      // setTimeout(() => {
-      //   this.$refs.scroll.scrollTo(0, this.scrollY + 0.5, '200', 'bounce')
-      // }, 20)
     },
     // 批量阅读
     handleReadAll() {

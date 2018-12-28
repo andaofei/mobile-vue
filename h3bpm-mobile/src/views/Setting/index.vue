@@ -22,8 +22,7 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  @import "../../commom/scss/mixin";
-  @import "../../commom/scss/varible";
+  $bg2: rgba(240,242,245,0.5);
   .setting-com {
     width: 100%;
     height: 100%;

@@ -14,7 +14,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss">
   @import "../../commom/scss/varible";
 .footer{
-  padding: 10px 0;
+  padding: 0 0 20px 0;
   text-align: center;
   p{
     color: $dark_gray;

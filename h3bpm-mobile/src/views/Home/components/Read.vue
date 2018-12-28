@@ -22,7 +22,6 @@
 import getListMixin from '@/commom/mixins/getList'
 import {getUserInfo} from '@/utils/auth'
 import { ERR_OK } from '@/api/options/statusCode'
-import {mapMutations} from 'vuex'
 export default {
   name: 'Read',
   mixins: [getListMixin],
@@ -50,12 +49,6 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({
-      setOptions: 'ADD_OPTIONS'
-    }),
-    handleClick(item) {
-      console.log(item)
-    },
     onPullingDown() {
       let that = this
       // 下拉更新数据

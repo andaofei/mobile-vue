@@ -4,10 +4,10 @@
       :show-timeout="200"
       :default-active="$route.path"
       :collapse="isCollapse"
+      :background-color="bgColor"
+      :text-color="textColor"
+      active-text-color="#000"
       mode="vertical"
-      background-color="#001529"
-      text-color="#ffffffa6"
-      active-text-color="#1890FF"
     >
       <sidebar-item v-for="route in permission_routers" :key="route.path" :item="route" :base-path="route.path"/>
     </el-menu>
@@ -20,6 +20,12 @@ import SidebarItem from './SidebarItem'
 
 export default {
   components: { SidebarItem },
+  data() {
+    return {
+      bgColor: '#002638',
+      textColor: '#eee'
+    }
+  },
   computed: {
     ...mapGetters([
       'permission_routers',

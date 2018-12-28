@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie'
-
+import { getAuto, setAuto } from '@/utils/auth'
 const app = {
   state: {
     sidebar: {
@@ -8,7 +8,8 @@ const app = {
     },
     device: 'desktop',
     language: Cookies.get('language') || 'en',
-    size: Cookies.get('size') || 'medium'
+    size: Cookies.get('size') || 'medium',
+    autoLogin: getAuto() || false
   },
   mutations: {
     TOGGLE_SIDEBAR: state => {
@@ -35,6 +36,10 @@ const app = {
     SET_SIZE: (state, size) => {
       state.size = size
       Cookies.set('size', size)
+    },
+    SET_AUTO_LOGIN: (state, payload) => {
+      state.autoLogin = payload
+      setAuto(payload)
     }
   },
   actions: {

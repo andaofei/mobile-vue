@@ -28,6 +28,7 @@ export default {
       transitionName: 'slide-fade'
     }
   },
+
   methods: {
     // 隐藏筛选
     handleHiddenBox() {
@@ -37,6 +38,7 @@ export default {
       this.$store.commit('SET_FILTER_SHOW', {status: false, inner: name})
     }
   },
+
   computed: {
     filterShow() {
       return this.$store.getters.filterShow

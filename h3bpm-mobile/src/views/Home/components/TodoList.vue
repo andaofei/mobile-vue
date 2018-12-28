@@ -22,8 +22,8 @@
 import getListMixin from '@/commom/mixins/getList'
 import {getUserInfo} from '@/utils/auth'
 import { ERR_OK } from '@/api/options/statusCode'
-import {getWorkItem} from '@/api/getworkitems'
-import {mapMutations} from 'vuex'
+// import {getWorkItem} from '@/api/getworkitems'
+// import {mapMutations} from 'vuex'
 export default {
   name: 'TodoList',
   mixins: [getListMixin],
@@ -46,7 +46,7 @@ export default {
           this.setToDoCounts(res.data.TotalCount)
         }
       })
-    this.getList(options)
+    // this.getList(options)
   },
   computed: {
     itemList() {
@@ -57,31 +57,18 @@ export default {
     }
   },
   methods: {
-    ...mapMutations({
-      setToDoCounts: 'SET_TODO_COUNTS',
-      setOptions: 'ADD_OPTIONS'
-    }),
-    getList(options) {
-      return new Promise((resolve, reject) => {
-        getWorkItem(options).then(res => {
-          if (res.code === ERR_OK) {
-            console.log(res, '初始待办/已办')
-          }
-          resolve(res)
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
-    handleClick(item) {
-      // console.log(item, 'data')
-      this.$router.push({
-        name: 'SheetDetail',
-        params: {
-          data: item
-        }
-      })
-    },
+    // getList(options) {
+    //   return new Promise((resolve, reject) => {
+    //     getWorkItem(options).then(res => {
+    //       if (res.code === ERR_OK) {
+    //         console.log(res, '初始待办/已办')
+    //       }
+    //       resolve(res)
+    //     }).catch(error => {
+    //       reject(error)
+    //     })
+    //   })
+    // },
     onPullingDown() {
       // 下拉更新数据
       // console.log('pulling down and refresh data')
@@ -107,6 +94,7 @@ export default {
           })
       }, 1500)
     },
+
     onPullingUp() {
       // 上拉更新数据
       // console.log('pulling up and load data')
