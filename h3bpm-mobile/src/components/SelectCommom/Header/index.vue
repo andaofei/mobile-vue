@@ -1,14 +1,7 @@
 <template>
   <div class="select-header">
-    <div @click="back" class="back">
-     <p>
-       <svg-icon icon-class="left"/>
-       <span>返回</span>
-     </p>
-    </div>
-
+    <p @click="back" class="back"><svg-icon icon-class="left"/>{{$t('home.back')}}</p>
     <p class="title">{{$t('selectPerson.title')}}</p>
-
     <p class="sure">&nbsp;&nbsp;&nbsp;&nbsp;</p>
   </div>
 </template>
@@ -47,20 +40,18 @@ export default {
     display: flex;
     justify-content: space-between;
     background: $baseColor;
-  @include border-bottom-1px($borderBottom);
-  .title,
-  .back,
-  .sure {
-    line-height: 44px;
-    font-size: $font-size-medium-x;
-  }
-  .back{
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-  }
-  .sure {
-    color: $mainColor;
-  }
+    @include border-bottom-1px($borderBottom);
+    .title,
+    .back,
+    .sure {
+      line-height: 44px;
+      font-size: $font-size-medium-x;
+    }
+    .back{
+      color: $mainColor;
+    }
+    .sure {
+      color: $mainColor;
+    }
   }
 </style>

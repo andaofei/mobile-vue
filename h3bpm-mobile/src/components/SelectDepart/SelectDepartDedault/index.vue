@@ -1,9 +1,18 @@
 <template>
+  <BtScroll class="tag-scroll"
+            ref="userList"
+            @scroll="scroll"
+            @refresh="refresh"
+            :probe-type="probeType"
+            :listenScroll="listenScroll"
+            :pullingUp="pullingUp"
+            :beforeScroll="beforeScroll"
+            @beforeScroll="listScroll">
     <div class="selectDepartDefault">
       <div :key="index" v-for="(item, index) in departList" v-if="item.ExtendObject.UnitType=== 'O'" class="wrapper">
         <div class="title">{{item.Text}}</div>
       <ul>
-        <li :key="index" v-for="(inner, index) in item.children"  @click="handleClickChild(item)">
+        <li :key="index" v-for="(inner, index) in item.children"  @click="handleClickChild(inner)">
            <span>{{inner.Text}}</span>
            <p>
              <span>{{inner.ExtendObject.ChildrenCount}}</span>
@@ -15,12 +24,15 @@
       </ul>
       </div>
     </div>
+  </BtScroll>
 </template>
 
 <script>
 import {getUserInfo} from '@/utils/auth'
+import getPartMixin from '@/commom/mixins/selectPartList'
 export default {
   name: 'selectDepartDefault',
+  mixins: [getPartMixin],
   data() {
     return {
       probeType: 0,
@@ -47,9 +59,9 @@ export default {
   },
   methods: {
     handleClickChild(item) {
-      // this.$router.push({
-      //   path: `/selectDepart/selectDepartDefault/${item.ObjectID}`
-      // })
+      if (item.ExtendObject.ChildrenCount === 0) {
+        return false
+      }
       this.$router.push({
         path: '/selectDepart/selectDepartChild',
         name: 'SelectDepartChild',

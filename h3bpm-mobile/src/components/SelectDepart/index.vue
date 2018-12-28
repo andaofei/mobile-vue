@@ -27,30 +27,9 @@
             </div>
 
             <div class="search-inner-body">
-              <BtScroll class="tag-scroll"
-                        ref="userList"
-                        @scroll="scroll"
-                        @refresh="refresh"
-                        :probe-type="probeType"
-                        :listenScroll="listenScroll"
-                        :pullingUp="pullingUp"
-                        :beforeScroll="beforeScroll"
-                        @beforeScroll="listScroll">
-                    <div class="depart-list">
-                      <router-view></router-view>
-                    </div>
-              </BtScroll>
-            </div>
-
-            <div class="select-btm">
-              <p class="btm-left" @click="handleCheckAll">
-                <span class="svg-box">
-            <svg-icon v-if="allCheckStatus" class="checked-icon" icon-class="checked"/>
-              <svg-icon v-else icon-class="check"/>
-            </span>
-                <span class="allCheck">全选</span>
-              </p>
-              <p class="btm-right" @click="handleSureClick">确定</p>
+              <div class="tag-scroll">
+                <router-view></router-view>
+              </div>
             </div>
           </div>
         </div>
@@ -59,47 +38,25 @@
 </template>
 
 <script>
-import BtScroll from '@/components/BtScroll/index'
+
 import SelectHeader from '@/components/SelectCommom/Header/index'
 import SearchInput from '@/components/SelectCommom/InputSearch/index'
 import BreadCrumb from '@/components/SelectCommom/BreadCrumb/index'
-import { mapMutations } from 'vuex'
 export default {
   name: 'SelectDepart',
   data() {
     return {
-      probeType: 0,
-      pullingUp: true,
-      beforeScroll: true,
       title: '',
       allCheckStatus: false
     }
   },
   created() {
-    this.probeType = 3
-    this.listenScroll = true
-    this.pullingUp = true
   },
   methods: {
-    ...mapMutations({
-      setAlLChecked: 'SET_ALL_CHECKED_DEPART'
-    }),
-
-    // 全选
-    handleCheckAll() {
-      const data = this.departChildUsList
-      console.log(data)
-      this.setAlLChecked({data: data, state: this.allCheckStatus})
-    },
 
     // 关闭tag
     handleClose(tag, index) {
       this.$store.commit('SET_DELETE_DEPART', {data: tag, index: index})
-    },
-
-    // 确定
-    handleSureClick() {
-      console.log(this.checkedDepartList, 'this.checkedDepartList')
     },
     addViewTags() {
       console.log(this.$route, 'addViewTags')
@@ -108,51 +65,17 @@ export default {
       //   this.$store.dispatch('addView', this.$route)
       // }
       // return false
-    },
-    // 下拉
-    scroll(pos) {
-      // console.log(pos.y)
-    },
-
-    //  刷新
-    refresh() {
-      this.$refs.userList.refresh()
-    },
-
-    //  下拉监听
-    listScroll() {
-      this.$emit('listScroll')
     }
   },
   computed: {
     // 已选列表
     checkedDepartList() {
       return this.$store.getters.checkedDepartList
-    },
-    // 用户数据列表
-    departChildUsList() {
-      return this.$store.getters.departChildUsList
-    }
-  },
-  watch: {
-    $route() {
-      this.addViewTags()
-    },
-    checkedDepartList: {
-      handler() { // 数据数组有变化将触发此函数
-        if (this.departChildUsList.length === this.checkedDepartList.length && this.checkedDepartList.length !== 0) {
-          this.allCheckStatus = true
-        } else {
-          this.allCheckStatus = false
-        }
-      },
-      deep: true // 深度监视
     }
   },
   components: {
     SelectHeader,
     SearchInput,
-    BtScroll,
     BreadCrumb
   }
 }
@@ -162,7 +85,7 @@ export default {
   @import "../../commom/scss/mixin";
   @import "../../commom/scss/varible";
 .search-department{
-  background: #fff;
+  background: $baseColor;
   width: 100%;
   height: 100%;
   display: flex;

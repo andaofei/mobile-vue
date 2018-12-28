@@ -37,7 +37,8 @@ export default {
   },
   home: {
     filter: '筛选',
-    success: '操作成功'
+    success: '操作成功',
+    back: '返回'
   },
   appCenter: {
     noData: '暂无数据',
@@ -54,5 +55,8 @@ export default {
   },
   workList: {
     loadAll: '没有更多数据了'
+  },
+  sheet: {
+    title: '表单'
   }
 }

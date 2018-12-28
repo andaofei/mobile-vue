@@ -306,7 +306,7 @@ export default {
       this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
     },
     clickItem(item, index) {
-      console.log(item, index)
+      // console.log(item, index)
       this.$emit('handleClick', {item, index})
     },
     // 选中
@@ -540,7 +540,7 @@ export default {
     }
   }
   .orange{
-    color: $blueColor!important;
+    color: $successColor!important;
   }
   .red{
     color: $errorColor!important;

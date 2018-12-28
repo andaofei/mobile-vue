@@ -56,11 +56,10 @@ export default {
   }
   .home-header-logo{
     width: 100px;
-    height: 18px;
     line-height: 44px;
     img{
       width: 100%;
-      height: 100%;
+      height: 16px;
     }
   }
 }

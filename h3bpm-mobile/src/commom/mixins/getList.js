@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Scroll from '@/components/scroll/scroll.vue'
 import { ease } from '@/commom/js/ease'
 import ToTop from '@/views/Home/commom/ToTop'
+
 const getListMixin = {
   data() {
     return {

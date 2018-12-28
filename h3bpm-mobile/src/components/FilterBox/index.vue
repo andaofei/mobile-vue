@@ -165,6 +165,9 @@ export default {
 
     // 搜索
     handleSearch() {
+      if (this.errorMsg) {
+        return false
+      }
       this.$emit('handleHiddenBox')
       // console.log(this.$route.meta.id, 'filter')
       const routeId = this.$route.meta.id

@@ -37,7 +37,8 @@ export default {
   },
   home: {
     filter: 'Filter',
-    success: 'operate successfully'
+    success: 'operate successfully',
+    back: 'Back'
   },
   appCenter: {
     noData: 'no App',

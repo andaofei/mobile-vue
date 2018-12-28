@@ -169,9 +169,14 @@ export default new Router({
       name: 'AppChild'
     },
     {
-      path: '/appcenter/detail', // 应用中心
+      path: '/appcenter/detail', // 应用中心详情
       component: () => import('@/views/AppCenter/components/detail'),
       name: 'AppDetail'
+    },
+    {
+      path: '/sheet/detail', // 应用中心详情
+      component: () => import('@/views/SheetDetail/index'),
+      name: 'SheetDetail'
     }
   ]
 })

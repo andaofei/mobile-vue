@@ -1,12 +1,12 @@
 <template>
   <div class="selectDepartChild">
     <ul class="inner-box">
-      <li :key="item.id" v-for="(item, index) in personList" @click="handleClickSelect(item, index)">
+      <li :key="item.id" v-for="(item, index) in sponsorList" @click="handleClickSelect(item, index)">
                 <span class="svg-box">
                   <svg-icon icon-class="check" v-if="!item.checked"/>
                   <svg-icon class="checked-icon" v-else icon-class="checked"/>
                 </span>
-        <p class="inner-right">
+          <p class="inner-right">
           <span class="icon-text" :class="[index%2 === 1 ? activeClass : '', index%3 === 1 ? activeClass2 : '', index%4 === 1 ? activeClass3 : '']">{{item.name}}</span>
           <span class="inner-text">{{item.position}}{{item.name}}</span>
         </p>
@@ -29,13 +29,13 @@ export default {
   },
   created() {
     this.$nextTick(() => {
-      console.log(this.$route, 'selectDepartList')
+      // console.log(this.$route, 'selectDepartList')
       this.$store.dispatch('addView', this.$route)
     })
   },
   computed: {
-    personList() {
-      return this.$store.getters.personList
+    sponsorList() {
+      return this.$store.getters.sponsorList
     }
   },
 
@@ -53,7 +53,7 @@ export default {
   @import "../../commom/scss/varible";
   .selectDepartChild{
     width: 100%;
-    background: #fff;
+    background: $baseColor;
     .inner-box {
       li {
         display: flex;

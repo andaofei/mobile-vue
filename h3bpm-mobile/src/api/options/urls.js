@@ -9,3 +9,6 @@ export const appList = 'Portal/Mobile/GetAppList' // 应用中心
 export const appChildList = 'Portal/Mobile/GetFunctions' // 应用中心child
 export const LoadWorkFlows = 'Portal/Mobile/LoadWorkflows' // 发起流程
 export const LoadOrgTreeNodes = 'Portal/SheetUser/Mobile/LoadOrgTreeNodes' // 发起流程
+export const WorkFlowsDetail = 'Portal/Mobile/getMvcDefaultSheet' // 流程详情
+export const WorkFlowsUrl = 'Portal/WorkItemSheets/WorkItemSheets' // 流程url
+export const DingTalkUrl = 'Portal/DingTalk/GetSignConfig' // 钉钉登录

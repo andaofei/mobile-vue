@@ -4,17 +4,16 @@
       <el-input
         size="small"
         placeholder="搜索用户"
-        @focus="handleFocus"
+        @input="handleFocus"
         v-model="inputValue">
-        <i slot="suffix" class="el-input__icon el-icon-search"></i>
+        <i slot="suffix" class="el-input__icon el-icon-search" @click="searchDataList"></i>
       </el-input>
     </div>
     <!--搜索列表-->
     <div class="search-list" v-show="listShow">
       <div class="search-list-header">
       <div class="close-icon">
-         <span class="svg-box" @click.stop="handleListShow">
-             <svg-icon  icon-class="back"/>
+         <span class="svg-box">
          </span>
         <span>搜索用户</span>
         <span class="svg-box" @click.stop="handleListShow">
@@ -90,14 +89,19 @@ export default {
     this.probeType = 3
     this.listenScroll = true
     this.pullingUp = true
-    this.inputValue = ''
+    // this.inputValue = ''
   },
   methods: {
     ...mapMutations({
       setCheckedPerson: 'SET_CHECKED_PERSONS'
     }),
     handleFocus() {
-      this.listShow = true
+      // this.listShow = true
+      // console.log(this.personList)
+      console.log(this.sponsorList, '列表')
+    },
+    searchDataList() {
+      console.log(this.inputValue)
     },
     // 隐藏
     handleListShow() {
@@ -133,6 +137,9 @@ export default {
     },
     searchUserList() {
       return this.$store.getters.searchUserList
+    },
+    sponsorList() {
+      return this.$store.getters.sponsorList
     }
   },
   components: {
@@ -153,7 +160,7 @@ export default {
       width: 100%;
       height: 100%;
       background:$baseColor;
-      z-index: 30;
+      z-index: 50;
       display: flex;
       flex-direction: column;
       .search-list-header {
@@ -181,8 +188,13 @@ export default {
         .close-icon {
           display: flex;
           justify-content: space-between;
-          padding: 10px;
+          padding: 0 10px;
+          line-height: 44px;
           color: $textColor2;
+          .svg-box{
+            width: 30px;
+            text-align: center;
+          }
         }
         .input-box {
           padding: 5px 10px;

@@ -8,6 +8,7 @@ const app = {
     filterTitle: '',
     filterPath: ''
   },
+
   mutations: {
     SET_LANGUAGE: (state, language) => {
       state.language = language
@@ -24,6 +25,7 @@ const app = {
       state.filterPath = payload.path
     }
   },
+
   actions: {
     setLanguage({ commit }, language) {
       commit('SET_LANGUAGE', language)

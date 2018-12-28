@@ -7,9 +7,10 @@ const dataList = {
     todoCounts: 0,
     toReadCounts: 0,
     // 选人列表
-    personList: [],
+    // personList: [],
     departList: [],
-    departChildList: [], // 组织子表发起人
+    // departChildList: [], // 组织子表发起人
+    sponsorList: [], // 发起人---唯一数据列表
     departChildUsList: [], // 个人用户
     departChildOgList: [], // 组织
     checkedPersonList: [],
@@ -190,43 +191,46 @@ const dataList = {
       )
     },
 
-    // 发起人列表
+    // 发起人本部门列表
     SET_PERSON_LIST: (state, payload) => {
       payload.map((item) => {
         item.checked = false
       })
-      state.personList = payload
+      state.sponsorList = payload
+      // console.log(state.sponsorList)
+      // console.log(state.checkedPersonList, '已选')
+      state.sponsorList = Object.assign(state.sponsorList, state.checkedPersonList)
+      // console.log(newOptions, 'newOptions')
     },
 
-    // 发起人部门列表
+    // 发起人组织列表
     SET_DEPART_LIST: (state, payload) => {
+      // console.log(payload, '发起人部门列表')
       state.departList = payload // 组织列表
-      state.departChildUsList = [] // 用户为空
+      state.sponsorList = [] // 用户为空
     },
 
-    // 发起人部门列表
+    // 发起人子部门列表
     SET_DEPART_CHILD_LIST: (state, payload) => {
-      let arr = []
-      let list = []
+      // let arr = []
+      // let list = []
       payload.map((item) => {
         if (item.ExtendObject.UnitType === 'U') {
           item.checked = false
-          arr.push(item)
-        } else {
-          list.push(item)
+          // arr.push(item)
         }
       })
-      state.departChildUsList = arr // 个人用户
-      state.departChildOgList = list // 组织
-      state.departChildList = [...arr, ...list]
+      // state.departChildUsList = arr // 个人用户
+      // state.departChildOgList = list // 组织
+      state.sponsorList = payload
     },
 
     // 选中/取消 本部门发起人
     SET_CHECKED_PERSONS: (state, payload) => {
       // console.log(payload, 'SET_CHECKED_PERSONS')
-      let check = state.personList[payload.index].checked
+      let check = state.sponsorList[payload.index].checked
       const status = !check
-      state.personList[payload.index].checked = status
+      state.sponsorList[payload.index].checked = status
       if (payload.data.checked) {
         state.checkedPersonList.push(payload.data)
       } else {
@@ -237,9 +241,9 @@ const dataList = {
     // 选中/取消 组织列表发起人
     SET_CHECKED_DEPART: (state, payload) => {
       // console.log(payload, 'SET_CHECKED_PERSONS')
-      let check = state.departChildList[payload.index].checked
+      let check = state.sponsorList[payload.index].checked
       const status = !check
-      state.departChildList[payload.index].checked = status
+      state.sponsorList[payload.index].checked = status
       if (payload.data.checked) {
         state.checkedDepartList.push(payload.data)
       } else {
@@ -262,8 +266,8 @@ const dataList = {
 
     // 删除本部门已选发起人
     SET_DELETE_PERSONS: (state, payload) => {
-      console.log(payload)
-      state.personList.map((item, index) => {
+      // console.log(payload)
+      state.sponsorList.map((item, index) => {
         // console.log(item, index)
         if (item.ObjectID === payload.data.ObjectID) {
           item.checked = false
@@ -274,8 +278,7 @@ const dataList = {
 
     // 删除组织机构已选发起人
     SET_DELETE_DEPART: (state, payload) => {
-      console.log(payload)
-      state.departChildList.map((item, index) => {
+      state.sponsorList.map((item, index) => {
         if (item.ObjectID === payload.data.ObjectID) {
           item.checked = false
         }
@@ -286,6 +289,7 @@ const dataList = {
 
     // 全选 本部门发起人
     SET_ALL_CHECKED_PERSONS: (state, payload) => {
+      // console.log(payload, 'payload')
       if (!payload.state) {
         state.checkedPersonList = []
         payload.data.map((item) => {
@@ -316,7 +320,7 @@ const dataList = {
     },
     // 搜索发起人列表
     SET_SEARCH_LIST: (state, payload) => {
-      console.log(state.checkedPersonList, 'checkedPersonList')
+      // console.log(state.checkedPersonList, 'checkedPersonList')
       state.checkedPersonList.forEach((item, index) => {
         console.log(item)
       })
@@ -461,7 +465,7 @@ const dataList = {
       return new Promise((resolve, reject) => {
         getSelectPerson(payload).then(res => {
           if (res.code === ERR_OK) {
-            console.log(res)
+            // console.log(res)
             commit('SET_PERSON_LIST', res.data)
           }
           resolve(res)
@@ -488,7 +492,7 @@ const dataList = {
       return new Promise((resolve, reject) => {
         getSelectPerson(payload).then(res => {
           if (res.code === ERR_OK) {
-            console.log(res)
+            // console.log(res)
             commit('SET_DEPART_CHILD_LIST', res.data)
           }
           resolve(res)

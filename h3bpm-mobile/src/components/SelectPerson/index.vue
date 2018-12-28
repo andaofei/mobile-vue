@@ -56,13 +56,12 @@
                      @pullingDown="onPullingDown"
                     @pullingUp="onPullingUp">
                 <ul class="inner-box">
-                  <li :key="item.id" v-for="(item, index) in personList" @click="handleClickSelect(item, index)">
+                  <li :key="item.id" v-for="(item, index) in sponsorList" @click="handleClickSelect(item, index)">
                   <span class="svg-box">
                     <svg-icon icon-class="check" v-if="!item.checked"/>
                     <svg-icon class="checked-icon" v-else icon-class="checked"/>
                   </span>
                 <div class="inner-right">
-                  <!--<span class="icon-text" :class="[index%2 === 1 ? activeClass : '', index%3 === 1 ? activeClass2 : '', index%4 === 1 ? activeClass3 : '']">{{item.name}}</span>-->
                   <div class="inner-right-box">
                   <span class="img-box">
                    <img v-if="item.ExtendObject ? item.ExtendObject.UserImageUrl.length > 0 : ''" v-lazy="baseUrl + item.ExtendObject.UserImageUrl" alt="" class="icon-text">
@@ -144,7 +143,7 @@ export default {
     selectDepart() {
       this.$router.push('/selectDepart')
       // 清空已选
-      this.setEmptyPerson([])
+      // this.setEmptyPerson([])
     },
 
     // 单击选中
@@ -154,7 +153,7 @@ export default {
 
     // 全选
     handleCheckAll() {
-      const data = this.personList
+      const data = this.sponsorList
       this.setAlLChecked({data: data, state: this.allCheckStatus})
     },
 
@@ -196,8 +195,8 @@ export default {
   },
 
   computed: {
-    personList() {
-      return this.$store.getters.personList
+    sponsorList() {
+      return this.$store.getters.sponsorList
     },
     checkedPersonList() {
       return this.$store.getters.checkedPersonList
@@ -205,9 +204,10 @@ export default {
   },
 
   watch: {
-    checkedPersonList: {
+    sponsorList: {
       handler() { // 数据数组有变化将触发此函数
-        if (this.personList.length === this.checkedPersonList.length) {
+        if (this.sponsorList.length === this.checkedPersonList.length) {
+          console.log(true)
           this.allCheckStatus = true
         } else {
           this.allCheckStatus = false

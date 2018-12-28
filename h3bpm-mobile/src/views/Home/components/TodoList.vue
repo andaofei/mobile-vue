@@ -74,7 +74,13 @@ export default {
       })
     },
     handleClick(item) {
-      console.log(item)
+      // console.log(item, 'data')
+      this.$router.push({
+        name: 'SheetDetail',
+        params: {
+          data: item
+        }
+      })
     },
     onPullingDown() {
       // 下拉更新数据

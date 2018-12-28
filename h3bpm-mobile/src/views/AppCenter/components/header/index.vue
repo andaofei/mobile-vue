@@ -1,12 +1,9 @@
 <template>
   <div class="header">
-    <div  @click="back" class="back">
-      <p>
-        <span class="svg-box">
-        <svg-icon icon-class="back"/>
-      </span>
-      </p>
-    </div>
+    <p  @click="back" class="back">
+      <svg-icon icon-class="left"/>
+      返回
+    </p>
 
     <p class="title">{{childName}}</p>
 
@@ -39,11 +36,9 @@ export default {
     @include border-bottom-1px($borderBottom);
     line-height: 44px;
     .back{
-      font-size: 14px;
+      font-size: 16px;
       line-height: 44px;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      color: $mainColor;
     }
     .title{
       font-size: 16px;

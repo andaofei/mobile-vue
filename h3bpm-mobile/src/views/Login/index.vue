@@ -43,7 +43,10 @@
 
 <script>
 import { ERR_OK } from '@/api/options/statusCode'
+import dingtalk from 'dingtalk-javascript-sdk'
 import {Toast} from 'mint-ui'
+import {getDingTalkInfo} from '@/api/dingTalk'
+import {isDingtalk} from '@/utils/dingoptions'
 export default {
   name: 'Login',
   data() {
@@ -68,6 +71,12 @@ export default {
       console.log(this.autoLogin)
       this.handleLogin()
     }
+    // let sourceUrl = document.location.href
+    let url = 'http://192.168.7.48:9980/#/login'
+    // let url = sourceUrl.toLocaleLowerCase()
+    if (isDingtalk) {
+      this.getDingTalkInfo(url)
+    }
   },
   methods: {
     showPwd() {
@@ -77,6 +86,66 @@ export default {
         this.passwordType = 'password'
       }
     },
+    // 获取签名
+    getDingTalkInfo(option) {
+      return new Promise((resolve, reject) => {
+        getDingTalkInfo(option).then((res) => {
+          // console.log(res.data, '获取签名')
+          if (res.code === ERR_OK) {
+            dingtalk.config({
+              agentId: res.data.agentId,
+              corpId: res.data.corpId,
+              timeStamp: res.data.timeStamp,
+              nonceStr: res.data.nonce,
+              signature: res.data.signature,
+              jsApiList: [
+                'runtime.info',
+                'biz.contact.choose',
+                'device.notification.confirm',
+                'device.notification.alert',
+                'device.notification.prompt',
+                'biz.ding.post',
+                'runtime.permission.requestAuthCode',
+                'device.geolocation.get',
+                'biz.ding.post',
+                'biz.contact.complexChoose'
+              ]
+            })
+            this.getDingTalkReady('211165759')
+          }
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    // 免登录
+    getDingTalkReady(corpId) {
+      return new Promise(function(resolve, reject) {
+        dingtalk.ready(function() {
+          const dd = dingtalk.jsApiList
+          // dd.biz.navigation.setTitle({
+          //   title: 'icepy'
+          // })
+          dd.runtime.permission.requestAuthCode({
+            corpId: corpId,
+            onSuccess(result) {
+              resolve(result, 'result')
+            },
+            onFail(err) {
+              console.log(err, '登录错误-----------------')
+              reject(err)
+            }
+          })
+        })
+        dingtalk.error(function(err) {
+          // 钉钉验证出错
+          console.log(err, '钉钉验证出错-----------------')
+          reject(err)
+        })
+      })
+    },
+    // 登录
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
@@ -91,9 +160,11 @@ export default {
               setTimeout(() => {
                 instance.close()
                 this.$router.push({ path: '/dashboard' })
+                this.loading = false
               }, 500)
+            } else {
+              this.loading = false
             }
-            this.loading = false
           }).catch(() => {
             this.loading = false
           })
@@ -103,6 +174,7 @@ export default {
         }
       })
     },
+    // 设置
     handleSetting() {
       this.$router.push('/setting')
     }

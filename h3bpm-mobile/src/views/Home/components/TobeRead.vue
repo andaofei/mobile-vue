@@ -97,7 +97,7 @@ export default {
     },
     // 单击
     handleClick(data) {
-      console.log('单击')
+      console.log(data)
     },
     // 单击选中
     handleSelect(data) {

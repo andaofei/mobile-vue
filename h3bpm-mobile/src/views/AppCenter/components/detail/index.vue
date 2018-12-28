@@ -1,7 +1,9 @@
 <template>
     <div class="container">
       <div class="header">
-        <p class="svg-box" @click="back"><svg-icon icon-class="back"/></p>
+        <p class="svg-box" @click="back">
+          <svg-icon icon-class="left"/>返回
+        </p>
         <div class="title">报表</div>
         <p @click="handleClickFilter" class="home-header-filter">
           <svg-icon icon-class="filter" />
@@ -38,9 +40,8 @@ export default {
       @include border-bottom-1px($borderBottom);
       padding: 0 10px;
       .svg-box{
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+        color: $mainColor;
+        line-height: 44px;
       }
       .title {
         text-align: center;
