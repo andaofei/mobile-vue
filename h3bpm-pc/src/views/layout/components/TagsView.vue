@@ -145,10 +145,11 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
+@import "../../../styles/variables";
 .tags-view-container {
   height: 34px;
   width: 100%;
-  background: #fff;
+  background: $bgColor;
   border-bottom: 1px solid #d8dce5;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, .12), 0 0 3px 0 rgba(0, 0, 0, .04);
   .tags-view-wrapper {
@@ -160,7 +161,7 @@ export default {
       line-height: 26px;
       border: 1px solid #d8dce5;
       color: #495060;
-      background: #fff;
+      background: $bgColor;
       padding: 0 8px;
       font-size: 12px;
       margin-left: 5px;
@@ -172,12 +173,12 @@ export default {
         margin-right: 15px;
       }
       &.active {
-        background-color: #42b983;
+        background-color: $green;
         color: #fff;
-        border-color: #42b983;
+        border-color: $green;
         &::before {
           content: '';
-          background: #fff;
+          background: $bgColor;
           display: inline-block;
           width: 8px;
           height: 8px;
@@ -190,7 +191,7 @@ export default {
   }
   .contextmenu {
     margin: 0;
-    background: #fff;
+    background: $bgColor;
     z-index: 100;
     position: absolute;
     list-style-type: none;

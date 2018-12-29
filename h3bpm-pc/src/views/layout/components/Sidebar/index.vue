@@ -6,7 +6,7 @@
       :collapse="isCollapse"
       :background-color="bgColor"
       :text-color="textColor"
-      active-text-color="#000"
+      :active-text-color="activeText"
       mode="vertical"
     >
       <sidebar-item v-for="route in permission_routers" :key="route.path" :item="route" :base-path="route.path"/>
@@ -23,7 +23,8 @@ export default {
   data() {
     return {
       bgColor: '#002638',
-      textColor: '#eee'
+      textColor: 'rgba(255, 255, 255, 0.7)',
+      activeText: '#2970FF'
     }
   },
   computed: {

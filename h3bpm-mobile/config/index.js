@@ -8,8 +8,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/apis': {
-        // target: 'http://192.168.7.44:8080',
-        target: 'http://192.168.9.144:8080',
+        target: 'http://192.168.7.44:8080',
+        // target: 'http://192.168.9.144:8080',
         changeOrigin: true,
         pathRewrite: {
           '^/apis': ''

@@ -16,26 +16,10 @@ const steps = [
     }
   },
   {
-    element: '.screenfull',
-    popover: {
-      title: 'Screenfull',
-      description: 'Bring the page into fullscreen',
-      position: 'left'
-    }
-  },
-  {
     element: '.international-icon',
     popover: {
       title: 'Switch language',
       description: 'Switch the system language',
-      position: 'left'
-    }
-  },
-  {
-    element: '.theme-switch',
-    popover: {
-      title: 'Theme Switch',
-      description: 'Custom switch system theme',
       position: 'left'
     }
   },

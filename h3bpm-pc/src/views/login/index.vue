@@ -203,6 +203,7 @@ $light_gray:#eee;
   background-color: $bg;
   display: flex;
   flex-direction: column;
+  background-image: url("https://gw.alipayobjects.com/zos/rmsportal/TVYTbAXWheQpRcWDaDMu.svg");
   .login-form {
     width: 400px;
     flex: 1 1 auto;
