@@ -107,8 +107,8 @@ export default {
                 'biz.ding.post',
                 'runtime.permission.requestAuthCode',
                 'device.geolocation.get',
-                'biz.ding.post',
-                'biz.contact.complexChoose'
+                'biz.contact.complexChoose',
+                'biz.util.openLink'
               ]
             })
             this.getDingTalkReady('211165759')

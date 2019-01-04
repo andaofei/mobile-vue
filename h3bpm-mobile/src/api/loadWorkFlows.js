@@ -11,9 +11,9 @@ export function getWorkFlowLst(data) {
 // url
 export function getWorkUrl(data) {
   return request({
-    url: WorkFlowsUrl,
-    method: 'GET',
-    params: data
+    url: WorkFlowsUrl + data,
+    method: 'GET'
+    // params: data
   })
 }
 // detail

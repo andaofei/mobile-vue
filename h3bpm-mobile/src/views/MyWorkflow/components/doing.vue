@@ -48,9 +48,6 @@ export default {
   },
 
   methods: {
-    handleClick(item) {
-      console.log(item)
-    },
     onPullingDown() {
       // 更新数据
       let options = {

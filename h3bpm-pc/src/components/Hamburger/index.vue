@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="svg-box">
     <svg
       :class="{'is-active':isActive}"
       t="1492500959545"
@@ -43,6 +43,12 @@ export default {
 </script>
 
 <style scoped>
+  .svg-box{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 .hamburger {
   display: inline-block;
   cursor: pointer;

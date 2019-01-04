@@ -63,13 +63,18 @@ export default {
   methods: {
     appChild(item) {
       this.$router.push({
-        // path: '/appcenter/child',
-        name: 'AppChild',
-        params: {
-          name: item.DisplayName,
-          code: item.AppCode
-        }
+        path: '/appcenter/child'
+        // name: 'AppChild',
+        // params: {
+        //   name: item.DisplayName,
+        //   code: item.AppCode
+        // }
       })
+      this.$store.commit('SET_APP_CODE', {name: item.DisplayName, code: item.AppCode})
+      // let options = {
+      //   AppCode: item.AppCode
+      // }
+      // this.$store.dispatch('getAppChildLst', options)
     },
     // 下拉
     scroll(pos) {

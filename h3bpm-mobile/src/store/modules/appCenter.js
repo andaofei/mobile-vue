@@ -1,9 +1,10 @@
-import {getAppLst, getAppChildLst} from '@/api/appCenter'
+import {getAppLst} from '@/api/appCenter'
 import {ERR_OK} from '@/api/options/statusCode'
 const appCenter = {
   state: {
     appList: [], // 数据列表
-    appChildList: [] // 数据列表
+    reportOptions: ''
+    // appChildList: [] // 数据列表
   },
 
   mutations: {
@@ -13,6 +14,9 @@ const appCenter = {
     // 应用中心child
     SET_APP_CHILD_LIST: (state, payload) => {
       state.appChildList = payload
+    },
+    SET_REPORT_OPTIONS: (state, payload) => {
+      state.reportOptions = payload
     }
   },
 
@@ -30,21 +34,21 @@ const appCenter = {
           reject(error)
         })
       })
-    },
-    // 应用中心child
-    getAppChildLst({ commit }, payload) {
-      return new Promise((resolve, reject) => {
-        getAppChildLst(payload).then(res => {
-          if (res.code === ERR_OK) {
-            console.log(res)
-            commit('SET_APP_CHILD_LIST', res.data)
-          }
-          resolve(res)
-        }).catch(error => {
-          reject(error)
-        })
-      })
     }
+    // 应用中心child
+    // getAppChildLst({ commit }, payload) {
+    //   return new Promise((resolve, reject) => {
+    //     getAppChildLst(payload).then(res => {
+    //       if (res.code === ERR_OK) {
+    //         console.log(res)
+    //         commit('SET_APP_CHILD_LIST', res.data)
+    //       }
+    //       resolve(res)
+    //     }).catch(error => {
+    //       reject(error)
+    //     })
+    //   })
+    // }
   }
 }
 

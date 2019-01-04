@@ -7,6 +7,7 @@ const getters = {
   filterShow: state => state.app.filterShow, // 筛选
   filterTitle: state => state.app.filterTitle, // 筛选名称
   filterPath: state => state.app.filterPath, // 筛选路径
+  appCode: state => state.app.appCode, // app-code
   todoOptions: state => state.dataList.todoOptions, // 待办筛选
   todoCounts: state => state.dataList.todoCounts, // 待办数量
   toReadCounts: state => state.dataList.toReadCounts, // 待阅数量
@@ -27,7 +28,8 @@ const getters = {
   listCounts: state => state.instance.listCounts, // 数量
   instanceOptions: state => state.instance.instanceOptions, // 过滤条件
   appList: state => state.appCenter.appList, // 应用中心
-  appChildList: state => state.appCenter.appChildList, // 应用中心
+  reportOptions: state => state.appCenter.reportOptions, // 应用中心
+  // appChildList: state => state.appCenter.appChildList, // 应用中心
   workFlowLst: state => state.workFlow.workFlowLst, // 我的流程
   searchList: state => state.workFlow.searchList // 我的流程
 }

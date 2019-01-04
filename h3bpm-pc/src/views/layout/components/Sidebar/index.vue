@@ -7,9 +7,8 @@
       :background-color="bgColor"
       :text-color="textColor"
       :active-text-color="activeText"
-      mode="vertical"
-    >
-      <sidebar-item v-for="route in permission_routers" :key="route.path" :item="route" :base-path="route.path"/>
+      mode="vertical">
+      <sidebar-item v-for="route in menuList" :key="route.path" :item="route" :base-path="route.path"/>
     </el-menu>
   </el-scrollbar>
 </template>
@@ -24,7 +23,12 @@ export default {
     return {
       bgColor: '#002638',
       textColor: 'rgba(255, 255, 255, 0.7)',
-      activeText: '#2970FF'
+      activeText: '#2970FF',
+      menuList: [
+        {
+          name: '我的待办'
+        }
+      ]
     }
   },
   computed: {

@@ -12,8 +12,9 @@
                   :beforeScroll="beforeScroll"
                   @beforeScroll="listScroll">
             <ul v-if="appChildList.length > 0" class="list">
+              <!--存在子长度-->
               <li class="item" :key="index" v-for="(item, index) in appChildList">
-                <div class="item-title" @click.stop="toggle(item, index)">
+                <div class="item-title" v-if="item.Children.length > 0" @click.stop="toggle(item, index)">
                   <span>{{item.DisplayName}}
                       <span class="count">({{item.Children.length}})</span>
                   </span>
@@ -24,7 +25,7 @@
                 </div>
                 <el-collapse-transition>
                 <div class="item-box" v-show="item.show">
-                  <div class="item-inner"  @click="appDetail" v-if="item.Children.length" :key="index" v-for="(inner, index) in item.Children">
+                  <div class="item-inner"  @click="appDetail(item)" v-if="item.Children.length" :key="index" v-for="(inner, index) in item.Children">
                     <p class="img-box">
                         <!--<img v-lazy="inner.IconUrl" class="img"/>-->
                       <span class="img" :class="[index%2 === 1 ? activeClass : '', index%3 === 1 ? activeClass2 : '', index%4 === 1 ? activeClass3 : '']"></span>
@@ -34,6 +35,29 @@
                 </div>
                 </div>
                   </el-collapse-transition>
+              </li>
+              <!--不存在子元素-->
+              <li class="item">
+                <div class="item-title"  @click.stop="toggleChildShow()">
+                  <span>其他<span class="count">({{noChild.length}})</span>
+                  </span>
+                  <span>
+                   <svg-icon icon-class="top-d" v-if="childShow"/>
+                      <svg-icon v-else icon-class="arrow-bottom" />
+                  </span>
+                </div>
+                <el-collapse-transition>
+                  <div class="item-box" v-show="childShow">
+                    <div class="item-inner" @click="appDetail(inner)" :key="index" v-for="(inner, index) in noChild">
+                      <p class="img-box">
+                        <!--<img v-lazy="inner.IconUrl" class="img"/>-->
+                        <span class="img" :class="[index%2 === 1 ? activeClass : '', index%3 === 1 ? activeClass2 : '', index%4 === 1 ? activeClass3 : '']"></span>
+                        <!--<span class="img" :class="[index%2 === 1 ? activeClass : '', index%3 === 1 ? activeClass2 : '', index%4 === 1 ? activeClass3 : '']"></span>-->
+                      </p>
+                      <span class="text">{{inner.DisplayName}}</span>
+                    </div>
+                  </div>
+                </el-collapse-transition>
               </li>
             </ul>
             <div v-else class="noApp">
@@ -48,6 +72,9 @@
 <script>
 import BtScroll from '@/components/BtScroll/index'
 import AppHeader from '../header'
+import {getAppChildLst} from '@/api/appCenter'
+import {ERR_OK} from '@/api/options/statusCode'
+// import qs from 'qs'
 export default {
   name: 'AppChild',
   data() {
@@ -61,29 +88,111 @@ export default {
       activeClass: 'activeClass',
       activeClass2: 'activeClass2',
       activeClass3: 'activeClass3',
-      childName: ''
+      childName: '',
+      appChildList: [],
+      noChild: [],
+      childShow: true
     }
   },
   created() {
     this.probeType = 3
     this.listenScroll = true
     this.pullingUp = true
-
-    const code = this.$route.params.code
-    this.childName = this.$route.params.name
+    const code = this.appCode.code
+    this.childName = this.appCode.name
     let options = {
       AppCode: code
     }
-    this.$store.dispatch('getAppChildLst', options)
+    this.getList(options)
   },
   methods: {
-    appDetail() {
-      this.$router.push({
-        path: '/appcenter/detail'
+    getList(options) {
+      return new Promise((resolve, reject) => {
+        getAppChildLst(options).then(res => {
+          if (res.code === ERR_OK) {
+            const data = res.data
+            data.map((item) => {
+              this.formatUrl(item)
+              if (item.Children.length > 0) {
+                item.Children.map((inner) => {
+                  this.formatUrl(item)
+                })
+              }
+            })
+            this.appChildList = data
+            this.noChild = data.filter(item => item.Children.length === 0)
+            // console.log(data)
+          }
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
       })
+    },
+    // 为每一组数据增加type（1为默认配置，2为发起流程链接，3为外部链接，4为打开表单）； data.Code作为发起流程链接提取workflowCode
+    formatUrl(data) {
+      let regex = /^http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w-./?%&=]*)?$/
+      let reg = new RegExp('WorkflowCode=([^&]*)(&|$)')
+      if (data.Url && regex.test(data.Url)) {
+        data.Type = 3
+      } else if (data.Url && data.Url.toLowerCase().indexOf('portal'.toLowerCase()) !== -1) {
+        let WorkflowCode = ''
+        let r = data.Url.match(reg)
+        if (r != null) WorkflowCode = unescape(r[1])
+        data.Type = 2
+        data.Code = WorkflowCode
+      } else {
+        data.Type = 1
+        if (data.Url) {
+          if (data.Url.indexOf('app.EditBizObject') > -1) {
+            data.Type = 4
+            data.Url = this.ConvertBizObjectUrl(data.Url)
+          }
+        } else {
+          return data
+        }
+      }
+    },
+    // 表单地址
+    ConvertBizObjectUrl(Url) {
+      let url = ''
+      url = Url.slice(0, Url.length - 1).replace('app.EditBizObject(', '')
+      return url
+    },
+    appDetail(item) {
+      console.log(item.Type)
+      switch (item.Type) {
+        case 1: // url 转换
+          let rt = /(.+)?(?:\(|（)(.+)(?=\)|）)/.exec(item.Url)
+          let childPath = rt[1].replace(/\./g, '/')
+          let regex = /[^\(\)]+(?=\))/g
+          let data = item.Url.match(regex)[0]
+          console.log(data)
+          this.$router.push({
+            path: `/` + childPath
+          })
+          this.$store.commit('SET_REPORT_OPTIONS', data)
+          break
+        case 2: // 发起流程
+          console.log(item.Url)
+          break
+        case 3: // 打开连接
+          console.log(item.Url)
+          window.location.href = item.Url + '?t=' + Math.random()
+          break
+        case 4: // 打开表单
+          console.log(item.Url)
+          break
+      }
+    },
+    appOther(inner) {
+      console.log(inner.Type)
     },
     toggle(item) {
       this.$set(item, 'show', this.show = !this.show)
+    },
+    toggleChildShow() {
+      this.childShow = !this.childShow
     },
     // 下拉
     scroll(pos) {
@@ -103,10 +212,10 @@ export default {
   computed: {
     appCode() {
       return this.$store.getters.appCode
-    },
-    appChildList() {
-      return this.$store.getters.appChildList
     }
+    // appChildList() {
+    //   return this.$store.getters.appChildList
+    // }
   },
   components: {
     AppHeader,
@@ -167,7 +276,7 @@ export default {
               line-height: 28px;
               overflow: hidden;
               text-overflow: ellipsis;
-              white-space: nowrap;
+              /*white-space: nowrap;*/
             }
           }
         }

@@ -1,5 +1,6 @@
 /**
  * Created by 23535 on 2018/6/20.
+ * 表格通用自适应高度方法
  */
 export const roleMixin = {
   data() {

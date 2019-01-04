@@ -12,7 +12,7 @@ import process from 'process'
 const debug = process.env.NODE_ENV !== 'production'
 Vue.use(Vuex)
 const store = new Vuex.Store({
-  plugins: debug ? [createLogger()] : [],
+  plugins: debug ? [createLogger()] : false,
   modules: {
     user,
     app,

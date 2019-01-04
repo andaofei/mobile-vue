@@ -126,6 +126,19 @@ export const constantRouterMap = [
         meta: { title: 'myprocess', icon: 'process', noCache: true }
       }
     ]
+  },
+  {
+    path: '/workflow',
+    component: Layout,
+    redirect: '/workflow/index', // 我的流程
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/dashboard/index'),
+        name: 'workflow',
+        meta: { title: 'workflow', icon: 'workflow', noCache: true }
+      }
+    ]
   }
 ]
 
@@ -136,7 +149,6 @@ export default new Router({
 })
 
 export const asyncRouterMap = [
-
   {
     path: '/icon', // 待阅任务
     component: Layout,
@@ -180,12 +192,6 @@ export const asyncRouterMap = [
       }
     ]
   },
-  /** When your routing table is too long, you can split it into small modules**/
-  // componentsRouter,
-  // chartsRouter,
-  // nestedRouter,
-  // tableRouter,
-
   {
     path: '/excel',
     component: Layout,
@@ -216,6 +222,5 @@ export const asyncRouterMap = [
       }
     ]
   },
-
   { path: '*', redirect: '/404', hidden: true }
 ]

@@ -1,7 +1,10 @@
 import Vue from 'vue'
 import Scroll from '@/components/scroll/scroll.vue'
+import {getWorkUrl} from '@/api/loadWorkFlows'
 import { ease } from '@/commom/js/ease'
 import ToTop from '@/views/Home/commom/ToTop'
+// import {isDingtalk} from '@/utils/dingoptions'
+// import dingtalk from 'dingtalk-javascript-sdk'
 import {mapMutations} from 'vuex'
 const getListMixin = {
   data() {
@@ -74,12 +77,43 @@ const getListMixin = {
   methods: {
     // 点击元素事件
     handleClick(item) {
-      // console.log(item, 'data')
-      this.$router.push({
-        name: 'SheetDetail',
-        params: {
-          data: item
-        }
+      console.log(item, 'data')
+      this.getWorkUrl(item)
+      // this.$router.push({
+      //   name: 'SheetDetail',
+      //   params: {
+      //     data: item
+      //   }
+      // })
+    },
+    getWorkUrl(data) {
+      // const options = {
+      //   WorkItemID: data.item.ObjectID
+      // }
+      const options = data.item.ObjectID
+      return new Promise((resolve, reject) => {
+        getWorkUrl(options).then(res => {
+          // const urls = `http://192.168.9.144:8080` + res.data
+          // this.src = urls
+          console.log(res)
+          // if (isDingtalk) {
+          //   dingtalk.ready(function() {
+          //     const dd = dingtalk.apis
+          //     dd.biz.util.openLink({
+          //       url: urls + `&loginfrom=dingtalk`,
+          //       onSuccess: function(result) { },
+          //       onFail: function(err) {
+          //         console.log(err)
+          //       }
+          //     })
+          //   })
+          // } else {
+          //   window.location.href = urls
+          // }
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
       })
     },
     scroll(pos) {
