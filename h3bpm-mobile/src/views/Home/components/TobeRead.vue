@@ -66,6 +66,7 @@ export default {
     }
   },
   created() {
+    this.loadingShow = true
     this._initList()
   },
   methods: {
@@ -82,6 +83,7 @@ export default {
       }
       this.$store.dispatch('getReadItem', options)
         .then((res) => {
+          this.loadingShow = false
           if (res.code === ERR_OK) {
             this.setToReadCount(res.data.TotalCount)
           }

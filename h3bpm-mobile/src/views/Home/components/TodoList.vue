@@ -40,8 +40,10 @@ export default {
       sortKey: 'ReceiveTime',
       userId: getUserInfo().id
     }
+    this.loadingShow = true
     this.$store.dispatch('getItemList', options)
       .then((res) => {
+        this.loadingShow = false
         if (res.code === ERR_OK) {
           this.setToDoCounts(res.data.TotalCount)
         }
