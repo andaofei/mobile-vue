@@ -19,6 +19,7 @@
     "blueimp-md5": "^2.10.0",
     "dingtalk-javascript-sdk": "^0.2.0",
     "echart": "^0.1.3",
+    "echarts": "^4.2.0-rc.2",
     "element-ui": "^2.4.11",
     "fastclick": "^1.0.6",
     "iframe-resizer": "^3.6.3",

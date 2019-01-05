@@ -1,4 +1,8 @@
 import BtScroll from '@/components/BtScroll/index'
+import {initSelfWorkflow} from '@/api/loadWorkFlows'
+import { ERR_OK } from '@/api/options/statusCode'
+import {isDingtalk} from '@/utils/dingoptions'
+import dingtalk from 'dingtalk-javascript-sdk'
 const InitWorkflowMixin = {
   data() {
     return {
@@ -18,7 +22,46 @@ const InitWorkflowMixin = {
     this.$store.dispatch('getWorkFlowLst')
   },
   methods: {
-    handleClickSelect() {},
+    handleClickSelect(item, index) {
+      console.log(item, index)
+      this.initSelfWork(item)
+    },
+    // 发起流程
+    initSelfWork(data) {
+      const options = {
+        WorkflowCode: data.WorkflowCode,
+        PageAction: 'Close'
+      }
+      return new Promise((resolve, reject) => {
+        initSelfWorkflow(options).then(res => {
+          if (res.code === ERR_OK) {
+            // const urls = this.baseUrl + res.data
+            // const urls = `http://` + this.baseUrl + res.data
+            const urls = `http://192.168.7.48:8080` + res.data
+            // this.src = urls
+            if (isDingtalk) {
+              dingtalk.ready(function() {
+                const dd = dingtalk.apis
+                dd.biz.util.openLink({
+                  url: urls + `&loginfrom=dingtalk`,
+                  onSuccess: function(result) {
+                  },
+                  onFail: function(err) {
+                    console.log(err)
+                  }
+                })
+              })
+            } else {
+              window.location.href = urls
+            }
+          }
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+          this.loadingShow = false
+        })
+      })
+    },
     // 下拉
     scroll(pos) {
       // console.log(pos.y)

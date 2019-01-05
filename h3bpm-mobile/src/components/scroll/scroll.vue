@@ -20,13 +20,13 @@
                   <div class="right-box-top">{{item.InstanceName}}</div>
                   <div class="right-box-btm">
 
-                    <p class="time" v-if="routeId === 0 || routeId === 1">
+                    <p class="time" v-if="routeId === 0 || routeId === 1 || routeId === 4">
                       <span class="time-title">接收时间：</span>
                       <span class="time-inner">{{item.ReceiveTime}}</span>
                     </p>
                     <p class="time" v-else>
                       <span class="time-title">处理时间：</span>
-                      <span class="time-inner">{{item.ReceiveTime}}</span>
+                      <span class="time-inner">{{item.FinishTime}}</span>
                     </p>
 
                     <p class="time" v-if="item.Summary" :key="index" v-for="(list, index) in item.Summary">
@@ -40,7 +40,8 @@
                     </p>
                     <p class="detail" v-else-if="routeId === 4 || routeId === 5 || routeId === 6">
                       <svg-icon icon-class="zhang"/>
-                      <span class="detail-inner" v-for="(inner, index) in item.ActivityNames" :key="index">{{inner}}</span>
+                      <span v-show="'item.ActivityNames.length？true: false'" class="detail-inner"  v-for="(inner, index) in item.ActivityNames" :key="index">{{inner}}</span>
+                      <span v-show="!item.ActivityNames || !item.ActivityNames.length" class="detail-inner">-</span>
                     </p>
                     <!--已办才有-->
                     <p class="detail" v-else>

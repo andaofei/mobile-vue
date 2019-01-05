@@ -3,6 +3,7 @@
     <!--回顶部-->
     <ToTop v-show="topTop" @backTop="backTop"></ToTop>
     <scroll ref="scroll"
+            v-loading="loadingShow"
             @handleClick="handleClick"
             :data="readList"
             :probe-type="probeType"

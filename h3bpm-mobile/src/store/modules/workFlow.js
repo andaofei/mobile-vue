@@ -13,10 +13,8 @@ const WorkFlow = {
       payload.Workflows.forEach((item) => {
         if (item.DisplayName === 'FrequentFlow') {
         } else {
-          console.log(item)
           state.workFlowLst.push(item)
           item.Workflows.forEach((inner) => {
-            console.log(inner)
             state.searchList.push(inner)
           })
         }

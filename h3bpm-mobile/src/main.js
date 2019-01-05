@@ -12,7 +12,7 @@ import '../theme/index.css'
 import './commom/mintui/style.scss'
 import './commom/scss/index.scss'
 import fastclick from 'fastclick'
-import { Button, Form, Input, FormItem, Checkbox, Badge, Radio, Tag, Breadcrumb, BreadcrumbItem, Table, TableColumn, Pagination } from 'element-ui'
+import { Button, Form, Input, FormItem, Checkbox, Badge, Radio, Tag, Breadcrumb, BreadcrumbItem, Table, TableColumn, Pagination, Loading } from 'element-ui'
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
 import { Actionsheet, Toast, DatetimePicker } from 'mint-ui'
 fastclick.attach(document.body)
@@ -33,6 +33,7 @@ Vue.use(BreadcrumbItem)
 Vue.use(Table)
 Vue.use(TableColumn)
 Vue.use(Pagination)
+Vue.use(Loading)
 Vue.config.productionTip = false
 Vue.use(VueLazyload, {
   loading: require('../static/default/loading.svg'), // 加载的图片

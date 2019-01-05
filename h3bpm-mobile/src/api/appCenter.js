@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import {appList, appChildList, ReportPage, ReportDetail} from '@/api/options/urls'
+import {appList, appChildList, ReportPage, ReportDetail, ReportBar} from '@/api/options/urls'
 import qs from 'qs'
 // 应用中心
 export function getAppLst(data) {
@@ -28,13 +28,26 @@ export function getReportPage(data) {
     data: qs.stringify(data)
   })
 }
-// 表格数据
+
+// 明细数据
 export function getReportDetail(data) {
   return request({
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
     url: ReportDetail,
+    method: 'POST',
+    data: qs.stringify(data)
+  })
+}
+
+// 柱状图数据
+export function getReportBar(data) {
+  return request({
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    url: ReportBar,
     method: 'POST',
     data: qs.stringify(data)
   })

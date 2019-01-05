@@ -3,6 +3,7 @@
     <!--回顶部-->
     <ToTop v-show="topTop" @backTop="backTop"></ToTop>
     <scroll ref="scroll"
+            v-loading="loadingShow"
             @handleClick="handleClick"
             :data="itemList"
             :probe-type="probeType"
@@ -39,7 +40,6 @@ export default {
       sortKey: 'ReceiveTime',
       userId: getUserInfo().id
     }
-    this.$store.dispatch('setTagCounts') // 待阅数
     this.$store.dispatch('getItemList', options)
       .then((res) => {
         if (res.code === ERR_OK) {

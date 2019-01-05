@@ -445,7 +445,7 @@ const dataList = {
         getWorkCount().then(res => {
           if (res.code === ERR_OK) {
             const data = res.data
-            // commit('SET_TODO_COUNTS', data.UnfinishedWorkItemCount)
+            commit('SET_TODO_COUNTS', data.UnfinishedWorkItemCount)
             commit('INIT_TO_READ_COUNTS', data.UnreadWorkItemCount)
           }
           resolve(res)

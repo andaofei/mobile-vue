@@ -5,6 +5,7 @@
     <!--批量阅读-->
     <div class="read-all" @click="handleReadAll" v-show="readList.length && readList.length > 1">批量阅读</div>
     <scroll ref="scroll"
+            v-loading="loadingShow"
             @handleClick="handleClick"
             @handleSelect="handleSelect"
             :data="readList"

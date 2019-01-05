@@ -33,7 +33,7 @@ export function setBatchRead(data) {
   })
 }
 
-// 获取发起人
+// 我的流程
 export function getSelectPerson(data) {
   return request({
     url: LoadOrgTreeNodes,

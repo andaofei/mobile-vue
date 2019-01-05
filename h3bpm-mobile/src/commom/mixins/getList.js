@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import Scroll from '@/components/scroll/scroll.vue'
-import {getWorkUrl} from '@/api/loadWorkFlows'
+import {getWorkUrl, getSelfWorkflow} from '@/api/loadWorkFlows'
 import { ease } from '@/commom/js/ease'
 import ToTop from '@/views/Home/commom/ToTop'
-// import {isDingtalk} from '@/utils/dingoptions'
-// import dingtalk from 'dingtalk-javascript-sdk'
+import {isDingtalk} from '@/utils/dingoptions'
+import dingtalk from 'dingtalk-javascript-sdk'
 import {mapMutations} from 'vuex'
+import { ERR_OK } from '@/api/options/statusCode'
 const getListMixin = {
   data() {
     return {
@@ -28,11 +29,14 @@ const getListMixin = {
       scrollToEasing: 'bounce',
       scrollToEasingOptions: ['bounce', 'swipe', 'swipeBounce'],
       items: [],
-      itemIndex: 0
+      itemIndex: 0,
+      baseUrl: process.env.BASE_API,
+      loadingShow: false
     }
   },
   created() {
     this.topTop = false
+    this.$store.dispatch('setTagCounts') // 待阅数 && 待办数
   },
   watch: {
     scrollbarObj: {
@@ -77,42 +81,85 @@ const getListMixin = {
   methods: {
     // 点击元素事件
     handleClick(item) {
-      console.log(item, 'data')
-      this.getWorkUrl(item)
+      // console.log(item, 'data')
+      // console.log(this.$route.meta.id, 'route')
+      const routeId = this.$route.meta.id
+      this.loadingShow = true
       // this.$router.push({
       //   name: 'SheetDetail',
       //   params: {
       //     data: item
       //   }
       // })
+      if (routeId === 0 || routeId === 1 || routeId === 2 || routeId === 3) {
+        this.getWorkUrl(item)
+      } else {
+        this.getSelfWork(item)
+      }
     },
+    // 首页
     getWorkUrl(data) {
-      // const options = {
-      //   WorkItemID: data.item.ObjectID
-      // }
       const options = data.item.ObjectID
       return new Promise((resolve, reject) => {
         getWorkUrl(options).then(res => {
-          // const urls = `http://192.168.9.144:8080` + res.data
-          // this.src = urls
-          console.log(res)
-          // if (isDingtalk) {
-          //   dingtalk.ready(function() {
-          //     const dd = dingtalk.apis
-          //     dd.biz.util.openLink({
-          //       url: urls + `&loginfrom=dingtalk`,
-          //       onSuccess: function(result) { },
-          //       onFail: function(err) {
-          //         console.log(err)
-          //       }
-          //     })
-          //   })
-          // } else {
-          //   window.location.href = urls
-          // }
+          if (res.code === ERR_OK) {
+            // const urls = `http://` + this.baseUrl + res.data
+            const urls = `http://192.168.7.48:8080` + res.data
+            // this.src = urls
+            this.loadingShow = false
+            if (isDingtalk) {
+              dingtalk.ready(function() {
+                const dd = dingtalk.apis
+                dd.biz.util.openLink({
+                  url: urls + `&loginfrom=dingtalk`,
+                  onSuccess: function(result) {
+                  },
+                  onFail: function(err) {
+                    console.log(err)
+                  }
+                })
+              })
+            } else {
+              window.location.href = urls
+            }
+          }
+          resolve(res)
+        }).catch(error => {
+          this.loadingShow = false
+          reject(error)
+        })
+      })
+    },
+    // 我的流程
+    getSelfWork(data) {
+      const options = data.item.ObjectID
+      return new Promise((resolve, reject) => {
+        getSelfWorkflow(options).then(res => {
+          if (res.code === ERR_OK) {
+            // const urls = this.baseUrl + res.data
+            // const urls = `http://` + this.baseUrl + res.data
+            const urls = `http://192.168.7.48:8080` + res.data
+            // this.src = urls
+            if (isDingtalk) {
+              dingtalk.ready(function() {
+                const dd = dingtalk.apis
+                dd.biz.util.openLink({
+                  url: urls + `&loginfrom=dingtalk`,
+                  onSuccess: function(result) {
+                  },
+                  onFail: function(err) {
+                    console.log(err)
+                  }
+                })
+              })
+            } else {
+              window.location.href = urls
+            }
+          }
           resolve(res)
         }).catch(error => {
           reject(error)
+          this.loadingShow = false
         })
       })
     },

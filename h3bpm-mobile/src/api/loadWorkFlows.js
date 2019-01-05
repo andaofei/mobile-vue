@@ -1,6 +1,7 @@
 import request from '@/utils/request'
-// import Qs from 'qs'
-import {LoadWorkFlows, WorkFlowsDetail, WorkFlowsUrl} from '@/api/options/urls'
+import qs from 'qs'
+import {LoadWorkFlows, WorkFlowsDetail, WorkFlowsUrl, SelfWorkFlows, StartWorkFlows} from '@/api/options/urls'
+// 获取我的流程
 export function getWorkFlowLst(data) {
   return request({
     url: LoadWorkFlows,
@@ -8,6 +9,7 @@ export function getWorkFlowLst(data) {
     data
   })
 }
+
 // url
 export function getWorkUrl(data) {
   return request({
@@ -16,11 +18,29 @@ export function getWorkUrl(data) {
     // params: data
   })
 }
+
 // detail
 export function getWorkDetail(data) {
   return request({
     url: WorkFlowsDetail,
     method: 'GET',
     params: data
+  })
+}
+
+// 我的流程
+export function getSelfWorkflow(data) {
+  return request({
+    url: SelfWorkFlows + data,
+    method: 'GET'
+  })
+}
+
+// 发起流程
+export function initSelfWorkflow(data) {
+  return request({
+    url: StartWorkFlows,
+    method: 'POST',
+    data: qs.stringify(data)
   })
 }
