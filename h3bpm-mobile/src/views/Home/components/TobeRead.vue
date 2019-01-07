@@ -134,10 +134,21 @@ export default {
               setTimeout(() => {
                 instance.close()
                 this._initList()
+                this.BatchStatus = false
               }, 1000)
             } else {
-              console.log('error')
+              let instance = Toast({
+                message: this.$t('home.fail'),
+                iconClass: 'icon el-icon-error'
+              })
+              setTimeout(() => {
+                instance.close()
+                this._initList()
+                this.BatchStatus = false
+              }, 1000)
             }
+          })
+          .catch(() => {
           })
       }
     },

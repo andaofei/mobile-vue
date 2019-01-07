@@ -39,6 +39,7 @@ export default {
     name: 'Home',
     filter: 'Filter',
     success: 'operate successfully',
+    fail: 'operate failed',
     back: 'Back',
     noData: 'No Data',
     TodoList: 'TodoList',

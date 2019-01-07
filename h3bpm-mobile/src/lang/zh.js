@@ -39,6 +39,7 @@ export default {
     name: '首页中心',
     filter: '筛选',
     success: '操作成功',
+    fail: '操作失败',
     back: '返回',
     noData: '暂无数据',
     TodoList: '待办',
