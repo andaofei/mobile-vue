@@ -2,8 +2,9 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import store from './store'
+import {setBaseUrl} from '@/utils/auth'
 import VueLazyload from 'vue-lazyload'
-// import axios from 'axios'
+import axios from 'axios'
 import './permission'
 import './icons'
 import i18n from './lang'
@@ -39,12 +40,43 @@ Vue.use(VueLazyload, {
   loading: require('../static/default/loading.svg'), // 加载的图片
   error: require('../static/default/bpm.jpg')
 })
-// Vue.prototype.$axios = axios
-/* eslint-disable no-new */
-new Vue({
+
+let newVue = new Vue({
   el: '#app',
   store,
   i18n,
   router,
   render: h => h(App)
 })
+// 设置全局api
+Vue.prototype.$axios = axios
+Vue.prototype.getConfigJson = function() {
+  Vue.prototype.$axios.get('serverConfig.json').then((result) => {
+    // console.log(result)
+    if (result.status === 200) {
+      Vue.prototype.$baseUrl = result.data.baseUrl
+      setBaseUrl(result.data.baseUrl)
+    } else {
+      Vue.prototype.$baseUrl = process.env.BASE_API
+      setBaseUrl(result.data.baseUrl)
+    }
+  }).catch((error) => {
+    Vue.prototype.$baseUrl = process.env.BASE_API
+    setBaseUrl(process.env.BASE_API)
+    console.log(error)
+  })
+}
+
+Vue.prototype.getConfigJson()// 调用声明的全局方法
+
+/* eslint-disable no-new */
+Vue.use({
+  newVue
+})
+// new Vue({
+//   el: '#app',
+//   store,
+//   i18n,
+//   router,
+//   render: h => h(App)
+// })

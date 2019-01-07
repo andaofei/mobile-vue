@@ -11,7 +11,7 @@
             :to="{path: '/dashboard/todolist'}">
             <div class="navbar-item">
               <el-badge :value="todoCounts" class="item">
-                <span>待办</span>
+                <span>{{$t('home.TodoList')}}</span>
               </el-badge>
             </div>
           </router-link>
@@ -21,7 +21,7 @@
             :to="{ path: '/dashboard/toberead'}">
             <div class="navbar-item">
               <el-badge :value="toReadCounts" class="item">
-                <span>待阅</span>
+                <span>{{$t('home.TobeRead')}}</span>
               </el-badge>
             </div>
           </router-link>
@@ -30,7 +30,7 @@
             class="nav-item"
             :to="{ path: '/dashboard/alldone' }">
             <div class="navbar-item">
-                <span>已办</span>
+                <span>{{$t('home.DoedMatter')}}</span>
             </div>
           </router-link>
           <router-link
@@ -38,7 +38,7 @@
             class="nav-item"
             :to="{ path: '/dashboard/read' }">
             <div class="navbar-item">
-                <span>已阅</span>
+                <span>{{$t('home.ReadItem')}}</span>
             </div>
           </router-link>
         </div>

@@ -64,7 +64,7 @@ export default {
   mixins: [getPartMixin],
   data() {
     return {
-      baseUrl: process.env.BASE_API,
+      baseUrl: this.$baseUrl,
       personList: [
         {
           checked: false,

@@ -1,4 +1,5 @@
 import BtScroll from '@/components/BtScroll/index'
+import NoData from '@/components/NoData/index'
 import {initSelfWorkflow} from '@/api/loadWorkFlows'
 import { ERR_OK } from '@/api/options/statusCode'
 import {isDingtalk} from '@/utils/dingoptions'
@@ -12,32 +13,67 @@ const InitWorkflowMixin = {
       listenScroll: true,
       activeClass: 'activeClass',
       activeClass2: 'activeClass2',
-      activeClass3: 'activeClass3'
+      activeClass3: 'activeClass3',
+      showLoading: false,
+      baseUrl: this.$baseUrl
     }
   },
   created() {
     this.probeType = 3
     this.listenScroll = true
     this.pullingUp = true
-    this.$store.dispatch('getWorkFlowLst')
   },
   methods: {
+    getDataList() {
+      this.showLoading = true
+      this.$store.dispatch('getWorkFlowLst')
+        .then((res) => {
+          this.showLoading = false
+        })
+        .catch((req) => {
+          this.showLoading = false
+        })
+    },
+    // 搜索
+    handleSearch() {
+      console.log(this.searchList)
+      let articlesArray = this.searchList
+      let searchString = this.inputValue
+
+      if (!searchString) {
+        return articlesArray
+      }
+
+      articlesArray = articlesArray.filter(function(item) {
+        if (item.DisplayName.toLowerCase().indexOf(searchString) !== -1) {
+          return item
+        }
+      })
+
+      this.$store.dispatch('setWorkFlowLst', articlesArray)
+      // console.log(articlesArray, 'articlesArray')
+    },
+    // 点击流程
     handleClickSelect(item, index) {
-      console.log(item, index)
+      this.showLoading = true
       this.initSelfWork(item)
     },
+
     // 发起流程
     initSelfWork(data) {
       const options = {
         WorkflowCode: data.WorkflowCode,
-        PageAction: 'Close'
+        PageAction: 'Close',
+        IsMobile: 'true'
       }
       return new Promise((resolve, reject) => {
         initSelfWorkflow(options).then(res => {
+          this.showLoading = false
           if (res.code === ERR_OK) {
-            // const urls = this.baseUrl + res.data
+            const urls = this.baseUrl + res.data.url
             // const urls = `http://` + this.baseUrl + res.data
-            const urls = `http://192.168.7.48:8080` + res.data
+            // console.log(res.data)
+            // const urls = `http://192.168.7.48:8080` + res.data.Url
             // this.src = urls
             if (isDingtalk) {
               dingtalk.ready(function() {
@@ -62,6 +98,7 @@ const InitWorkflowMixin = {
         })
       })
     },
+
     // 下拉
     scroll(pos) {
       // console.log(pos.y)
@@ -77,13 +114,21 @@ const InitWorkflowMixin = {
       this.$emit('listScroll')
     }
   },
+  watch: {
+    inputValue(value) {
+      if (!value) {
+        this.$store.commit('SER_SEARCH_LIST', this.searchList)
+      }
+    }
+  },
   computed: {
     workFlowLst() {
       return this.$store.getters.workFlowLst
     }
   },
   components: {
-    BtScroll
+    BtScroll,
+    NoData
   }
 }
 export default InitWorkflowMixin

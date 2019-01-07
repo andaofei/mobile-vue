@@ -40,11 +40,16 @@ export default {
       status: 2,
       userId: getUserInfo().id
     }
+    this.loadingShow = true
     this.$store.dispatch('getInstanceDoing', options)
       .then((res) => {
+        this.loadingShow = false
         if (res.code === ERR_OK) {
           this.setCounts(res.data.TotalCount)
         }
+      })
+      .catch(() => {
+        this.loadingShow = false
       })
   },
 

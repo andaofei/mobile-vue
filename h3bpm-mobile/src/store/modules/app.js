@@ -6,11 +6,7 @@ const app = {
     ipPath: Cookies.get('sysIp') || '127.0.0.1',
     filterShow: false,
     filterTitle: '',
-    filterPath: '',
-    appCode: {
-      name: '',
-      code: ''
-    }
+    filterPath: ''
   },
 
   mutations: {
@@ -27,10 +23,6 @@ const app = {
       state.filterShow = payload.status
       state.filterTitle = payload.inner.title
       state.filterPath = payload.path
-    },
-    SET_APP_CODE: (state, payload) => {
-      state.appCode.name = payload.name
-      state.appCode.code = payload.code
     }
   },
 

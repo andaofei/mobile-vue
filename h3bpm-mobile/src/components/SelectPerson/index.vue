@@ -106,7 +106,7 @@ export default {
   mixins: [getListMixin],
   data() {
     return {
-      baseUrl: process.env.BASE_API,
+      baseUrl: this.$baseUrl,
       probeType: 0,
       scrollY: 0,
       pullingUp: true,

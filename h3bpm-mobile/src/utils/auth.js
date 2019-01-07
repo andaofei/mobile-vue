@@ -3,6 +3,8 @@ import Cookies from 'js-cookie'
 const TokenKey = 'H3BPM-Token'
 const AutoLogin = 'AutoLogin'
 const User = 'userInfo'
+const Url = 'baseUrl'
+const App = 'appCenter'
 
 export function getToken() {
   return Cookies.get(TokenKey)
@@ -36,4 +38,21 @@ export function removeUserInfo(data) {
 
 export function getUserInfo(data) {
   return Cookies.getJSON(User)
+}
+
+export function setBaseUrl(data) {
+  return Cookies.set(Url, data)
+}
+
+export function getBaseUrl() {
+  return Cookies.getJSON(Url)
+}
+
+// 设置应用名称
+export function setAppName(data) {
+  return Cookies.set(App, data)
+}
+
+export function getAppName() {
+  return Cookies.getJSON(App)
 }

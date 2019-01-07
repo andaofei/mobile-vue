@@ -10,7 +10,15 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-
+//让打包的时候输出可配置的文件
+const GenerateAssetPlugin = require('generate-asset-webpack-plugin');
+const serverConfig = require('../serverConfig.json');
+const createServerConfig = function(compilation){
+  Object.assign({
+    _hash: compilation.hash
+  }, config)
+  return JSON.stringify(serverConfig);
+}
 const env = process.env.NODE_ENV === 'testing'
   ? require('../config/test.env')
   : require('../config/prod.env')
@@ -121,7 +129,15 @@ const webpackConfig = merge(baseWebpackConfig, {
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
       }
-    ])
+    ]),
+    //让打包的时候输入可配置的文件
+    new GenerateAssetPlugin({
+      filename: 'serverConfig.json',
+      fn: (compilation, cb) => {
+        cb(null, createServerConfig(compilation));
+      },
+      extraFiles: []
+    })
   ]
 })
 

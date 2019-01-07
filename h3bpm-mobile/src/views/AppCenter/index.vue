@@ -36,11 +36,12 @@
 
 <script>
 import BtScroll from '@/components/BtScroll/index'
+import {setAppName} from '@/utils/auth'
 export default {
   name: 'AppCenter',
   data() {
     return {
-      baseUrl: process.env.BASE_API,
+      baseUrl: this.$baseUrl,
       probeType: 0,
       pullingUp: true,
       beforeScroll: true,
@@ -64,17 +65,8 @@ export default {
     appChild(item) {
       this.$router.push({
         path: '/appcenter/child'
-        // name: 'AppChild',
-        // params: {
-        //   name: item.DisplayName,
-        //   code: item.AppCode
-        // }
       })
-      this.$store.commit('SET_APP_CODE', {name: item.DisplayName, code: item.AppCode})
-      // let options = {
-      //   AppCode: item.AppCode
-      // }
-      // this.$store.dispatch('getAppChildLst', options)
+      setAppName({name: item.DisplayName, code: item.AppCode})
     },
     // 下拉
     scroll(pos) {

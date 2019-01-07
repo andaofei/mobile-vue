@@ -1,7 +1,6 @@
 import {loginSys, logoutSys, getUserInfo} from '@/api/login'
 import {getToken, setToken, getAuto, setAuto, setUserInfo, removeToken, removeUserInfo} from '@/utils/auth'
 import { ERR_OK } from '@/api/options/statusCode'
-
 const user = {
   state: {
     roles: [],

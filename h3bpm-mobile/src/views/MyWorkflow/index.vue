@@ -2,7 +2,7 @@
   <div class="workflow">
     <div class="header">
       <span>&nbsp;&nbsp;</span>
-      <div class="title">我的流程</div>
+      <div class="title">{{$t('myWorkFlow.name')}}</div>
       <p @click="handleClickFilter" class="home-header-filter">
         <svg-icon icon-class="filter" />
         <span class="filter-text">{{$t('home.filter')}}</span>
@@ -14,18 +14,18 @@
           <router-link  tag="div" class="nav-item" :to="{ path: '/myworkflow/doing'}">
             <div class="navbar-item">
               <el-badge :value="listCounts" class="item">
-                <span>进行中</span>
+                <span>{{$t('myWorkFlow.ongoing')}}</span>
               </el-badge>
             </div>
           </router-link>
           <router-link tag="div" class="nav-item" :to="{ path: '/myworkflow/done'}">
             <div class="navbar-item">
-              <span>已完成</span>
+              <span>{{$t('myWorkFlow.completed')}}</span>
             </div>
           </router-link>
           <router-link tag="div" class="nav-item" :to="{ path: '/myworkflow/cancel'}">
             <div class="navbar-item">
-              <span>已取消</span>
+              <span>{{$t('myWorkFlow.cancelled')}}</span>
             </div>
           </router-link>
         </div>

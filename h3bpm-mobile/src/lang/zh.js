@@ -36,16 +36,38 @@ export default {
     userName: '账户名'
   },
   home: {
+    name: '首页中心',
     filter: '筛选',
     success: '操作成功',
-    back: '返回'
+    back: '返回',
+    noData: '暂无数据',
+    TodoList: '待办',
+    DoedMatter: '已办',
+    TobeRead: '待阅',
+    ReadItem: '已阅'
   },
   appCenter: {
     noData: '暂无数据',
-    name: '应用中心'
+    name: '应用中心',
+    back: '返回',
+    report: '报表'
   },
+  // 发起人
   selectPerson: {
     title: '发起人'
+  },
+  // 发起流程
+  startWork: {
+    name: '发起流程',
+    search: '搜索',
+    all: '全部',
+    favorite: '常用'
+  },
+  myWorkFlow: {
+    name: '我的流程',
+    ongoing: '进行中',
+    completed: '已完成',
+    cancelled: '已取消'
   },
   filter: {
     ToDoList: '待办',

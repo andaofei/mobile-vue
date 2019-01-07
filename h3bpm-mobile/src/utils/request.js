@@ -1,11 +1,11 @@
 import axios from 'axios'
 import { Toast, MessageBox } from 'mint-ui'
 import store from '@/store'
-// import { getToken } from '@/utils/auth'
 // create an axios instance
+import {getBaseUrl} from '@/utils/auth'
 const service = axios.create({
   withCredentials: true,
-  baseURL: process.env.BASE_API, // api 的 base_url
+  baseURL: getBaseUrl(), // api 的 base_url
   timeout: 8000 // request timeout
 })
 

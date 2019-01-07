@@ -2,9 +2,9 @@
     <div class="detail-container">
       <div class="header">
         <p class="svg-box" @click="back">
-          <svg-icon icon-class="left"/>返回
+          <svg-icon icon-class="left"/> {{$t('appCenter.back')}}
         </p>
-        <div class="title">报表</div>
+        <div class="title">{{$t('appCenter.report')}}</div>
         <p @click="handleClickFilter" class="home-header-filter">
           <svg-icon icon-class="filter" />
           <span class="filter-text">{{$t('home.filter')}}</span>
@@ -104,13 +104,6 @@ export default {
       nameList: [], // 柱状数据
       loading: false, // loading
       tableData6: [
-        {
-          '部门': '技术',
-          '月份': 12,
-          '超时数': 1,
-          '任务数': 1,
-          '完成数': 1
-        }
       ],
       columnHeader: [],
       RowTable: []

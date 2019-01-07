@@ -30,7 +30,7 @@ const getListMixin = {
       scrollToEasingOptions: ['bounce', 'swipe', 'swipeBounce'],
       items: [],
       itemIndex: 0,
-      baseUrl: process.env.BASE_API,
+      baseUrl: this.$baseUrl,
       loadingShow: false
     }
   },
@@ -103,8 +103,8 @@ const getListMixin = {
       return new Promise((resolve, reject) => {
         getWorkUrl(options).then(res => {
           if (res.code === ERR_OK) {
-            // const urls = `http://` + this.baseUrl + res.data
-            const urls = `http://192.168.7.48:8080` + res.data
+            const urls = this.baseUrl + res.data
+            // const urls = `http://192.168.7.48:8080` + res.data
             // this.src = urls
             this.loadingShow = false
             if (isDingtalk) {
@@ -137,8 +137,8 @@ const getListMixin = {
         getSelfWorkflow(options).then(res => {
           if (res.code === ERR_OK) {
             // const urls = this.baseUrl + res.data
-            // const urls = `http://` + this.baseUrl + res.data
-            const urls = `http://192.168.7.48:8080` + res.data
+            const urls = this.baseUrl + res.data
+            // const urls = `http://192.168.7.48:8080` + res.data
             // this.src = urls
             if (isDingtalk) {
               dingtalk.ready(function() {

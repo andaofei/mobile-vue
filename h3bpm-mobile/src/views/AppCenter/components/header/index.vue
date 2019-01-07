@@ -2,7 +2,7 @@
   <div class="header">
     <p  @click="back" class="back">
       <svg-icon icon-class="left"/>
-      返回
+      {{$t('appCenter.back')}}
     </p>
 
     <p class="title">{{childName}}</p>

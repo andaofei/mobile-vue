@@ -1,6 +1,6 @@
 {
   "name": "h3bpm",
-  "version": "1.0.3",
+  "version": "1.0.1",
   "description": "zhuaf",
   "author": "e <2353536563@qq.com>",
   "private": true,
@@ -22,6 +22,7 @@
     "echarts": "^4.2.0-rc.2",
     "element-ui": "^2.4.11",
     "fastclick": "^1.0.6",
+    "generate-asset-webpack-plugin": "^0.3.0",
     "iframe-resizer": "^3.6.3",
     "js-cookie": "^2.2.0",
     "mint-ui": "^2.2.13",

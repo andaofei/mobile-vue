@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import qs from 'qs'
+// import qs from 'qs'
 import {LoadWorkFlows, WorkFlowsDetail, WorkFlowsUrl, SelfWorkFlows, StartWorkFlows} from '@/api/options/urls'
 // 获取我的流程
 export function getWorkFlowLst(data) {
@@ -40,7 +40,8 @@ export function getSelfWorkflow(data) {
 export function initSelfWorkflow(data) {
   return request({
     url: StartWorkFlows,
-    method: 'POST',
-    data: qs.stringify(data)
+    method: 'GET',
+    params: data
+    // data: qs.stringify(data)
   })
 }

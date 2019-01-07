@@ -1,11 +1,11 @@
 <template>
     <div class="InitWorkflow">
       <div class="header">
-        <div class="title">发起流程</div>
+        <div class="title">{{$t('startWork.name')}}</div>
         <div class="input-box">
           <el-input
             size="small"
-            placeholder="搜索"
+            :placeholder="text"
             clearable
             @input="handleSearch"
             v-model="inputValue">
@@ -13,44 +13,31 @@
           </el-input>
         </div>
         <div class="behavior">
-          <router-link tag="div" class="nav-item" :to="{ path: '/initworkflow/hist' }">常用</router-link>
-          <router-link tag="div" class="nav-item right-item" :to="{ path: '/initworkflow/all' }">全部</router-link>
+          <router-link tag="div" class="nav-item" :to="{ path: '/initworkflow/hist' }">{{$t('startWork.favorite')}}</router-link>
+          <router-link tag="div" class="nav-item right-item" :to="{ path: '/initworkflow/all' }">{{$t('startWork.all')}}</router-link>
         </div>
       </div>
       <div class="container">
-        <router-view></router-view>
+        <keep-alive>
+          <router-view/>
+        </keep-alive>
       </div>
     </div>
 </template>
 
 <script>
+import InitWorkflowMixin from './mixin'
 export default {
   name: 'InitWorkflow',
+  mixins: [InitWorkflowMixin],
   data() {
     return {
-      inputValue: ''
+      inputValue: '',
+      text: this.$t('startWork.search')
     }
   },
 
   methods: {
-    handleSearch() {
-      // console.log(this.searchList)
-      // console.log(this.workFlowLst)
-      let articlesArray = this.searchList
-      let searchString = this.inputValue
-
-      if (!searchString) {
-        return articlesArray
-      }
-
-      articlesArray = articlesArray.filter(function(item) {
-        if (item.DisplayName.toLowerCase().indexOf(searchString) !== -1) {
-          return item
-        }
-      })
-      // this.$store.dispatch('setWorkFlowLst', articlesArray)
-      console.log(articlesArray, 'articlesArray')
-    }
   },
 
   computed: {

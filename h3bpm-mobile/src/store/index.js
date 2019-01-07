@@ -8,11 +8,11 @@ import instance from './modules/instance'
 import appCenter from './modules/appCenter'
 import workFlow from './modules/workFlow'
 import getters from './getters'
-import process from 'process'
+// import process from 'process'
 const debug = process.env.NODE_ENV !== 'production'
 Vue.use(Vuex)
 const store = new Vuex.Store({
-  plugins: debug ? [createLogger()] : false,
+  plugins: debug ? [createLogger()] : [],
   modules: {
     user,
     app,

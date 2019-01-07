@@ -5,7 +5,7 @@
         <slot>
 
           <!--列表-->
-          <ul class="list-content" v-if="data && data.length">
+          <ul class="list-content" v-if="data && data.length > 0">
             <li @click="clickItem(item,index)" class="list-item" v-for="(item,index) in data" :key="index" >
               <div class="item-left">
                 <span class="svg-box" @click.stop="handleSelect(item, index, $event)" v-if="item.isChecked" >
@@ -60,9 +60,8 @@
             </li>
           </ul>
 
-          <div class="no-data" v-else>
-            <!--<img src="./images/nodata.svg" alt="">-->
-            <span>暂无数据</span>
+          <div v-else>
+            <NoData></NoData>
           </div>
         </slot>
       </div>
@@ -104,6 +103,7 @@
 import BScroll from 'better-scroll'
 import Loading from '../loading/loading.vue'
 import Bubble from '../bubble/bubble.vue'
+import NoData from '@/components/NoData/index'
 import {getRect} from '../../commom/js/dom'
 const COMPONENT_NAME = 'scroll'
 const DIRECTION_H = 'horizontal'
@@ -198,7 +198,7 @@ export default {
       pullUpDirty: true,
       pullDownStyle: '',
       bubbleY: 0,
-      baseUrl: process.env.BASE_API,
+      baseUrl: this.$baseUrl,
       jiaji: 'static/images/jiaji.png',
       jiaji2: 'static/images/jiaji2.svg',
       cuiban: 'static/images/cuiban.png',
@@ -390,7 +390,8 @@ export default {
   },
   components: {
     Loading,
-    Bubble
+    Bubble,
+    NoData
   }
 }
 </script>
@@ -498,15 +499,9 @@ export default {
           }
         }
       }
-      .no-data {
-        position: absolute;
-        transform: translate(-50%, -50%);
-        top: 40%;
-        left: 50%;
-        span {
-          font-size: 1rem;
-          color: $textColor2;
-        }
+      .no-data-box {
+        width: 100%;
+        height: 100%;
       }
     }
   }

@@ -74,6 +74,7 @@ import BtScroll from '@/components/BtScroll/index'
 import AppHeader from '../header'
 import {getAppChildLst} from '@/api/appCenter'
 import {ERR_OK} from '@/api/options/statusCode'
+import {getAppName} from '@/utils/auth'
 // import qs from 'qs'
 export default {
   name: 'AppChild',
@@ -98,8 +99,9 @@ export default {
     this.probeType = 3
     this.listenScroll = true
     this.pullingUp = true
-    const code = this.appCode.code
-    this.childName = this.appCode.name
+    console.log(getAppName())
+    const code = getAppName().code
+    this.childName = getAppName().name
     let options = {
       AppCode: code
     }
@@ -121,7 +123,6 @@ export default {
             })
             this.appChildList = data
             this.noChild = data.filter(item => item.Children.length === 0)
-            // console.log(data)
           }
           resolve(res)
         }).catch(error => {
@@ -163,25 +164,30 @@ export default {
       console.log(item.Type)
       switch (item.Type) {
         case 1: // url 转换
+          if (!item.Url) {
+            return
+          }
           let rt = /(.+)?(?:\(|（)(.+)(?=\)|）)/.exec(item.Url)
           let childPath = rt[1].replace(/\./g, '/')
           let regex = /[^\(\)]+(?=\))/g
           let data = item.Url.match(regex)[0]
-          console.log(data)
           this.$router.push({
             path: `/` + childPath
           })
           this.$store.commit('SET_REPORT_OPTIONS', data)
           break
         case 2: // 发起流程
-          console.log(item.Url)
+          console.log(item)
           break
         case 3: // 打开连接
-          console.log(item.Url)
           window.location.href = item.Url + '?t=' + Math.random()
           break
         case 4: // 打开表单
-          console.log(item.Url)
+          // http://localhost:8085/Portal/MvcDefaultSheet.jsp?
+          let obj = eval('(' + item.Url + ')') //  ToFix: eval语句是有害的
+          const Url = this.$baseUrl + `Portal/MvcDefaultSheet.jsp?SheetCode=` + obj.SheetCode + '&Mode=' + obj.Mode + '&SchemaCode=' + obj.SchemaCode + '&IsMobile=true&onlyData=true&go=-2&T=' + new Date().getTime()
+          console.log(Url)
+          window.location.href = Url
           break
       }
     },
@@ -210,12 +216,6 @@ export default {
     }
   },
   computed: {
-    appCode() {
-      return this.$store.getters.appCode
-    }
-    // appChildList() {
-    //   return this.$store.getters.appChildList
-    // }
   },
   components: {
     AppHeader,

@@ -7,7 +7,7 @@
     <span class="svg-box">
       <svg-icon icon-class="home" />
     </span>
-    <p class="text">首页中心</p>
+    <p class="text">{{$t('home.name')}}</p>
   </router-link>
 
   <router-link
@@ -17,7 +17,7 @@
     <span class="svg-box">
       <svg-icon icon-class="start" />
     </span>
-    <p class="text">发起流程</p>
+    <p class="text">{{$t('startWork.name')}}</p>
   </router-link>
 
   <router-link
@@ -27,7 +27,7 @@
     <span class="svg-box">
       <svg-icon icon-class="process" />
     </span>
-    <p class="text">我的流程</p>
+    <p class="text">{{$t('myWorkFlow.name')}}</p>
   </router-link>
 
   <router-link
@@ -37,7 +37,7 @@
     <span class="svg-box">
       <svg-icon icon-class="app" />
     </span>
-    <p class="text">应用中心</p>
+    <p class="text">{{$t('appCenter.name')}}</p>
   </router-link>
 </div>
 </template>

@@ -36,16 +36,36 @@ export default {
     userName: 'UserName'
   },
   home: {
+    name: 'Home',
     filter: 'Filter',
     success: 'operate successfully',
-    back: 'Back'
+    back: 'Back',
+    noData: 'No Data',
+    TodoList: 'TodoList',
+    DoedMatter: 'DoedMatter',
+    TobeRead: 'TobeRead',
+    ReadItem: 'ReadItem'
   },
   appCenter: {
     noData: 'no App',
-    name: 'App Center'
+    name: 'Apps',
+    back: 'Back',
+    report: 'Report'
   },
   selectPerson: {
     title: 'Originator'
+  },
+  startWork: {
+    name: 'Initiate',
+    search: 'search',
+    all: 'All',
+    favorite: 'Favorite'
+  },
+  myWorkFlow: {
+    name: 'Workflows',
+    ongoing: 'Ongoing',
+    completed: 'Completed',
+    cancelled: 'Cancelled'
   },
   filter: {
     ToDoList: 'ToDoList',

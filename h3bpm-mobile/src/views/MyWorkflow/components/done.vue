@@ -37,7 +37,14 @@ export default {
       status: 4,
       userId: getUserInfo().id
     }
+    this.loadingShow = true
     this.$store.dispatch('getInstanceDoing', options)
+      .then((res) => {
+        this.loadingShow = false
+      })
+      .catch(() => {
+        this.loadingShow = false
+      })
   },
   methods: {
 

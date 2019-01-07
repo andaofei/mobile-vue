@@ -26,7 +26,7 @@ export default {
   name: 'SheetDetail',
   data() {
     return {
-      baseUrl: process.env.BASE_API,
+      baseUrl: this.$baseUrl,
       htmlBox: '',
       src: ''
     }
@@ -52,12 +52,9 @@ export default {
       const options = data.item.ObjectID
       return new Promise((resolve, reject) => {
         getWorkUrl(options).then(res => {
-          console.log(res)
           // const urls = this.baseUrl + res.data
           // this.src = `http://192.168.9.144:8080/ + res.data
-          const urls = `http://192.168.9.144:8080` + res.data
-          // this.src = urls
-          window.location.href = urls
+          window.location.href = this.baseUrl + res.data
           resolve(res)
         }).catch(error => {
           reject(error)
