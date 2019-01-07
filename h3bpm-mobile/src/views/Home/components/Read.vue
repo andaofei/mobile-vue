@@ -69,7 +69,6 @@ export default {
           userId: getUserInfo().id
         }
         let newOptions = Object.assign(options, this.todoOptions)
-        console.log(newOptions, 'newOptions')
         that.$store.dispatch('getReadItem', newOptions)
           .then((res) => {
             if (res.code === ERR_OK) {
