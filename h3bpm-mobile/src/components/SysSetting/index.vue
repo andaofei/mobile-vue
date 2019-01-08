@@ -3,7 +3,7 @@
     <div class="setting-header">
       <p @click="back" class="svg-box">
         <svg-icon icon-class="left"/>
-        <span>返回</span>
+        <span>{{$t('home.back')}}</span>
       </p>
 
       <p class="title">{{$t('setting.title')}}</p>

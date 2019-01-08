@@ -14,7 +14,7 @@
               <span class="svg-box">
                   <svg-icon icon-class="orgnazition"></svg-icon>
               </span>
-                <span class="text">组织机构</span>
+                <span class="text">{{$t('selectPerson.organization')}}</span>
                 </p>
               <span class="svg-box">
                 <svg-icon icon-class="right"></svg-icon>
@@ -23,11 +23,13 @@
             <!--部门-->
             <div class="department">
                 <span class="vertical-line"></span>
-                <p class="text">本部门</p>
+                <p class="text">{{$t('selectPerson.department')}}</p>
             </div>
           </div>
           <!--主体-->
           <div class="search-inner">
+            <!--回顶部-->
+            <ToTop v-show="topTop" @backTop="backTop"></ToTop>
             <div class="selected-person">
               <el-tag
                 :key="tag.id"
@@ -41,6 +43,7 @@
             </div>
             <div class="tag-wrapper" >
               <BtScroll class="tag-scroll"
+                    v-loading="loadShow"
                     ref="userList"
                     @scroll="scroll"
                     @refresh="refresh"
@@ -55,7 +58,7 @@
                     :startY="parseInt(startY)"
                      @pullingDown="onPullingDown"
                     @pullingUp="onPullingUp">
-                <ul class="inner-box">
+                <ul class="inner-box" v-if="sponsorList">
                   <li :key="item.id" v-for="(item, index) in sponsorList" @click="handleClickSelect(item, index)">
                   <span class="svg-box">
                     <svg-icon icon-class="check" v-if="!item.checked"/>
@@ -71,12 +74,16 @@
                 </div>
                 </div>
               </li>
-               </ul>
+              </ul>
+                <div class="inner-box-nodata" v-else>
+                  <NoData></NoData>
+                </div>
               </BtScroll>
             </div>
           </div>
         </div>
       </div>
+      <!--// 全选-->
       <div class="select-btm">
         <p class="btm-left" @click="handleCheckAll">
           <span class="svg-box">
@@ -84,11 +91,11 @@
              <svg-icon v-else icon-class="check"/>
          </span>
           <span class="allCheck">
-            <span>全选</span>
+            <span>{{$t('home.selectAll')}}</span>
             <span class="count">({{this.checkedPersonList ? this.checkedPersonList.length : 0 }})</span>
           </span>
         </p>
-        <p class="btm-right" @click="handleSureClick">确定</p>
+        <p class="btm-right" @click="handleSureClick">{{$t('home.submit')}}</p>
       </div>
     </div>
 </template>
@@ -100,6 +107,7 @@ import BtScroll from '@/components/scroll/new-scroll'
 import SelectHeader from '@/components/SelectCommom/Header/index'
 import SearchInput from '@/components/SelectCommom/InputSearch/index'
 import {getUserInfo} from '@/utils/auth'
+import NoData from '@/components/NoData/index'
 import { mapMutations } from 'vuex'
 export default {
   name: 'SelectPerson',
@@ -111,6 +119,7 @@ export default {
       scrollY: 0,
       pullingUp: true,
       beforeScroll: true,
+      loadShow: false,
       selected: -1,
       activeClass: 'activeClass',
       activeClass2: 'activeClass2',
@@ -125,12 +134,7 @@ export default {
     this.probeType = 3
     this.listenScroll = true
     this.pullingUp = true
-    let options = {
-      IsMobile: true,
-      ParentID: getUserInfo().ParentID,
-      o: 'U'
-    }
-    this.$store.dispatch('getSelectPersonList', options)
+    this.getList()
   },
 
   methods: {
@@ -140,6 +144,22 @@ export default {
       setEmptyPerson: 'SET_EMPTY_PERSONS',
       setDeletePerson: 'SET_DELETE_PERSONS'
     }),
+    // 获取数据
+    getList() {
+      let options = {
+        IsMobile: true,
+        ParentID: getUserInfo().ParentID,
+        o: 'U'
+      }
+      this.loadShow = true
+      this.$store.dispatch('getSelectPersonList', options)
+        .then(() => {
+          this.loadShow = false
+        })
+        .catch(() => {
+          this.loadShow = false
+        })
+    },
     selectDepart() {
       this.$router.push('/selectDepart')
       // 清空已选
@@ -168,9 +188,9 @@ export default {
     },
 
     // 滑动
-    scroll(pos) {
-      // console.log(pos.y)
-    },
+    // scroll(pos) {
+    //   console.log(pos.y)
+    // },
 
     onPullingDown() {
       setTimeout(() => {
@@ -206,7 +226,7 @@ export default {
   watch: {
     sponsorList: {
       handler() { // 数据数组有变化将触发此函数
-        if (this.sponsorList.length === this.checkedPersonList.length) {
+        if (this.sponsorList.length > 0 && this.sponsorList.length === this.checkedPersonList.length) {
           console.log(true)
           this.allCheckStatus = true
         } else {
@@ -220,7 +240,8 @@ export default {
   components: {
     BtScroll,
     SelectHeader,
-    SearchInput
+    SearchInput,
+    NoData
   }
 }
 </script>

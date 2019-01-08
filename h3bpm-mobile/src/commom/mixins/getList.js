@@ -6,6 +6,7 @@ import ToTop from '@/views/Home/commom/ToTop'
 import {isDingtalk} from '@/utils/dingoptions'
 import dingtalk from 'dingtalk-javascript-sdk'
 import {mapMutations} from 'vuex'
+import {getUserInfo} from '@/utils/auth'
 import { ERR_OK } from '@/api/options/statusCode'
 const getListMixin = {
   data() {
@@ -36,7 +37,17 @@ const getListMixin = {
   },
   created() {
     this.topTop = false
-    this.$store.dispatch('setTagCounts') // 待阅数 && 待办数
+    let options = {
+      keyWord: '',
+      finishedWorkItem: false,
+      sortDirection: 'Desc',
+      sortKey: 'ReceiveTime',
+      existsLength: 0,
+      userId: getUserInfo().id
+    }
+    this.loadingShow = true
+    this.$store.dispatch('setTodoCounts', options) // 待办数
+    this.$store.dispatch('setTagCounts') // 待阅数
   },
   watch: {
     scrollbarObj: {
@@ -81,16 +92,8 @@ const getListMixin = {
   methods: {
     // 点击元素事件
     handleClick(item) {
-      // console.log(item, 'data')
-      // console.log(this.$route.meta.id, 'route')
       const routeId = this.$route.meta.id
       this.loadingShow = true
-      // this.$router.push({
-      //   name: 'SheetDetail',
-      //   params: {
-      //     data: item
-      //   }
-      // })
       if (routeId === 0 || routeId === 1 || routeId === 2 || routeId === 3) {
         this.getWorkUrl(item)
       } else {
@@ -104,8 +107,6 @@ const getListMixin = {
         getWorkUrl(options).then(res => {
           if (res.code === ERR_OK) {
             const urls = this.baseUrl + res.data
-            // const urls = `http://192.168.7.48:8080` + res.data
-            // this.src = urls
             this.loadingShow = false
             if (isDingtalk) {
               dingtalk.ready(function() {
@@ -138,8 +139,6 @@ const getListMixin = {
           if (res.code === ERR_OK) {
             // const urls = this.baseUrl + res.data
             const urls = this.baseUrl + res.data
-            // const urls = `http://192.168.7.48:8080` + res.data
-            // this.src = urls
             if (isDingtalk) {
               dingtalk.ready(function() {
                 const dd = dingtalk.apis
@@ -172,7 +171,11 @@ const getListMixin = {
       }
     },
     backTop() {
-      this.$refs.scroll.scrollTo(0, 0, '500', 'bounce')
+      if (this.$refs.scroll) {
+        this.$refs.scroll.scrollTo(0, 0, '500', 'bounce')
+        return
+      }
+      this.$refs.userList.scrollTo(0, 0, '500', 'bounce')
       // this.topTop = false
     },
     scrollTo() {

@@ -14,6 +14,7 @@ const getters = {
   sponsorList: state => state.dataList.sponsorList, // 发起人列表--唯一数据列表
   checkedDepartList: state => state.dataList.checkedDepartList, // 已选部门发起人列表
   departList: state => state.dataList.departList, // 选人部门列表
+  departTitle: state => state.dataList.departTitle, // 选人部门名称
   departChildOgList: state => state.dataList.departChildOgList, // 选人部门组织列表
   departChildUsList: state => state.dataList.departChildUsList, // 选人部门用户列表
   visitedViews: state => state.dataList.visitedViews, // 路由

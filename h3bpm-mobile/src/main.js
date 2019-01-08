@@ -48,11 +48,12 @@ let newVue = new Vue({
   router,
   render: h => h(App)
 })
-// 设置全局api
+// 设置全局api 生产环境
+const evn = process.env.NODE_ENV === 'production'
+
 Vue.prototype.$axios = axios
 Vue.prototype.getConfigJson = function() {
   Vue.prototype.$axios.get('serverConfig.json').then((result) => {
-    // console.log(result)
     if (result.status === 200) {
       Vue.prototype.$baseUrl = result.data.baseUrl
       setBaseUrl(result.data.baseUrl)
@@ -60,15 +61,19 @@ Vue.prototype.getConfigJson = function() {
       Vue.prototype.$baseUrl = process.env.BASE_API
       setBaseUrl(result.data.baseUrl)
     }
-  }).catch((error) => {
+  }).catch(() => {
     Vue.prototype.$baseUrl = process.env.BASE_API
     setBaseUrl(process.env.BASE_API)
-    console.log(error)
   })
 }
 
-Vue.prototype.getConfigJson()// 调用声明的全局方法
-
+if (evn) {
+  Vue.prototype.getConfigJson()// 调用声明的全局方法
+} else {
+  Vue.prototype.$baseUrl = process.env.BASE_API
+  setBaseUrl(process.env.BASE_API)
+}
+Vue.prototype.getConfigJson()
 /* eslint-disable no-new */
 Vue.use({
   newVue

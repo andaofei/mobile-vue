@@ -9,20 +9,35 @@
             :beforeScroll="beforeScroll"
             @beforeScroll="listScroll">
     <div class="selectDepartDefault">
-      <div :key="index" v-for="(item, index) in departList" v-if="item.ExtendObject.UnitType=== 'O'" class="wrapper">
-        <div class="title">{{item.Text}}</div>
-      <ul>
-        <li :key="index" v-for="(inner, index) in item.children"  @click="handleClickChild(inner)">
-           <span>{{inner.Text}}</span>
+      <div class="wrapper"  >
+        <div>
+        <div class="title">{{departTitle}}</div>
+        <ul>
+        <li :key="index" v-for="(item, index) in departList"  @click="handleClickChild(item)">
+           <span>{{item.Text}}</span>
            <p>
-             <span>{{inner.ExtendObject.ChildrenCount}}</span>
+             <span>{{item.ExtendObject.ChildrenCount}}</span>
              <span class="svg-box">
                <svg-icon icon-class="right"></svg-icon>
             </span>
            </p>
         </li>
       </ul>
+        </div>
       </div>
+      <!--<div class="wrapper">-->
+        <!--<ul>-->
+          <!--<li :key="index" v-for="(inner, index) in departList"  @click="handleClickChild(inner)">-->
+            <!--<span>{{inner.Text}}</span>-->
+            <!--<p>-->
+              <!--<span>{{inner.ExtendObject.ChildrenCount}}</span>-->
+              <!--<span class="svg-box">-->
+               <!--<svg-icon icon-class="right"></svg-icon>-->
+            <!--</span>-->
+            <!--</p>-->
+          <!--</li>-->
+        <!--</ul>-->
+      <!--</div>-->
     </div>
   </BtScroll>
 </template>
@@ -49,12 +64,20 @@ export default {
       ParentID: getUserInfo().ParentID,
       o: 'U'
     }
+    // let options = {
+    //   ParentID: getUserInfo().ParentID,
+    //   o: 'U',
+    //   isMobile: true
+    // }
     this.$store.dispatch('getSelectDepartList', options)
   },
   computed: {
     // 数据列表
     departList() {
       return this.$store.getters.departList
+    },
+    departTitle() {
+      return this.$store.getters.departTitle
     }
   },
   methods: {

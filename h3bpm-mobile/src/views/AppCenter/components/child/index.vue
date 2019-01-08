@@ -39,7 +39,7 @@
               <!--不存在子元素-->
               <li class="item">
                 <div class="item-title"  @click.stop="toggleChildShow()">
-                  <span>其他<span class="count">({{noChild.length}})</span>
+                  <span>{{$t('appCenter.other')}}<span class="count">({{noChild.length}})</span>
                   </span>
                   <span>
                    <svg-icon icon-class="top-d" v-if="childShow"/>
@@ -75,6 +75,7 @@ import AppHeader from '../header'
 import {getAppChildLst} from '@/api/appCenter'
 import {ERR_OK} from '@/api/options/statusCode'
 import {getAppName} from '@/utils/auth'
+import { Toast } from 'mint-ui'
 // import qs from 'qs'
 export default {
   name: 'AppChild',
@@ -165,6 +166,13 @@ export default {
       switch (item.Type) {
         case 1: // url 转换
           if (!item.Url) {
+            let instance = Toast({
+              message: this.$t('appCenter.noURl'),
+              iconClass: 'icon el-icon-warning'
+            })
+            setTimeout(() => {
+              instance.close()
+            }, 2000)
             return
           }
           let rt = /(.+)?(?:\(|（)(.+)(?=\)|）)/.exec(item.Url)

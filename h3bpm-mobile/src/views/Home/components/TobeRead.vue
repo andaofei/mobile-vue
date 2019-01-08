@@ -3,7 +3,7 @@
     <!--回顶部-->
     <ToTop v-show="topTop" @backTop="backTop"></ToTop>
     <!--批量阅读-->
-    <div class="read-all" @click="handleReadAll" v-show="readList.length && readList.length > 1">批量阅读</div>
+    <div class="read-all" @click="handleReadAll" v-show="readList.length && readList.length > 1">{{$t('home.Batch')}}</div>
     <scroll ref="scroll"
             v-loading="loadingShow"
             @handleClick="handleClick"
@@ -31,13 +31,13 @@
             <svg-icon v-if="allCheckStatus" class="checked-icon" icon-class="checked"/>
              <svg-icon v-else icon-class="check"/>
          </span>
-        <span class="allCheck">全选
+        <span class="allCheck">{{$t('home.selectAll')}}
         <span class="allCheck-count">
           ({{this.itemCheckList.length}})
         </span>
         </span>
       </p>
-      <p class="btm-right" @click="handleSureClick">确定</p>
+      <p class="btm-right" @click="handleSureClick">{{$t('home.submit')}}</p>
     </div>
   </div>
 </template>
@@ -66,7 +66,6 @@ export default {
     }
   },
   created() {
-    this.loadingShow = true
     this._initList()
   },
   methods: {
@@ -87,6 +86,9 @@ export default {
           if (res.code === ERR_OK) {
             this.setToReadCount(res.data.TotalCount)
           }
+        })
+        .catch(() => {
+          this.loadingShow = false
         })
     },
     // 单击选中

@@ -37,15 +37,9 @@ export default {
     }
   },
 
-  methods: {
-  },
-
   computed: {
     searchList() {
       return this.$store.getters.searchList
-    },
-    workFlowLst() {
-      return this.$store.getters.workFlowLst
     }
   }
 }

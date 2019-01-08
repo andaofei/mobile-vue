@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { ERR_OK } from '@/api/options/statusCode'
 import dingtalk from 'dingtalk-javascript-sdk'
 import {Toast} from 'mint-ui'
@@ -67,6 +68,7 @@ export default {
     }
   },
   mounted() {
+    Vue.prototype.getConfigJson()
     if (this.autoLogin) {
       console.log(this.autoLogin)
       this.handleLogin()

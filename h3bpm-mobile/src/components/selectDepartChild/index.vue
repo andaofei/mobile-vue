@@ -49,9 +49,9 @@
       <svg-icon v-if="allCheckStatus" class="checked-icon" icon-class="checked"/>
       <svg-icon v-else icon-class="check"/>
       </span>
-        <span class="allCheck">全选</span>
+        <span class="allCheck">{{$t('home.selectAll')}}</span>
       </p>
-      <p class="btm-right" @click="handleSureClick">确定</p>
+      <p class="btm-right" @click="handleSureClick">{{$t('home.submit')}}</p>
     </div>
   </div>
 

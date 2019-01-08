@@ -1,6 +1,5 @@
 import {getWorkItem, getReadItem, getWorkCount, setBatchRead, getSelectPerson} from '@/api/getworkitems'
-// import { listData, searchList } from '@/commom/localdata/index'
-import { searchList } from '@/commom/localdata/index'
+// import { searchList } from '@/commom/localdata/index'
 import {ERR_OK} from '@/api/options/statusCode'
 const dataList = {
   state: {
@@ -9,6 +8,7 @@ const dataList = {
     // 选人列表
     // personList: [],
     departList: [],
+    departTitle: '', // 部门名称
     // departChildList: [], // 组织子表发起人
     sponsorList: [], // 发起人---唯一数据列表
     departChildUsList: [], // 个人用户
@@ -200,29 +200,30 @@ const dataList = {
       // console.log(state.sponsorList)
       // console.log(state.checkedPersonList, '已选')
       state.sponsorList = Object.assign(state.sponsorList, state.checkedPersonList)
+      state.searchUserList = Object.assign(state.sponsorList, state.checkedPersonList) // 搜索列表
       // console.log(newOptions, 'newOptions')
     },
 
     // 发起人组织列表
     SET_DEPART_LIST: (state, payload) => {
-      // console.log(payload, '发起人部门列表')
-      state.departList = payload // 组织列表
+      console.log(payload, '发起人部门列表')
+      state.departTitle = payload[0].Text // 组织名称
+      state.departList = payload[0].children // 组织列表
       state.sponsorList = [] // 用户为空
+      state.searchUserList = payload[0].children
     },
 
     // 发起人子部门列表
     SET_DEPART_CHILD_LIST: (state, payload) => {
-      // let arr = []
-      // let list = []
       payload.map((item) => {
         if (item.ExtendObject.UnitType === 'U') {
           item.checked = false
           // arr.push(item)
         }
       })
-      // state.departChildUsList = arr // 个人用户
-      // state.departChildOgList = list // 组织
       state.sponsorList = payload
+      // state.sponsorList = Object.assign(state.sponsorList, state.checkedPersonList)
+      // state.searchUserList = Object.assign(state.sponsorList, state.checkedPersonList) // 搜索列表
     },
 
     // 选中/取消 本部门发起人
@@ -303,6 +304,7 @@ const dataList = {
         state.checkedPersonList = []
       }
     },
+
     // 全选 组织发起人
     SET_ALL_CHECKED_DEPART: (state, payload) => {
       if (!payload.state) {
@@ -318,6 +320,7 @@ const dataList = {
         state.checkedDepartList = []
       }
     },
+
     // 搜索发起人列表
     SET_SEARCH_LIST: (state, payload) => {
       // console.log(state.checkedPersonList, 'checkedPersonList')
@@ -328,6 +331,16 @@ const dataList = {
         console.log(item)
       })
       // state.searchUserList = payload
+    },
+    // 发起人搜索列表
+    SET_SEARCH_PERSON_LIST: (state, payload) => {
+      state.sponsorList = payload
+    },
+    // 组织机构搜索列表
+    SET_SEARCH_DEPART_LIST: (state, payload) => {
+      console.log(payload)
+      state.departList = []
+      state.departList = payload
     }
   },
 
@@ -436,7 +449,7 @@ const dataList = {
 
     // 获取搜索列表
     getSearchList({ commit }, payload) {
-      commit('SET_SEARCH_LIST', searchList)
+      commit('SET_SEARCH_LIST', payload)
     },
 
     // 待办数量/ 待阅数量
@@ -445,8 +458,22 @@ const dataList = {
         getWorkCount().then(res => {
           if (res.code === ERR_OK) {
             const data = res.data
-            commit('SET_TODO_COUNTS', data.UnfinishedWorkItemCount)
+            // commit('SET_TODO_COUNTS', data.UnfinishedWorkItemCount)
             commit('INIT_TO_READ_COUNTS', data.UnreadWorkItemCount)
+          }
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
+    setTodoCounts({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        getWorkItem(payload).then(res => {
+          console.log(res, '初始待办数量')
+          if (res.code === ERR_OK) {
+            // console.log(res)
+            commit('SET_TODO_COUNTS', res.data.totalCount)
           }
           resolve(res)
         }).catch(error => {
@@ -492,7 +519,7 @@ const dataList = {
       return new Promise((resolve, reject) => {
         getSelectPerson(payload).then(res => {
           if (res.code === ERR_OK) {
-            // console.log(res)
+            console.log(res, '发起人子部门部门列表')
             commit('SET_DEPART_CHILD_LIST', res.data)
           }
           resolve(res)

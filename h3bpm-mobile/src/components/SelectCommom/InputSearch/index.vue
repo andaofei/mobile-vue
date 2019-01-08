@@ -3,7 +3,8 @@
     <div class="input-box">
       <el-input
         size="small"
-        placeholder="搜索用户"
+        clearable
+        :placeholder="placeHolder"
         @input="handleFocus"
         v-model="inputValue">
         <i slot="suffix" class="el-input__icon el-icon-search" @click="searchDataList"></i>
@@ -77,6 +78,7 @@ export default {
       pullingUp: true,
       beforeScroll: true,
       selected: -1,
+      placeHolder: this.$t('selectPerson.search'),
       activeClass: 'activeClass',
       activeClass2: 'activeClass2',
       activeClass3: 'activeClass3',
@@ -85,20 +87,51 @@ export default {
       listShow: false
     }
   },
+
   created() {
     this.probeType = 3
     this.listenScroll = true
     this.pullingUp = true
     // this.inputValue = ''
   },
+
   methods: {
     ...mapMutations({
-      setCheckedPerson: 'SET_CHECKED_PERSONS'
+      setCheckedPerson: 'SET_CHECKED_PERSONS', // 单击选择
+      setSearchPerson: 'SET_SEARCH_PERSON_LIST', // 搜索列表
+      setSearchDepart: 'SET_SEARCH_DEPART_LIST' // 搜索列表组织机构
     }),
+
     handleFocus() {
-      // this.listShow = true
-      // console.log(this.personList)
-      console.log(this.sponsorList, '列表')
+      let searchString = this.inputValue
+      let articlesArray = []
+      if (!searchString) {
+        return articlesArray
+      }
+      console.log(this.$route.name, '$route')
+      const routeName = this.$route.name
+      if (routeName === 'SelectPerson') {
+        articlesArray = this.searchUserList
+        console.log(this.sponsorList, '发起人列表')
+        articlesArray = articlesArray.filter(function(item) {
+          if (item.Text.toLowerCase().indexOf(searchString) !== -1) {
+            return item
+          }
+        })
+        this.setSearchPerson(articlesArray) // 设置发起人列表
+      } else if (routeName === 'SelectDepartDefault') {
+        // console.log(this.departList, '组织机构')
+        articlesArray = this.searchUserList
+        let searchResult = [] // 搜索结果
+        // 过滤遍历结果
+        searchResult = articlesArray.filter(function(item) {
+          if (item.Text.toLowerCase().indexOf(searchString) !== -1) {
+            return item
+          }
+        })
+        console.log(searchResult, 'searchResult')
+        this.setSearchDepart(searchResult)
+      } else if (routeName === 'SelectDepartChild ') {}
     },
     searchDataList() {
       console.log(this.inputValue)
@@ -107,15 +140,18 @@ export default {
     handleListShow() {
       this.listShow = false
     },
+
     // 选中
     handleClickSelect(item, index) {
       this.setCheckedPerson({data: item, index: index})
     },
+
     // 搜索列表
     searchList() {
       // console.log(this.searchInner)
       this.$store.dispatch('getSearchList', this.searchInner)
     },
+
     // 下拉
     scroll(pos) {
       // console.log(pos.y)
@@ -131,17 +167,40 @@ export default {
       this.$emit('listScroll')
     }
   },
+
   computed: {
+    // 选中列表
     checkedPersonList() {
       return this.$store.getters.checkedPersonList
     },
+    // 搜索列表
     searchUserList() {
       return this.$store.getters.searchUserList
     },
+    // 数据列表
     sponsorList() {
       return this.$store.getters.sponsorList
+    },
+    // 组织数据列表
+    departList() {
+      return this.$store.getters.departList
     }
   },
+
+  watch: {
+    inputValue(value) {
+      if (!value) {
+        console.log(this.$route.name, '$route')
+        const routeName = this.$route.name
+        if (routeName === 'SelectPerson') {
+          this.setSearchPerson(this.searchUserList)
+        } else if (routeName === 'SelectDepartDefault') {
+          this.setSearchDepart(this.searchUserList)
+        }
+      }
+    }
+  },
+
   components: {
     BtScroll
   }

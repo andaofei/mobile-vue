@@ -40,7 +40,6 @@ export default {
       sortKey: 'ReceiveTime',
       userId: getUserInfo().id
     }
-    this.loadingShow = true
     this.$store.dispatch('getItemList', options)
       .then((res) => {
         this.loadingShow = false
@@ -48,7 +47,9 @@ export default {
           this.setToDoCounts(res.data.TotalCount)
         }
       })
-    // this.getList(options)
+      .catch(() => {
+        this.loadingShow = false
+      })
   },
   computed: {
     itemList() {

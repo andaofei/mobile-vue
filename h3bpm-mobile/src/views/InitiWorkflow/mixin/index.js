@@ -24,6 +24,7 @@ const InitWorkflowMixin = {
     this.pullingUp = true
   },
   methods: {
+    // 获取数据
     getDataList() {
       this.showLoading = true
       this.$store.dispatch('getWorkFlowLst')

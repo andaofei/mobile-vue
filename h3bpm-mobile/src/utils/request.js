@@ -6,7 +6,7 @@ import {getBaseUrl} from '@/utils/auth'
 const service = axios.create({
   withCredentials: true,
   baseURL: getBaseUrl(), // api 的 base_url
-  timeout: 8000 // request timeout
+  timeout: 10000 // request timeout
 })
 
 // request interceptor

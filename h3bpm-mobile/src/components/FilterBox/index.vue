@@ -10,18 +10,18 @@
 
       <div class="filter-container">
         <div class="process">
-          <p class="item-name">流程名称</p>
+          <p class="item-name">{{$t('filter.title')}}</p>
           <p class="item-input">
-            <el-input v-model="input" placeholder="请输入内容" maxlength="20"></el-input>
+            <el-input v-model="input" :placeholder="placeHolder" maxlength="20"></el-input>
           </p>
         </div>
 
         <div class="process-person">
-          <span class="process-person-name">发起人</span>
+          <span class="process-person-name">{{$t('filter.sponsor')}}</span>
           <p class="process-person-list" @click="handleSelect">
-            <span class="list-name"  :key="item.id" v-for="(item, index) in checkedPersonList" v-if="index<2 && item.checked">{{item.name}}</span>
-            <span v-if="checkedPersonList.length>2">等{{checkedPersonList.length}}人</span>
-            <span v-else-if="!checkedPersonList">请选择发起人</span>
+            <span class="list-name"  :key="item.id" v-for="(item, index) in checkedPersonList" v-if="index<2 && item.checked">{{item.Text}}</span>
+            <span v-if="checkedPersonList.length>2">{{$t('filter.and')}}{{checkedPersonList.length}}{{$t('filter.people')}}</span>
+            <span v-else-if="!checkedPersonList">{{$t('filter.select')}}</span>
             <span class="svg-box">
               <svg-icon icon-class="right" />
           </span>
@@ -29,18 +29,18 @@
         </div>
 
         <div class="process-time">
-          <p class="item-name">创建时间</p>
+          <p class="item-name">{{$t('filter.time')}}</p>
           <div class="time-picker">
             <div  class="start-time">
               <p @click="openPicker(0)">
                 <span v-if="startTime">{{startTime}}</span>
-                <span v-else>开始时间</span>
+                <span v-else>{{$t('filter.startTime')}}</span>
               </p>
             </div>
             <div class="end-time">
               <p @click="openPicker(1)">
                 <span v-if="endTime">{{endTime}}</span>
-                <span v-else>结束时间</span>
+                <span v-else>{{$t('filter.endTime')}}</span>
               </p>
             </div>
           </div>
@@ -48,7 +48,7 @@
         </div>
 
         <div class="process-status">
-          <p class="item-name">是否加急</p>
+          <p class="item-name">{{$t('filter.status')}}</p>
           <div class="status-list">
             <p  :key="item.id" v-for="(item, index) in statusList" @click="handleClickStatus(item, index)">
               <span :class="{'activeSelect': active === item}">{{item.name}}</span>
@@ -58,14 +58,14 @@
       </div>
 
       <div class="filter-btm">
-        <p class="reset" @click="handleReset">重置</p>
-        <p class="sure" @click="handleSearch">确定</p>
+        <p class="reset" @click="handleReset">{{$t('filter.reset')}}</p>
+        <p class="sure" @click="handleSearch">{{$t('filter.submit')}}</p>
       </div>
 
       <mt-datetime-picker
         ref="picker"
-        cancelText="取消"
-        confirmText="确定"
+        :cancelText="cancelText"
+        :confirmText="confirmText"
         type="date"
         @confirm="handleConfirm"
         v-model="value">
@@ -88,19 +88,22 @@ export default {
       startTime: null,
       timeStatus: -1,
       errorMsg: false,
-      text: '开始时间不能小于结束时间',
+      text: this.$t('filter.tip'),
+      cancelText: this.$t('filter.cancel'),
+      confirmText: this.$t('filter.submit'),
+      placeHolder: this.$t('filter.inner'),
       statusList: [
         {
-          name: '是',
-          id: 2
-        },
-        {
-          name: '否',
+          name: this.$t('filter.yes'),
           id: 0
         },
         {
-          name: '不限',
-          id: -1
+          name: this.$t('filter.no'),
+          id: 1
+        },
+        {
+          name: this.$t('filter.Unlimited'),
+          id: 2
         }
       ],
       active: -1,
@@ -140,7 +143,7 @@ export default {
         let times = moment(this.startTime) - moment(this.endTime)
         if (times > 0) {
           this.errorMsg = true
-          this.text = '开始时间不能大于结束时间'
+          this.text = this.$t('filter.tip')
         } else {
           this.errorMsg = false
         }
@@ -150,7 +153,7 @@ export default {
         let times = moment(this.endTime) - moment(this.startTime)
         if (times < 0) {
           this.errorMsg = true
-          this.text = '结束时间不能小于开始时间'
+          this.text = this.$t('filter.tip2')
         } else {
           this.errorMsg = false
         }

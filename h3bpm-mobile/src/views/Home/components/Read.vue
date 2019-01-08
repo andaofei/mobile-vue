@@ -38,12 +38,12 @@ export default {
       sortKey: 'ReceiveTime',
       userId: getUserInfo().id
     }
-    this.loadingShow = true
     this.$store.dispatch('getReadItem', options)
       .then((res) => {
         this.loadingShow = false
-        if (res.code === ERR_OK) {
-        }
+      })
+      .catch(() => {
+        this.loadingShow = false
       })
   },
   computed: {

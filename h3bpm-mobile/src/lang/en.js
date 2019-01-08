@@ -2,7 +2,7 @@ export default {
   route: {
   },
   navbar: {
-    logOut: 'Log Out',
+    logOut: 'Logout',
     dashboard: 'Dashboard'
   },
   login: {
@@ -13,15 +13,15 @@ export default {
     any: 'any',
     auto: 'AutoLogin',
     sysSetting: 'SystemSet',
-    success: 'Login successfully',
+    success: 'Success',
     fail: 'Login failed',
     effect: 'Logon effect'
   },
   logout: {
-    title: 'LogOff',
+    title: 'Logout',
     tip: 'Tips',
     cancel: 'Cancel',
-    determine: 'Determine',
+    determine: 'Submit',
     config: 'Are you sure you want to cancel it?',
     text: 'Logon is invalid, please login again'
   },
@@ -45,16 +45,24 @@ export default {
     TodoList: 'TodoList',
     DoedMatter: 'DoedMatter',
     TobeRead: 'TobeRead',
-    ReadItem: 'ReadItem'
+    ReadItem: 'ReadItem',
+    Batch: ' BatchReading',
+    selectAll: 'selectAll',
+    submit: 'Submit'
   },
   appCenter: {
     noData: 'no App',
     name: 'Apps',
     back: 'Back',
-    report: 'Report'
+    report: 'Report',
+    other: 'Other',
+    noURl: 'Temporarily not configured url'
   },
   selectPerson: {
-    title: 'Originator'
+    title: 'Originator',
+    search: 'Search',
+    organization: 'Organization',
+    department: 'Department'
   },
   startWork: {
     name: 'Initiate',
@@ -72,7 +80,25 @@ export default {
     ToDoList: 'ToDoList',
     TobeRead: 'TobeRead',
     AllDone: 'AllDone',
-    Read: 'Read'
+    Read: 'Read',
+    sponsor: 'Sponsor',
+    and: 'And',
+    select: 'Please select a sponsor',
+    title: 'ProcessName',
+    time: 'CreationTime',
+    startTime: 'StartingTime',
+    endTime: 'EndTime',
+    status: 'ExpeditedState',
+    yes: 'Yes',
+    no: 'No',
+    Unlimited: 'Unlimited',
+    reset: 'ReSet',
+    submit: 'Submit',
+    cancel: 'Cancel',
+    inner: 'InputContent',
+    tip: 'Start time cannot be less than end time',
+    tip2: 'End time cannot be less than start time',
+    people: 'people'
   },
   workList: {
     loadAll: 'Load ALL'
