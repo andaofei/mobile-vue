@@ -137,31 +137,38 @@ export default new Router({
       path: '/selectDepart', // 选择组织
       name: 'SelectDepart',
       hidden: true,
-      redirect: '/selectDepart/selectDepartDefault',
-      component: () => import('@/components/selectDepart/index'),
-      children: [
-        {
-          path: '/selectDepart/selectDepartDefault',
-          name: 'SelectDepartDefault',
-          hidden: true,
-          component: () => import('@/components/selectDepart/SelectDepartDedault/index'),
-          meta: { title: 'selectdepart', icon: 'selectdepart', noCache: true }
-        },
-        {
-          path: '/selectDepart/selectDepartChild',
-          name: 'SelectDepartChild',
-          hidden: true,
-          component: () => import('@/components/selectDepartChild/index'),
-          meta: { title: 'departchild', icon: 'departchild', noCache: true }
-        },
-        {
-          path: '/selectDepart/selectDepartList',
-          name: 'SelectDepartList',
-          hidden: true,
-          component: () => import('@/components/SelectDepartList/index'),
-          meta: { title: 'departList', icon: 'departList', noCache: true }
-        }
-      ]
+      // redirect: '/selectDepart/selectDepartDefault',
+      component: () => import('@/components/selectDepart/index')
+      // children: [
+      //   {
+      //     path: '/selectDepart/selectDepartDefault',
+      //     name: 'SelectDepartDefault',
+      //     hidden: true,
+      //     component: () => import('@/components/selectDepart/SelectDepartDedault/index'),
+      //     meta: { title: 'selectdepart', icon: 'selectdepart', noCache: true }
+      //   },
+      //   {
+      //     path: '/selectDepart/selectDepartChild',
+      //     name: 'SelectDepartChild',
+      //     hidden: true,
+      //     component: () => import('@/components/selectDepartChild/index'),
+      //     meta: { title: 'departchild', icon: 'departchild', noCache: true }
+      //   },
+      //   {
+      //     path: '/selectDepart/selectDepartList',
+      //     name: 'SelectDepartList',
+      //     hidden: true,
+      //     component: () => import('@/components/SelectDepartList/index'),
+      //     meta: { title: 'departList', icon: 'departList', noCache: true }
+      //   }
+      // ]
+    },
+    {
+      path: '/selectDepart/selectDepartChild',
+      name: 'SelectDepartChild',
+      hidden: true,
+      component: () => import('@/components/selectDepartChild/index'),
+      meta: { title: 'departchild', icon: 'departchild', noCache: true }
     },
     {
       path: '/appcenter/child', // 应用中心

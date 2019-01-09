@@ -36,12 +36,12 @@
 
 <script>
 import BtScroll from '@/components/BtScroll/index'
-import {setAppName} from '@/utils/auth'
+import {setAppName, getBaseUrl} from '@/utils/auth'
 export default {
   name: 'AppCenter',
   data() {
     return {
-      baseUrl: this.$baseUrl,
+      baseUrl: getBaseUrl(),
       probeType: 0,
       pullingUp: true,
       beforeScroll: true,

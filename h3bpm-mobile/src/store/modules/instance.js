@@ -48,7 +48,19 @@ const instance = {
         })
       })
     },
-
+    // 初始进行中数据量
+    getDoingCounts({ commit }, payload) {
+      return new Promise((resolve, reject) => {
+        getInstanceDoing(payload).then(res => {
+          if (res.code === ERR_OK) {
+            commit('SET_INSTANCE_DATA', res.data)
+          }
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
     // 上拉数据
     pullingUpInstanceList({ commit }, payload) {
       return new Promise((resolve, reject) => {

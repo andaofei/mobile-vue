@@ -98,11 +98,15 @@ export default {
   methods: {
     ...mapMutations({
       setCheckedPerson: 'SET_CHECKED_PERSONS', // 单击选择
-      setSearchPerson: 'SET_SEARCH_PERSON_LIST', // 搜索列表
-      setSearchDepart: 'SET_SEARCH_DEPART_LIST' // 搜索列表组织机构
+      setSearchPerson: 'SET_SEARCH_PERSON_LIST', // 搜索个人列表
+      setSearchDepart: 'SET_SEARCH_DEPART_LIST', // 搜索组织机构列表
+      setSearchChild: 'SET_SEARCH_DEPART_CHILD' // 搜索组织机构子表列表
     }),
-
     handleFocus() {
+      let searchString = this.inputValue
+      this.$emit('inputSearch', searchString)
+    },
+    handleFocus1() {
       let searchString = this.inputValue
       let articlesArray = []
       if (!searchString) {
@@ -110,28 +114,43 @@ export default {
       }
       console.log(this.$route.name, '$route')
       const routeName = this.$route.name
-      if (routeName === 'SelectPerson') {
-        articlesArray = this.searchUserList
-        console.log(this.sponsorList, '发起人列表')
-        articlesArray = articlesArray.filter(function(item) {
-          if (item.Text.toLowerCase().indexOf(searchString) !== -1) {
-            return item
-          }
-        })
-        this.setSearchPerson(articlesArray) // 设置发起人列表
-      } else if (routeName === 'SelectDepartDefault') {
-        // console.log(this.departList, '组织机构')
-        articlesArray = this.searchUserList
-        let searchResult = [] // 搜索结果
-        // 过滤遍历结果
-        searchResult = articlesArray.filter(function(item) {
-          if (item.Text.toLowerCase().indexOf(searchString) !== -1) {
-            return item
-          }
-        })
-        console.log(searchResult, 'searchResult')
-        this.setSearchDepart(searchResult)
-      } else if (routeName === 'SelectDepartChild ') {}
+      switch (routeName) {
+        case 'SelectPerson':
+          articlesArray = this.searchUserList
+          // console.log(this.sponsorList, '发起人列表')
+          articlesArray = articlesArray.filter(function(item) {
+            if (item.Text.toLowerCase().indexOf(searchString) !== -1) {
+              return item
+            }
+          })
+          this.setSearchPerson(articlesArray) // 设置发起人列表
+          break
+        case 'SelectDepartDefault':
+          // console.log(this.departList, '组织机构')
+          articlesArray = this.searchUserList
+          let searchResult = [] // 搜索结果
+          // 过滤遍历结果
+          searchResult = articlesArray.filter(function(item) {
+            if (item.Text.toLowerCase().indexOf(searchString) !== -1) {
+              return item
+            }
+          })
+          console.log(searchResult, 'searchResult')
+          this.setSearchDepart(searchResult)
+          break
+        case 'SelectDepartChild':
+          articlesArray = this.searchUserList
+          let searchListResult = [] // 搜索结果
+          // 过滤遍历结果
+          searchListResult = articlesArray.filter(function(item) {
+            if (item.Text.toLowerCase().indexOf(searchString) !== -1) {
+              return item
+            }
+          })
+          console.log(searchListResult, 'searchResult')
+          this.setSearchChild(searchListResult)
+          break
+      }
     },
     searchDataList() {
       console.log(this.inputValue)
@@ -192,10 +211,16 @@ export default {
       if (!value) {
         console.log(this.$route.name, '$route')
         const routeName = this.$route.name
-        if (routeName === 'SelectPerson') {
-          this.setSearchPerson(this.searchUserList)
-        } else if (routeName === 'SelectDepartDefault') {
-          this.setSearchDepart(this.searchUserList)
+        switch (routeName) {
+          case 'SelectPerson':
+            this.setSearchPerson(this.searchUserList)
+            break
+          case 'SelectDepartDefault':
+            this.setSearchDepart(this.searchUserList)
+            break
+          case 'SelectDepartChild':
+            this.setSearchChild(this.searchUserList)
+            break
         }
       }
     }

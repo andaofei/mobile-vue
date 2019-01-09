@@ -32,20 +32,8 @@ export default {
   },
   created() {
     this.setOptions({}) // 清空搜索条件
-    let options = {
-      keyWord: '',
-      finishedWorkItem: true,
-      sortDirection: 'Desc',
-      sortKey: 'OT_WorkItemFinished.FinishTime',
-      userId: getUserInfo().id
-    }
-    this.$store.dispatch('getItemList', options)
-      .then((res) => {
-        this.loadingShow = false
-      })
-      .catch(() => {
-        this.loadingShow = false
-      })
+    this.getTagCounts() // 待阅数/ 待办数
+    this.initDoneList()
   },
   computed: {
     itemList() {
@@ -56,7 +44,23 @@ export default {
     }
   },
   methods: {
-
+    initDoneList() {
+      this.loadingShow = true
+      let options = {
+        keyWord: '',
+        finishedWorkItem: true,
+        sortDirection: 'Desc',
+        sortKey: 'OT_WorkItemFinished.FinishTime',
+        userId: getUserInfo().id
+      }
+      this.$store.dispatch('getItemList', options)
+        .then((res) => {
+          this.loadingShow = false
+        })
+        .catch(() => {
+          this.loadingShow = false
+        })
+    },
     onPullingDown() {
       // 下拉更新数据
       setTimeout(() => {

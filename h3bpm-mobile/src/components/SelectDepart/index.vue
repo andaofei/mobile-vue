@@ -4,32 +4,55 @@
       <div class="select-box">
         <div class="search">
           <div class="search-header">
-          <SearchInput></SearchInput>
+          <SearchInput @inputSearch="inputSearch"></SearchInput>
           </div>
-
           <div class="search-inner">
-            <div class="search-inner-header">
-              <!--//面包屑-->
-              <div class="breadcrumb">
-                <BreadCrumb></BreadCrumb>
-              </div>
-              <div class="selected-person">
-                <el-tag
-                  :key="tag.id"
-                  v-for="(tag, index) in checkedDepartList"
-                  v-if="tag.checked"
-                  closable
-                  :disable-transitions="false"
-                  @close="handleClose(tag, index)">
-                  {{tag.Text}}
-                </el-tag>
-              </div>
-            </div>
-
+            <!--<div class="search-inner-header">-->
+              <!--&lt;!&ndash;//面包屑&ndash;&gt;-->
+              <!--<div class="breadcrumb">-->
+                <!--<BreadCrumb></BreadCrumb>-->
+              <!--</div>-->
+            <!--</div>-->
             <div class="search-inner-body">
-              <div class="tag-scroll">
-                <router-view></router-view>
-              </div>
+              <BtScroll class="tag-scroll"
+                        ref="userList"
+                        @scroll="scroll"
+                        @refresh="refresh"
+                        :probe-type="probeType"
+                        :listenScroll="listenScroll"
+                        :pullingUp="pullingUp"
+                        :beforeScroll="beforeScroll"
+                        @beforeScroll="listScroll">
+                <div class="selectDepartDefault">
+                  <div class="wrapper">
+                    <div class="selected-person">
+                      <el-tag
+                        :key="tag.id"
+                        v-for="(tag, index) in checkedDepartList"
+                        v-if="tag.checked"
+                        closable
+                        :disable-transitions="false"
+                        @close="handleClose(tag, index)">
+                        {{tag.Text}}
+                      </el-tag>
+                    </div>
+                    <div>
+                      <div class="title">{{departTitle}}</div>
+                      <ul>
+                        <li :key="index" v-for="(item, index) in departList"  @click="handleClickChild(item)">
+                          <span>{{item.Text}}</span>
+                          <p>
+                            <span>{{item.ExtendObject.ChildrenCount}}</span>
+                            <span class="svg-box">
+               <svg-icon icon-class="right"></svg-icon>
+            </span>
+                          </p>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </BtScroll>
             </div>
           </div>
         </div>
@@ -42,21 +65,75 @@
 import SelectHeader from '@/components/SelectCommom/Header/index'
 import SearchInput from '@/components/SelectCommom/InputSearch/index'
 import BreadCrumb from '@/components/SelectCommom/BreadCrumb/index'
+import {getUserInfo} from '@/utils/auth'
+import getPartMixin from '@/commom/mixins/selectPartList'
+import {getSelectPerson} from '@/api/getworkitems'
+import {ERR_OK} from '@/api/options/statusCode'
+import { mapMutations } from 'vuex'
 export default {
   name: 'SelectDepart',
+  mixins: [getPartMixin],
   data() {
     return {
       title: '',
-      allCheckStatus: false
+      allCheckStatus: false,
+      probeType: 0,
+      pullingUp: true,
+      beforeScroll: true,
+      departTitle: '',
+      departList: []
     }
   },
   created() {
+    this.initList()
   },
   methods: {
-
+    ...mapMutations({
+      setDeletePart: 'SET_DELETE_DEPART' // 单选
+    }),
+    initList() {
+      let options = {
+        IsMobile: true,
+        LoadTree: true,
+        Recursive: true,
+        ParentID: getUserInfo().ParentID,
+        o: 'U'
+      }
+      return new Promise((resolve, reject) => {
+        getSelectPerson(options).then(res => {
+          console.log(res.data, 'data')
+          if (res.code === ERR_OK) {
+            const list = res.data[0].children
+            this.departTitle = res.data[0].Text
+            this.departList = list
+          }
+          resolve(res)
+        }).catch(error => {
+          console.error(error)
+          reject(error)
+        })
+      })
+    },
     // 关闭tag
     handleClose(tag, index) {
-      this.$store.commit('SET_DELETE_DEPART', {data: tag, index: index})
+      console.log(tag, index)
+      this.setDeletePart({data: tag, index: index})
+      // this.$store.commit('SET_DELETE_DEPART', {data: tag, index: index})
+    },
+    handleClickChild(item) {
+      console.log(item)
+      if (item.ExtendObject.ChildrenCount === 0) {
+        return false
+      }
+      this.$router.push({
+        path: '/selectDepart/selectDepartChild',
+        name: 'SelectDepartChild',
+        params: {
+          objId: item.ObjectID,
+          title: item.Text
+        }
+      })
+      this.title = item.Text
     },
     addViewTags() {
       console.log(this.$route, 'addViewTags')
@@ -65,6 +142,23 @@ export default {
       //   this.$store.dispatch('addView', this.$route)
       // }
       // return false
+    },
+    // 本地搜索
+    inputSearch(inner) {
+      let searchString = inner
+      let articlesArray = []
+      if (!searchString) {
+        this.initList()
+        return articlesArray
+      }
+      articlesArray = this.departList
+      articlesArray = articlesArray.filter(function(item) {
+        if (item.Text.toLowerCase().indexOf(searchString) !== -1) {
+          return item
+        }
+      })
+      console.log(articlesArray, 'articlesArray')
+      this.departList = articlesArray
     }
   },
   computed: {
@@ -296,6 +390,44 @@ export default {
       }
     }
   }
-
+  .selectDepartDefault{
+    position: relative;
+    .wrapper{
+      width: 100%;
+      .selected-person {
+        display: flex;
+        flex-wrap: wrap;
+        line-height: 40px;
+        padding: 4px 10px 0 10px;
+        justify-content: flex-start;
+        background: $baseColor;
+        max-height: 100px;
+        overflow: scroll;
+        span {
+          color: $textColor2;
+          /*font-size: 14px;*/
+          padding: 0 5px;
+          margin-left: 4px;
+          margin-bottom: 5px;
+        }
+      }
+      .title{
+        padding: 0 10px;
+        font-size: 1rem;
+        font-weight: 500;
+        line-height: 2rem;
+      }
+      ul {
+        li {
+          display: flex;
+          justify-content: space-between;
+          padding: 5px 10px;
+          line-height: 30px;
+          color: $textColor2;
+          @include border-bottom-1px($borderBottom);
+        }
+      }
+    }
+  }
 }
 </style>

@@ -1,5 +1,22 @@
 <template>
   <div class="selectDepartChild-box">
+    <SelectHeader></SelectHeader>
+    <div class="search">
+      <div class="search-header">
+        <SearchInput @inputSearch="inputSearch"></SearchInput>
+      </div>
+    </div>
+    <div class="selected-person">
+      <el-tag
+        :key="tag.id"
+        v-for="(tag, index) in checkedDepartList"
+        v-if="tag.checked"
+        closable
+        :disable-transitions="false"
+        @close="handleClose(tag, index)">
+        {{tag.Text}}
+      </el-tag>
+    </div>
     <div class="selectDepartChild-wrapper">
       <BtScroll class="child-scroll"
                 ref="userList"
@@ -58,53 +75,37 @@
 </template>
 
 <script>
+import SelectHeader from '@/components/SelectCommom/Header/index'
+import SearchInput from '@/components/SelectCommom/InputSearch/index'
 import getPartMixin from '@/commom/mixins/selectPartList'
+import {getSelectPerson} from '@/api/getworkitems'
+import {ERR_OK} from '@/api/options/statusCode'
+import {getBaseUrl} from '@/utils/auth'
+import { mapMutations } from 'vuex'
 export default {
   name: 'selectDepartChild',
   mixins: [getPartMixin],
   data() {
     return {
-      baseUrl: this.$baseUrl,
-      personList: [
-        {
-          checked: false,
-          Text: '产品经理1',
-          ExtendObject: {
-            UnitType: 'U',
-            UserImageUrl: [],
-            UserGender: 1
-          }
-        },
-        {
-          checked: false,
-          Text: '产品经理2',
-          ExtendObject: {
-            UnitType: 'O',
-            UserImageUrl: [],
-            UserGender: 1,
-            ChildrenCount: 9
-          }
-        }
+      baseUrl: getBaseUrl(),
+      sponsorList: [
       ],
       man: '/static/images/man.svg', // 男头像
       woman: '/static/images/woman.svg'
     }
   },
   created() {
-    const id = this.$route.params.objId
-    this.$store.dispatch('addView', this.$route)
-    let options = {
-      IsMobile: true,
-      ParentID: id,
-      o: 'U'
-    }
-    this.$store.dispatch('getSelectDepartChildList', options)
-    // console.log(this.$route)
+    this.initList()
+    // this.$store.dispatch('getSelectDepartChildList', options)
   },
   computed: {
     // 数据列表
-    sponsorList() {
-      return this.$store.getters.sponsorList
+    // sponsorList() {
+    //   return this.$store.getters.sponsorList
+    // },
+    // 筛选历史路径
+    filterPath() {
+      return this.$store.getters.filterPath
     },
     // 已选列表
     checkedDepartList() {
@@ -112,6 +113,58 @@ export default {
     }
   },
   methods: {
+    ...mapMutations({
+      setItemChecked: 'SET_CHECKED_DEPART', // 单选
+      setDeletePart: 'SET_DELETE_DEPART' // 删除tag
+    }),
+    // 初始数据
+    initList() {
+      const id = this.$route.params.objId
+      // this.$store.dispatch('addView', this.$route)
+      let options = {
+        IsMobile: true,
+        ParentID: id,
+        o: 'U'
+      }
+      return new Promise((resolve, reject) => {
+        getSelectPerson(options).then(res => {
+          if (res.code === ERR_OK) {
+            const list = res.data
+            let newList = []
+
+            const arr = this.checkedDepartList
+            let newArr = []
+
+            for (const i of list) {
+              newList.push(i.ObjectID)
+            }
+            for (const j of arr) {
+              newArr.push(j.ObjectID)
+            }
+
+            let a = new Set(newList)
+            let b = new Set(newArr)
+            let intersect = new Set([...a].filter(x => b.has(x)))
+
+            console.log(intersect, 'intersect')
+
+            list.map((item) => {
+              item.checked = false
+              for (const inner of intersect) {
+                if (inner === item.ObjectID) {
+                  item.checked = true
+                }
+              }
+            })
+
+            this.sponsorList = list
+          }
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+        })
+      })
+    },
     // 跳转组织页面
     handleClickChild(item) {
       console.log(item)
@@ -119,18 +172,60 @@ export default {
     },
     // 单击选中
     handleClickSelect(item, index) {
-      // console.log(item, index)
-      this.$store.commit('SET_CHECKED_DEPART', {data: item, index: index})
+      if (item.checked === false) {
+        this.$set(item, 'checked', true)
+      } else {
+        this.$set(item, 'checked', false)
+      }
+      console.log(item, index)
+      this.setItemChecked({data: item, index: index})
     },
     // 全选
     handleCheckAll() {
       const data = this.sponsorList
-      // console.log(data)
+      console.log(data)
+      const status = true
+      const checkedStatus = this.allCheckStatus
+      if (checkedStatus) {
+        for (const value of data) {
+          this.$set(value, 'checked', !status)
+        }
+      } else {
+        for (const value of data) {
+          this.$set(value, 'checked', status)
+        }
+      }
       this.setAlLChecked({data: data, state: this.allCheckStatus})
     },
+
+    // 关闭tag
+    handleClose(tag, index) {
+      this.$set(tag, 'checked', false)
+      this.setDeletePart({data: tag, index: index})
+    },
+
     // 确定
     handleSureClick() {
+      this.$router.push(this.filterPath)
       console.log(this.checkedDepartList, 'this.checkedDepartList')
+    },
+
+    // 本地搜索
+    inputSearch(inner) {
+      let searchString = inner
+      let articlesArray = []
+      if (!searchString) {
+        this.initList()
+        return articlesArray
+      }
+      articlesArray = this.sponsorList
+      articlesArray = articlesArray.filter(function(item) {
+        if (item.Text.toLowerCase().indexOf(searchString) !== -1) {
+          return item
+        }
+      })
+      console.log(articlesArray, 'articlesArray')
+      this.sponsorList = articlesArray
     }
   },
   watch: {
@@ -138,27 +233,25 @@ export default {
       this.addViewTags()
     },
     sponsorList: {
-      handler() { // 数据数组有变化将触发此函数
-        // if (this.sponsorList.length === this.checkedDepartList.length && this.checkedDepartList.length !== 0) {
-        //   this.allCheckStatus = true
-        // } else {
-        //   this.allCheckStatus = false
-        // }
+      handler() {
         let arr = []
         this.sponsorList.forEach((item) => {
-          // console.log(item)
           if (item.checked) {
             arr.push(item)
           }
         })
-        if (arr.length === this.sponsorList.length) {
+        if (arr.length === this.sponsorList.length && this.sponsorList.length > 0) {
           this.allCheckStatus = true
         } else {
           this.allCheckStatus = false
         }
       },
-      deep: true // 深度监视
+      deep: true
     }
+  },
+  components: {
+    SelectHeader,
+    SearchInput
   }
 }
 </script>
@@ -171,6 +264,220 @@ export default {
     height: 100%;
     display: flex;
     flex-direction: column;
+    .search{
+      .search-header{
+        padding: 10px 0;
+        .organization{
+          display: flex;
+          justify-content: space-between;
+          line-height: 44px;
+          padding: 0 10px;
+          .text{
+            font-size: 1rem;
+            padding-left: 5px;
+            color: $textColor2;
+          }
+          .svg-box{
+            color: $mainColor;
+          }
+        }
+        .department{
+          display: flex;
+          position: relative;
+          line-height: 40px;
+          background: $mainBgColor;
+          padding: 0 10px;
+          @include border-top-1px($borderBottom);
+          .vertical-line{
+            width: 2px;
+            height: 14px;
+            left: 10px;
+            top: 14px;
+            background: $mainColor;
+            position: absolute;
+          }
+          .text{
+            padding-left: 6px;
+            font-size: 14px;
+            color: $textColor2;
+          }
+        }
+      }
+      .search-inner{
+        flex: 1 0 auto;
+        display: flex;
+        flex-direction: column;
+        .search-inner-header {
+          flex: 0 0 30px;
+          .breadcrumb {
+            padding: 0 10px;
+            .el-breadcrumb {
+              line-height: 30px;
+            }
+          }
+          .selected-person {
+            display: flex;
+            flex-wrap: wrap;
+            line-height: 40px;
+            padding: 4px 10px 0 10px;
+            justify-content: flex-start;
+            background: $baseColor;
+            max-height: 100px;
+            overflow: scroll;
+            span {
+              color: $textColor2;
+              /*font-size: 14px;*/
+              padding: 0 5px;
+              margin-left: 4px;
+              margin-bottom: 5px;
+            }
+          }
+        }
+        .search-inner-body{
+          flex: 1 0 auto;
+          position: relative;
+          .tag-scroll{
+            position: absolute;
+            left: 0;
+            top:0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+            .depart-list{
+              width: 100%;
+              height: auto;
+              li{
+                display: flex;
+                justify-content: space-between;
+                padding: 5px 10px;
+                line-height: 30px;
+                color: $textColor2;
+                @include border-bottom-1px($borderBottom);
+              }
+            }
+          }
+        }
+        .select-btm{
+          position: fixed;
+          width: 100%;
+          left: 0;
+          bottom: 0;
+          z-index: 10;
+          background: $baseColor;
+          display: flex;
+          @include border-top-1px($borderBottom);
+          .btm-left{
+            padding-left: 10px;
+            width: 60%;
+            line-height: 44px;
+            display: flex;
+            .svg-box{
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+              padding-right: 5px;
+              svg{
+                width: 24px;
+                height: 24px;
+              }
+              .checked-icon{
+                color: $mainColor;
+              }
+            }
+            .allCheck{
+              color: $textColor2;
+            }
+          }
+          .btm-right{
+            width: 40%;
+            line-height: 44px;
+            text-align: center;
+            background: $mainColor;
+            color: $baseColor;
+          }
+        }
+        .tag-wrapper {
+          position: relative;
+          flex: 1 0 auto;
+          .tag-scroll {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            .inner-box {
+              li {
+                display: flex;
+                padding: 10px;
+                @include border-bottom-1px($borderBottom);
+                .svg-box {
+                  line-height: 40px;
+                  display: flex;
+                  flex-direction: column;
+                  justify-content: center;
+                  padding-right: 5px;
+                  svg {
+                    width: 24px;
+                    height: 24px;
+                  }
+                  .checked-icon{
+                    color: $mainColor;
+                  }
+                }
+                .inner-right {
+                  display: flex;
+                  .icon-text {
+                    display: inline-block;
+                    text-align: center;
+                    width: 40px;
+                    height: 40px;
+                    font-size: 1rem;
+                    line-height: 40px;
+                    border-radius: 50%;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                    color: $baseColor;
+                    background: $errorColor;
+                  }
+                  .activeClass{
+                    background: $mainColor!important;
+                  }
+                  .activeClass1{
+                    background: $warningColor!important;
+                  }
+                  .activeClass2{
+                    background: $blueColor!important;
+                  }
+                  .inner-text {
+                    padding-left: 5px;
+                    font-size: 1rem;
+                    line-height: 40px;
+                    color: $textColor2;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  .selected-person {
+    display: flex;
+    flex-wrap: wrap;
+    line-height: 40px;
+    padding: 4px 10px 0 10px;
+    justify-content: flex-start;
+    background: $baseColor;
+    max-height: 100px;
+    overflow: scroll;
+    span {
+      color: $textColor2;
+      /*font-size: 14px;*/
+      padding: 0 5px;
+      margin-left: 4px;
+      margin-bottom: 5px;
+    }
   }
   .selectDepartChild-wrapper{
     width: 100%;

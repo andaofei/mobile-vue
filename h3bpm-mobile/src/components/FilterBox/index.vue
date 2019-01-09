@@ -19,9 +19,9 @@
         <div class="process-person">
           <span class="process-person-name">{{$t('filter.sponsor')}}</span>
           <p class="process-person-list" @click="handleSelect">
-            <span class="list-name"  :key="item.id" v-for="(item, index) in checkedPersonList" v-if="index<2 && item.checked">{{item.Text}}</span>
-            <span v-if="checkedPersonList.length>2">{{$t('filter.and')}}{{checkedPersonList.length}}{{$t('filter.people')}}</span>
-            <span v-else-if="!checkedPersonList">{{$t('filter.select')}}</span>
+            <span class="list-name"  :key="item.id" v-for="(item, index) in checkedSponsor" v-if="index<2 && item.checked">{{item.Text}}</span>
+            <span v-if="checkedSponsor.length>2">{{$t('filter.and')}}{{checkedSponsor.length}}{{$t('filter.people')}}</span>
+            <span v-else-if="!checkedSponsor">{{$t('filter.select')}}</span>
             <span class="svg-box">
               <svg-icon icon-class="right" />
           </span>
@@ -114,7 +114,8 @@ export default {
     ...mapMutations({
       setToDoCounts: 'SET_TODO_COUNTS',
       setToReadCounts: 'SET_TO_READ_COUNTS',
-      addOptions: 'ADD_OPTIONS'
+      addOptions: 'ADD_OPTIONS',
+      cleanChecked: 'CLEAN_CHECKED_LIST'
     }),
     // close
     handleHiddenBox() {
@@ -166,17 +167,25 @@ export default {
       this.IsPriority = item.id
     },
 
-    // 搜索
+    // 筛选
     handleSearch() {
       if (this.errorMsg) {
         return false
       }
       this.$emit('handleHiddenBox')
-      // console.log(this.$route.meta.id, 'filter')
+      this.searchActions()
+    },
+    searchActions() {
       const routeId = this.$route.meta.id
+      // console.log(this.checkedSponsor, 'checkedSponsor')
+      let arr = []
+      const checkedSponsor = this.checkedSponsor
+      for (const item of checkedSponsor) {
+        arr.push(item.ObjectID)
+      }
       let options = {
         IsPriority: this.IsPriority,
-        Originators: '', // 发起人
+        Originators: arr, // 发起人
         endDate: this.endTime,
         keyWord: this.input,
         startDate: this.startTime,
@@ -229,6 +238,9 @@ export default {
       this.active = -1
       this.endTime = null
       this.startTime = null
+      this.cleanChecked([])
+      this.$emit('handleHiddenBox')
+      this.searchActions()
     }
   },
   computed: {
@@ -239,8 +251,26 @@ export default {
         return ''
       }
     },
-    checkedPersonList() {
-      return this.$store.getters.checkedPersonList
+    checkedSponsor() {
+      const persons = this.$store.getters.checkedPersonList
+      const departs = this.$store.getters.checkedDepartList
+      return [...persons, ...departs]
+    },
+    // 筛选历史路径
+    filterPath() {
+      return this.$store.getters.filterPath
+    }
+  },
+  watch: {
+    $route: {
+      handler: function(val, oldVal) {
+        // console.log(val.path, 'path')
+        // console.log(this.filterPath, 'filterPath')
+        if (!this.filterPath) { // 重置筛选条件
+          this.handleReset()
+        }
+      },
+      deep: true
     }
   }
 }

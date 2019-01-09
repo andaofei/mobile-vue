@@ -2,7 +2,7 @@
     <div class="layout-container">
       <!--主视图-->
       <div class="layout-box">
-          <router-view :key="key"/>
+        <router-view :key="key"/>
       </div>
       <!--底部-->
       <NavBar class="nav-bar"></NavBar>

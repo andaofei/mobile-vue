@@ -66,12 +66,14 @@ export default {
     }
   },
   created() {
-    this._initList()
+    this.initToReadList()
   },
   methods: {
-    _initList() {
+    initToReadList() {
+      this.loadingShow = true
       this.setOptions({}) // 清空搜索条件
       this.clearChecked([]) // 清空搜索条件
+      this.getTagCounts() // 待阅数/ 待办数
       let options = {
         readWorkItem: false,
         keyWord: '',
@@ -234,9 +236,9 @@ export default {
     //   // console.log(pos.y)
     // }
   },
-  watch: { // 监视双向绑定的数据数组
+  watch: {
     readList: {
-      handler() { // 数据数组有变化将触发此函数
+      handler() {
         // console.log(this.itemCheckList, 'itemCheckList')
         // console.log(this.$store.getters.readList, 'readList')
         if (this.readList.length === this.itemCheckList.length) {
@@ -245,7 +247,7 @@ export default {
           this.allCheckStatus = false
         }
       },
-      deep: true // 深度监视
+      deep: true
     }
   },
   computed: {

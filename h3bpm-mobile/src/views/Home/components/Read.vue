@@ -31,20 +31,8 @@ export default {
   },
   created() {
     this.setOptions({}) // 清空搜索条件
-    let options = {
-      keyWord: '',
-      readWorkItem: true,
-      sortDirection: 'Desc',
-      sortKey: 'ReceiveTime',
-      userId: getUserInfo().id
-    }
-    this.$store.dispatch('getReadItem', options)
-      .then((res) => {
-        this.loadingShow = false
-      })
-      .catch(() => {
-        this.loadingShow = false
-      })
+    this.getTagCounts() // 待阅数/ 待办数
+    this.initReadList()
   },
   computed: {
     // 数据列表
@@ -56,6 +44,23 @@ export default {
     }
   },
   methods: {
+    initReadList() {
+      this.loadingShow = true
+      let options = {
+        keyWord: '',
+        readWorkItem: true,
+        sortDirection: 'Desc',
+        sortKey: 'ReceiveTime',
+        userId: getUserInfo().id
+      }
+      this.$store.dispatch('getReadItem', options)
+        .then((res) => {
+          this.loadingShow = false
+        })
+        .catch(() => {
+          this.loadingShow = false
+        })
+    },
     onPullingDown() {
       let that = this
       // 下拉更新数据

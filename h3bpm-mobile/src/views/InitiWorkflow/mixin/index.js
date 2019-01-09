@@ -4,6 +4,7 @@ import {initSelfWorkflow} from '@/api/loadWorkFlows'
 import { ERR_OK } from '@/api/options/statusCode'
 import {isDingtalk} from '@/utils/dingoptions'
 import dingtalk from 'dingtalk-javascript-sdk'
+import {getBaseUrl} from '@/utils/auth'
 const InitWorkflowMixin = {
   data() {
     return {
@@ -15,7 +16,7 @@ const InitWorkflowMixin = {
       activeClass2: 'activeClass2',
       activeClass3: 'activeClass3',
       showLoading: false,
-      baseUrl: this.$baseUrl
+      baseUrl: getBaseUrl()
     }
   },
   created() {
@@ -24,7 +25,6 @@ const InitWorkflowMixin = {
     this.pullingUp = true
   },
   methods: {
-    // 获取数据
     getDataList() {
       this.showLoading = true
       this.$store.dispatch('getWorkFlowLst')
@@ -37,7 +37,7 @@ const InitWorkflowMixin = {
     },
     // 搜索
     handleSearch() {
-      console.log(this.searchList)
+      // console.log(this.searchList)
       let articlesArray = this.searchList
       let searchString = this.inputValue
 

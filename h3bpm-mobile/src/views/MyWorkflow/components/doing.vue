@@ -25,6 +25,7 @@ import getListMixin from '@/commom/mixins/getList'
 import getInstanceMixin from '@/commom/mixins/isntanceMixin'
 import {getUserInfo} from '@/utils/auth'
 import { ERR_OK } from '@/api/options/statusCode'
+
 export default {
   name: 'Doing',
 
@@ -36,21 +37,7 @@ export default {
 
   created() {
     this.setInstanceOptions({}) // 清空搜索条件
-    let options = {
-      status: 2,
-      userId: getUserInfo().id
-    }
-    this.loadingShow = true
-    this.$store.dispatch('getInstanceDoing', options)
-      .then((res) => {
-        this.loadingShow = false
-        if (res.code === ERR_OK) {
-          this.setCounts(res.data.TotalCount)
-        }
-      })
-      .catch(() => {
-        this.loadingShow = false
-      })
+    this.initDoingList()
   },
 
   methods: {
@@ -62,7 +49,6 @@ export default {
         status: 2,
         userId: getUserInfo().id
       }
-      // let newOptions = Object.assign(options, this.instanceOptions)
       let newOptions = vue.userProfile = Object.assign(options, this.todoOptions)
       console.log(newOptions)
       setTimeout(() => {
@@ -86,7 +72,6 @@ export default {
           status: 2,
           userId: getUserInfo().id
         }
-        // let newOptions = Object.assign(options, this.instanceOptions)
         let newOptions = vue.userProfile = Object.assign(options, this.todoOptions)
         this.$store.dispatch('pullingUpInstanceList', newOptions)
           .then((res) => {

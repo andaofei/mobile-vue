@@ -22,11 +22,12 @@ import {getWorkDetail, getWorkUrl} from '@/api/loadWorkFlows'
 // import {isDingtalk} from '@/utils/dingoptions'
 // import dingtalk from 'dingtalk-javascript-sdk'
 // import iFrameResize from 'iframe-resizer'
+import {getBaseUrl} from '@/utils/auth'
 export default {
   name: 'SheetDetail',
   data() {
     return {
-      baseUrl: this.$baseUrl,
+      baseUrl: getBaseUrl(),
       htmlBox: '',
       src: ''
     }

@@ -21,7 +21,7 @@ export default {
     }
   },
   computed: {
-    // 筛选历史
+    // 筛选历史路径
     filterPath() {
       return this.$store.getters.filterPath
     }

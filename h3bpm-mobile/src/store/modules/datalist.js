@@ -5,11 +5,8 @@ const dataList = {
   state: {
     todoCounts: 0,
     toReadCounts: 0,
-    // 选人列表
-    // personList: [],
     departList: [],
     departTitle: '', // 部门名称
-    // departChildList: [], // 组织子表发起人
     sponsorList: [], // 发起人---唯一数据列表
     departChildUsList: [], // 个人用户
     departChildOgList: [], // 组织
@@ -94,7 +91,7 @@ const dataList = {
       }
     },
 
-    // 待阅模块 ------------------------------------------------------------------
+    // 待阅模块 ----------------
 
     // 改变待阅全选状态
     CHANGE_DATA_LIST_CHECKED: (state, payload) => {
@@ -177,7 +174,7 @@ const dataList = {
       state.toReadCounts = payload
     },
 
-    // 发起人模块 -----------------------------------------------
+    // 发起人模块 --------
 
     // 添加面包屑路由
     ADD_VISITED_VIEW: (state, view) => {
@@ -218,20 +215,20 @@ const dataList = {
       payload.map((item) => {
         if (item.ExtendObject.UnitType === 'U') {
           item.checked = false
-          // arr.push(item)
         }
       })
+      console.log(state.checkedDepartList)
       state.sponsorList = payload
-      // state.sponsorList = Object.assign(state.sponsorList, state.checkedPersonList)
-      // state.searchUserList = Object.assign(state.sponsorList, state.checkedPersonList) // 搜索列表
+      // state.sponsorList = Object.assign(state.sponsorList, state.checkedDepartList)
+      state.searchUserList = payload // 搜索列表
     },
 
     // 选中/取消 本部门发起人
     SET_CHECKED_PERSONS: (state, payload) => {
-      // console.log(payload, 'SET_CHECKED_PERSONS')
-      let check = state.sponsorList[payload.index].checked
-      const status = !check
-      state.sponsorList[payload.index].checked = status
+      console.log(payload, 'payload')
+      // let check = state.sponsorList[payload.index].checked
+      // const status = !check
+      // state.sponsorList[payload.index].checked = status
       if (payload.data.checked) {
         state.checkedPersonList.push(payload.data)
       } else {
@@ -239,12 +236,13 @@ const dataList = {
         state.checkedPersonList.splice(state.checkedPersonList.indexOf(payload.data), 1)
       }
     },
+
     // 选中/取消 组织列表发起人
     SET_CHECKED_DEPART: (state, payload) => {
       // console.log(payload, 'SET_CHECKED_PERSONS')
-      let check = state.sponsorList[payload.index].checked
-      const status = !check
-      state.sponsorList[payload.index].checked = status
+      // let check = state.sponsorList[payload.index].checked
+      // const status = !check
+      // state.sponsorList[payload.index].checked = status
       if (payload.data.checked) {
         state.checkedDepartList.push(payload.data)
       } else {
@@ -268,22 +266,22 @@ const dataList = {
     // 删除本部门已选发起人
     SET_DELETE_PERSONS: (state, payload) => {
       // console.log(payload)
-      state.sponsorList.map((item, index) => {
-        // console.log(item, index)
-        if (item.ObjectID === payload.data.ObjectID) {
-          item.checked = false
-        }
-      })
+      // state.sponsorList.map((item, index) => {
+      //   // console.log(item, index)
+      //   if (item.ObjectID === payload.data.ObjectID) {
+      //     item.checked = false
+      //   }
+      // })
       state.checkedPersonList.splice(state.checkedPersonList.indexOf(payload.data), 1)
     },
 
     // 删除组织机构已选发起人
     SET_DELETE_DEPART: (state, payload) => {
-      state.sponsorList.map((item, index) => {
-        if (item.ObjectID === payload.data.ObjectID) {
-          item.checked = false
-        }
-      })
+      // state.sponsorList.map((item, index) => {
+      //   if (item.ObjectID === payload.data.ObjectID) {
+      //     item.checked = false
+      //   }
+      // })
       // state.checkedDepartList.splice(state.checkedDepartList.indexOf(payload.data), 1)
       state.checkedDepartList.splice(payload.index, 1)
     },
@@ -307,6 +305,7 @@ const dataList = {
 
     // 全选 组织发起人
     SET_ALL_CHECKED_DEPART: (state, payload) => {
+      console.log(payload)
       if (!payload.state) {
         state.checkedDepartList = []
         payload.data.map((item) => {
@@ -332,20 +331,33 @@ const dataList = {
       })
       // state.searchUserList = payload
     },
+
     // 发起人搜索列表
     SET_SEARCH_PERSON_LIST: (state, payload) => {
       state.sponsorList = payload
     },
+
     // 组织机构搜索列表
     SET_SEARCH_DEPART_LIST: (state, payload) => {
-      console.log(payload)
       state.departList = []
       state.departList = payload
+    },
+
+    // 组织机构子表搜索列表
+    SET_SEARCH_DEPART_CHILD: (state, payload) => {
+      state.sponsorList = []
+      state.sponsorList = payload
+    },
+
+    // 清空发起人
+    CLEAN_CHECKED_LIST: (state, payload) => {
+      state.checkedPersonList = payload
+      state.checkedDepartList = payload
     }
   },
 
   actions: {
-    // 初始待办/已办列表数据 ----------------------
+    // 初始待办/已办列表数据
     getItemList({ commit }, payload) {
       return new Promise((resolve, reject) => {
         getWorkItem(payload).then(res => {
@@ -367,7 +379,7 @@ const dataList = {
     pullingUpWorkList({ commit }, payload) {
       return new Promise((resolve, reject) => {
         getWorkItem(payload).then(res => {
-          console.log(res, '上拉数据')
+          // console.log(res, '上拉数据')
           if (res.code === ERR_OK) {
             commit('ADD_DATA_LIST', {
               data: res.data,

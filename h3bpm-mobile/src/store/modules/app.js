@@ -19,7 +19,7 @@ const app = {
     },
     // 筛选
     SET_FILTER_SHOW: (state, payload) => {
-      console.log(payload)
+      console.log(payload, '筛选路径')
       state.filterShow = payload.status
       state.filterTitle = payload.inner.title
       state.filterPath = payload.path

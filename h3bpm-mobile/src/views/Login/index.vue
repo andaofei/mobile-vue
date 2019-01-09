@@ -48,6 +48,7 @@ import dingtalk from 'dingtalk-javascript-sdk'
 import {Toast} from 'mint-ui'
 import {getDingTalkInfo} from '@/api/dingTalk'
 import {isDingtalk} from '@/utils/dingoptions'
+const evn = process.env.NODE_ENV === 'production'
 export default {
   name: 'Login',
   data() {
@@ -67,8 +68,12 @@ export default {
       redirect: undefined
     }
   },
+  created() {
+    if (evn) {
+      Vue.prototype.getConfigJson()
+    }
+  },
   mounted() {
-    Vue.prototype.getConfigJson()
     if (this.autoLogin) {
       console.log(this.autoLogin)
       this.handleLogin()

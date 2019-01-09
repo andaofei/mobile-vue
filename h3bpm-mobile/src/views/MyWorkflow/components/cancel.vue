@@ -33,18 +33,8 @@ export default {
   },
   created() {
     this.setInstanceOptions({}) // 清空搜索条件
-    let options = {
-      status: 5,
-      userId: getUserInfo().id
-    }
-    this.loadingShow = true
-    this.$store.dispatch('getInstanceDoing', options)
-      .then((res) => {
-        this.loadingShow = false
-      })
-      .catch(() => {
-        this.loadingShow = false
-      })
+    this.initCancelList()
+    this.getDoingCounts()
   },
   methods: {
     onPullingDown() {

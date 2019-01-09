@@ -6,7 +6,7 @@ import ToTop from '@/views/Home/commom/ToTop'
 import {isDingtalk} from '@/utils/dingoptions'
 import dingtalk from 'dingtalk-javascript-sdk'
 import {mapMutations} from 'vuex'
-import {getUserInfo} from '@/utils/auth'
+import {getUserInfo, getBaseUrl} from '@/utils/auth'
 import { ERR_OK } from '@/api/options/statusCode'
 const getListMixin = {
   data() {
@@ -31,23 +31,12 @@ const getListMixin = {
       scrollToEasingOptions: ['bounce', 'swipe', 'swipeBounce'],
       items: [],
       itemIndex: 0,
-      baseUrl: this.$baseUrl,
+      baseUrl: getBaseUrl(),
       loadingShow: false
     }
   },
   created() {
     this.topTop = false
-    let options = {
-      keyWord: '',
-      finishedWorkItem: false,
-      sortDirection: 'Desc',
-      sortKey: 'ReceiveTime',
-      existsLength: 0,
-      userId: getUserInfo().id
-    }
-    this.loadingShow = true
-    this.$store.dispatch('setTodoCounts', options) // 待办数
-    this.$store.dispatch('setTagCounts') // 待阅数
   },
   watch: {
     scrollbarObj: {
@@ -90,6 +79,18 @@ const getListMixin = {
     }
   },
   methods: {
+    getTagCounts() {
+      let options = {
+        keyWord: '',
+        finishedWorkItem: false,
+        sortDirection: 'Desc',
+        sortKey: 'ReceiveTime',
+        existsLength: 0,
+        userId: getUserInfo().id
+      }
+      this.$store.dispatch('setTodoCounts', options) // 待办数
+      this.$store.dispatch('setTagCounts') // 待阅数
+    },
     // 点击元素事件
     handleClick(item) {
       const routeId = this.$route.meta.id
@@ -100,14 +101,15 @@ const getListMixin = {
         this.getSelfWork(item)
       }
     },
+
     // 首页
     getWorkUrl(data) {
       const options = data.item.ObjectID
       return new Promise((resolve, reject) => {
         getWorkUrl(options).then(res => {
+          this.loadingShow = false
           if (res.code === ERR_OK) {
             const urls = this.baseUrl + res.data
-            this.loadingShow = false
             if (isDingtalk) {
               dingtalk.ready(function() {
                 const dd = dingtalk.apis
@@ -131,11 +133,13 @@ const getListMixin = {
         })
       })
     },
+
     // 我的流程
     getSelfWork(data) {
       const options = data.item.ObjectID
       return new Promise((resolve, reject) => {
         getSelfWorkflow(options).then(res => {
+          this.loadingShow = false
           if (res.code === ERR_OK) {
             // const urls = this.baseUrl + res.data
             const urls = this.baseUrl + res.data
@@ -162,6 +166,7 @@ const getListMixin = {
         })
       })
     },
+
     scroll(pos) {
       // console.log(pos.y)
       if (pos.y < -100) {

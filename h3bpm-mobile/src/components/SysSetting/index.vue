@@ -16,12 +16,12 @@
       <span class="right">{{version}}</span>
     </div>
 
-    <div class="item">
-      <span>{{$t('setting.domainName')}}</span>
-      <p class="right">
-        <input type="text" v-model="ipPath" placeholder="" maxlength="16" autofocus="autofocus">
-      </p>
-    </div>
+    <!--<div class="item">-->
+      <!--<span>{{$t('setting.domainName')}}</span>-->
+      <!--<p class="right">-->
+        <!--<input type="text" v-model="ipPath" placeholder="" maxlength="16" autofocus="autofocus">-->
+      <!--</p>-->
+    <!--</div>-->
 
     <div class="item" @click="changeLang">
       <span>{{$t('setting.switchLanguage')}}</span>

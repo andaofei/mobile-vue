@@ -104,6 +104,7 @@ import BScroll from 'better-scroll'
 import Loading from '../loading/loading.vue'
 import Bubble from '../bubble/bubble.vue'
 import NoData from '@/components/NoData/index'
+import {getBaseUrl} from '@/utils/auth'
 import {getRect} from '../../commom/js/dom'
 const COMPONENT_NAME = 'scroll'
 const DIRECTION_H = 'horizontal'
@@ -198,7 +199,7 @@ export default {
       pullUpDirty: true,
       pullDownStyle: '',
       bubbleY: 0,
-      baseUrl: this.$baseUrl,
+      baseUrl: getBaseUrl(),
       jiaji: 'static/images/jiaji.png',
       jiaji2: 'static/images/jiaji2.svg',
       cuiban: 'static/images/cuiban.png',

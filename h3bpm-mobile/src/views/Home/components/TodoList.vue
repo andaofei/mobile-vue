@@ -33,23 +33,8 @@ export default {
   },
   created() {
     this.setOptions({}) // 清空搜索条件
-    let options = {
-      keyWord: '',
-      finishedWorkItem: false,
-      sortDirection: 'Desc',
-      sortKey: 'ReceiveTime',
-      userId: getUserInfo().id
-    }
-    this.$store.dispatch('getItemList', options)
-      .then((res) => {
-        this.loadingShow = false
-        if (res.code === ERR_OK) {
-          this.setToDoCounts(res.data.TotalCount)
-        }
-      })
-      .catch(() => {
-        this.loadingShow = false
-      })
+    this.getTagCounts() // 待阅数/ 待办数
+    this.initToDoList()
   },
   computed: {
     itemList() {
@@ -60,18 +45,25 @@ export default {
     }
   },
   methods: {
-    // getList(options) {
-    //   return new Promise((resolve, reject) => {
-    //     getWorkItem(options).then(res => {
-    //       if (res.code === ERR_OK) {
-    //         console.log(res, '初始待办/已办')
-    //       }
-    //       resolve(res)
-    //     }).catch(error => {
-    //       reject(error)
-    //     })
-    //   })
-    // },
+    initToDoList() {
+      let options = {
+        keyWord: '',
+        finishedWorkItem: false,
+        sortDirection: 'Desc',
+        sortKey: 'ReceiveTime',
+        userId: getUserInfo().id
+      }
+      this.loadingShow = true
+      this.$store.dispatch('getItemList', options)
+        .then((res) => {
+          this.loadingShow = false
+        })
+        .catch((error) => {
+          this.loadingShow = false
+          console.error(error)
+        })
+    },
+
     onPullingDown() {
       // 下拉更新数据
       // console.log('pulling down and refresh data')

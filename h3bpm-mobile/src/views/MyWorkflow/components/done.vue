@@ -33,21 +33,10 @@ export default {
   },
   created() {
     this.setInstanceOptions({}) // 清空搜索条件
-    let options = {
-      status: 4,
-      userId: getUserInfo().id
-    }
-    this.loadingShow = true
-    this.$store.dispatch('getInstanceDoing', options)
-      .then((res) => {
-        this.loadingShow = false
-      })
-      .catch(() => {
-        this.loadingShow = false
-      })
+    this.initDoneList()
+    this.getDoingCounts()
   },
   methods: {
-
     onPullingDown() {
       // 更新数据
       let options = {
@@ -56,9 +45,7 @@ export default {
         status: 4,
         userId: getUserInfo().id
       }
-      // let newOptions = Object.assign(options, this.instanceOptions)
       let newOptions = vue.userProfile = Object.assign(options, this.todoOptions)
-      console.log(newOptions)
       setTimeout(() => {
         this.$store.dispatch('getInstanceDoing', newOptions)
           .then((res) => {

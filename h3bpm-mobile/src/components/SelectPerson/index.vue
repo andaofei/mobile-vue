@@ -7,7 +7,7 @@
         <div class="search">
           <div class="search-header">
             <!--搜索框-->
-            <SearchInput></SearchInput>
+            <SearchInput @inputSearch="inputSearch"></SearchInput>
             <!--组织-->
             <div class="organization" @click="selectDepart">
               <p>
@@ -38,7 +38,7 @@
                 closable
                 :disable-transitions="false"
                 @close="handleClose(tag, index)">
-                  <span> {{tag.sortedType}}</span>
+                  <span> {{tag.Text}}</span>
                 </el-tag>
             </div>
             <div class="tag-wrapper" >
@@ -102,19 +102,22 @@
 
 <script>
 import getListMixin from '@/commom/mixins/getList'
+import {getSelectPerson} from '@/api/getworkitems'
 // import BtScroll from '@/components/BtScroll/index'
 import BtScroll from '@/components/scroll/new-scroll'
 import SelectHeader from '@/components/SelectCommom/Header/index'
 import SearchInput from '@/components/SelectCommom/InputSearch/index'
-import {getUserInfo} from '@/utils/auth'
+import {getUserInfo, getBaseUrl} from '@/utils/auth'
 import NoData from '@/components/NoData/index'
+import {ERR_OK} from '@/api/options/statusCode'
 import { mapMutations } from 'vuex'
 export default {
   name: 'SelectPerson',
   mixins: [getListMixin],
   data() {
     return {
-      baseUrl: this.$baseUrl,
+      baseUrl: getBaseUrl(),
+      sponsorList: [], // 发起人列表
       probeType: 0,
       scrollY: 0,
       pullingUp: true,
@@ -134,17 +137,43 @@ export default {
     this.probeType = 3
     this.listenScroll = true
     this.pullingUp = true
-    this.getList()
+    // this.getList()
+    this.initList()
   },
 
   methods: {
     ...mapMutations({
-      setAlLChecked: 'SET_ALL_CHECKED_PERSONS',
-      setCheckedPerson: 'SET_CHECKED_PERSONS',
-      setEmptyPerson: 'SET_EMPTY_PERSONS',
-      setDeletePerson: 'SET_DELETE_PERSONS'
+      setAlLChecked: 'SET_ALL_CHECKED_PERSONS', // 全选
+      setCheckedPerson: 'SET_CHECKED_PERSONS', // 单选
+      setEmptyPerson: 'SET_EMPTY_PERSONS', // 清空
+      setDeletePerson: 'SET_DELETE_PERSONS' // 删除已选
     }),
     // 获取数据
+    initList() {
+      let options = {
+        IsMobile: true,
+        ParentID: getUserInfo().ParentID,
+        o: 'U'
+      }
+      return new Promise((resolve, reject) => {
+        getSelectPerson(options).then(res => {
+          console.log(res.data)
+          if (res.code === ERR_OK) {
+            const list = res.data
+            list.map((item) => {
+              item.checked = false
+            })
+            this.sponsorList = Object.assign(list, this.checkedPersonList)
+            // this.sponsorList = list
+          }
+          resolve(res)
+        }).catch(error => {
+          console.error(error)
+          reject(error)
+        })
+      })
+    },
+
     getList() {
       let options = {
         IsMobile: true,
@@ -160,6 +189,7 @@ export default {
           this.loadShow = false
         })
     },
+
     selectDepart() {
       this.$router.push('/selectDepart')
       // 清空已选
@@ -168,23 +198,58 @@ export default {
 
     // 单击选中
     handleClickSelect(item, index) {
+      if (item.checked === false) {
+        this.$set(item, 'checked', true)
+      } else {
+        this.$set(item, 'checked', false)
+      }
       this.setCheckedPerson({data: item, index: index})
     },
 
     // 全选
     handleCheckAll() {
       const data = this.sponsorList
+      const status = true
+      if (this.allCheckStatus) {
+        for (const value of data) {
+          this.$set(value, 'checked', !status)
+        }
+      } else {
+        for (const value of data) {
+          this.$set(value, 'checked', status)
+        }
+      }
       this.setAlLChecked({data: data, state: this.allCheckStatus})
     },
 
     // 关闭tag
     handleClose(tag, index) {
+      this.$set(tag, 'checked', false)
       this.setDeletePerson({data: tag, index: index})
     },
 
     // 确定
     handleSureClick() {
       console.log(this.checkedPersonList, 'this.checkedPersonList')
+      this.$router.go(-1)
+    },
+
+    // 本地搜索
+    inputSearch(inner) {
+      let searchString = inner
+      let articlesArray = []
+      if (!searchString) {
+        this.initList()
+        return articlesArray
+      }
+      articlesArray = this.sponsorList
+      articlesArray = articlesArray.filter(function(item) {
+        if (item.Text.toLowerCase().indexOf(searchString) !== -1) {
+          return item
+        }
+      })
+      console.log(articlesArray, 'articlesArray')
+      this.sponsorList = articlesArray
     },
 
     // 滑动
@@ -203,6 +268,7 @@ export default {
         this.$refs.userList.forceUpdate()
       }, 1000)
     },
+
     //  刷新
     refresh() {
       this.$refs.userList.refresh()
@@ -215,9 +281,6 @@ export default {
   },
 
   computed: {
-    sponsorList() {
-      return this.$store.getters.sponsorList
-    },
     checkedPersonList() {
       return this.$store.getters.checkedPersonList
     }
@@ -225,7 +288,7 @@ export default {
 
   watch: {
     sponsorList: {
-      handler() { // 数据数组有变化将触发此函数
+      handler() {
         if (this.sponsorList.length > 0 && this.sponsorList.length === this.checkedPersonList.length) {
           console.log(true)
           this.allCheckStatus = true
@@ -233,7 +296,7 @@ export default {
           this.allCheckStatus = false
         }
       },
-      deep: true // 深度监视
+      deep: true
     }
   },
 

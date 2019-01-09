@@ -158,8 +158,11 @@ export default {
 
     // 搜索
     handleSearch() {
+      this.searchActions()
       this.$emit('handleHiddenBox')
       this.$emit('handleSearch')
+    },
+    searchActions() {
       const routeId = this.$route.meta.id
       let options = {
         IsPriority: this.IsPriority,
@@ -170,7 +173,7 @@ export default {
       }
       console.log(options)
       switch (routeId) {
-        case 4: // 待办
+        case 4: // 进行中
           options.status = 2
           this.setInstanceOptions(options)
           this.$store.dispatch('getInstanceDoing', options)
@@ -180,14 +183,14 @@ export default {
               }
             })
           break
-        case 5: // 待办
+        case 5: // 已完成
           options.status = 4
           this.setInstanceOptions(options)
           this.$store.dispatch('getInstanceDoing', options)
             .then((res) => {
             })
           break
-        case 6: // 待办
+        case 6: // 已取消
           options.status = 5
           this.setInstanceOptions(options)
           this.$store.dispatch('getInstanceDoing', options)
@@ -202,6 +205,9 @@ export default {
       this.active = -1
       this.endTime = null
       this.startTime = null
+      this.searchActions()
+      this.$emit('handleHiddenBox')
+      this.$emit('handleSearch')
     }
   },
   computed: {

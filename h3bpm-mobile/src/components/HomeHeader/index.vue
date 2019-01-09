@@ -26,7 +26,7 @@ export default {
       const name = this.$route.meta
       const path = this.$route.path
       this.$store.commit('SET_FILTER_SHOW', {status: true, inner: name, path: path})
-      console.log(this.$route)
+      // console.log(this.$route)
     }
   }
 }
