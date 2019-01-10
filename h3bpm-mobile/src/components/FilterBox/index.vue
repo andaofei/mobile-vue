@@ -9,10 +9,21 @@
         </div>
 
       <div class="filter-container">
+        <BtScroll
+                  class="filter-scroll"
+                  ref="userList"
+                  @scroll="scroll"
+                  @refresh="refresh"
+                  @beforeScroll="listScroll"
+                  :probe-type="probeType"
+                  :listenScroll="listenScroll"
+                  :pullingUp="pullingUp"
+                  :beforeScroll="beforeScroll">
+        <div>
         <div class="process">
           <p class="item-name">{{$t('filter.title')}}</p>
           <p class="item-input">
-            <el-input v-model="input" :placeholder="placeHolder" maxlength="20"></el-input>
+            <el-input v-model="input" @input="handleFocus" :placeholder="placeHolder" maxlength="20"></el-input>
           </p>
         </div>
 
@@ -55,6 +66,8 @@
             </p>
           </div>
         </div>
+        </div>
+        </BtScroll>
       </div>
 
       <div class="filter-btm">
@@ -68,6 +81,7 @@
         :confirmText="confirmText"
         type="date"
         @confirm="handleConfirm"
+        @cancel="handleCancel"
         v-model="value">
       </mt-datetime-picker>
     </div>
@@ -75,48 +89,19 @@
 
 <script>
 import {getUserInfo} from '@/utils/auth'
-import {mapMutations} from 'vuex'
+import filterMixin from '@/commom/mixins/filterMixin'
 import moment from 'moment'
 import { ERR_OK } from '@/api/options/statusCode'
 export default {
   name: 'FilterBox',
+  mixins: [filterMixin],
   data() {
     return {
-      input: '',
-      value: new Date(),
-      endTime: null,
-      startTime: null,
-      timeStatus: -1,
-      errorMsg: false,
-      text: this.$t('filter.tip'),
-      cancelText: this.$t('filter.cancel'),
-      confirmText: this.$t('filter.submit'),
-      placeHolder: this.$t('filter.inner'),
-      statusList: [
-        {
-          name: this.$t('filter.yes'),
-          id: 2
-        },
-        {
-          name: this.$t('filter.no'),
-          id: 1
-        },
-        {
-          name: this.$t('filter.Unlimited'),
-          id: 0
-        }
-      ],
-      active: -1,
-      IsPriority: ''
     }
   },
+
   methods: {
-    ...mapMutations({
-      setToDoCounts: 'SET_TODO_COUNTS',
-      setToReadCounts: 'SET_TO_READ_COUNTS',
-      addOptions: 'ADD_OPTIONS',
-      cleanChecked: 'CLEAN_CHECKED_LIST'
-    }),
+
     // close
     handleHiddenBox() {
       this.$emit('handleHiddenBox')
@@ -127,12 +112,6 @@ export default {
       this.$router.push({
         path: '/selectPerson'
       })
-    },
-
-    // 打开时间选择
-    openPicker(e) {
-      this.timeStatus = e
-      this.$refs.picker.open()
     },
 
     // 确定时间
@@ -161,12 +140,6 @@ export default {
       }
     },
 
-    // 加急
-    handleClickStatus(item, index) {
-      this.active = item
-      this.IsPriority = item.id
-    },
-
     // 筛选
     handleSearch() {
       if (this.errorMsg) {
@@ -175,6 +148,7 @@ export default {
       this.$emit('handleHiddenBox')
       this.searchActions()
     },
+
     searchActions() {
       const routeId = this.$route.meta.id
       // console.log(this.checkedSponsor, 'checkedSponsor')
@@ -232,6 +206,7 @@ export default {
           return false
       }
     },
+
     // 重置
     handleReset() {
       this.input = ''
@@ -280,129 +255,5 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  @import "../../commom/scss/mixin";
-  @import "../../commom/scss/varible";
-.filter-wrapper{
-  height: 100%;
-  flex: 1 0 auto;
-  background:$baseColor;
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  .filter-title, .filter-btm{
-    display: flex;
-    justify-content: space-between;
-  }
-  .filter-title{
-    padding: 0 12px;
-    @include border-bottom-1px($borderBottom);
-    font-size: 1rem;
-    line-height: 44px;
-    .svg-box{
-      color: $mainColor;
-      width: 20px;
-    }
-    .text{
-      color: $textColor2;
-    }
-  }
-  .filter-btm{
-    @include border-top-1px($borderBottom);
-    height: 44px;
-    p {
-      text-align: center;
-      line-height: 44px;
-    }
-    .reset{
-      color: $textColor2;
-      width: 60%;
-    }
-    .sure{
-      width: 40%;
-      background: $mainColor;
-      color: $baseColor;
-    }
-  }
-  .filter-container{
-    flex: 1 0 auto;
-    .item-name{
-      line-height: 40px;
-      color: $textColor2;
-      font-size: 14px;
-    }
-    .process{
-      padding: 0 10px;
-    }
-    .process-person{
-      display: flex;
-      padding: 0 10px;
-      line-height: 40px;
-      font-size: 14px;
-      color: $textColor2;
-      .process-person-name{
-        flex: 0 0 46px;
-      }
-      .process-person-list{
-        overflow: hidden;
-        color: $textColor2;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        text-align: right;
-        flex: 1 0 auto;
-        display: flex;
-        justify-content: flex-end;
-        .list-name{
-          padding: 0 3px;
-        }
-      }
-    }
-    .process-time,.process-status{
-      padding: 0 10px;
-      .time-picker{
-        display: flex;
-        justify-content: space-between;
-        .start-time,.end-time{
-          flex: 1;
-          text-align: center;
-          padding: 5px;
-          p{
-            border: 1px solid $solidColor;
-            color: $textColor2;
-            font-size: 14px;
-            line-height: 32px;
-            border-radius: 4px;
-          }
-        }
-      }
-      .error-msg{
-        font-size: 12px;
-        color: $errorColor;
-        line-height: 18px;
-        padding: 0 10px;
-      }
-      .status-list{
-        display: flex;
-        justify-content: space-between;
-        p{
-          flex: 1;
-          text-align: center;
-          font-size: 14px;
-          color: $textColor2;
-          padding: 5px;
-          span{
-            display: block;
-            border: 1px solid $solidColor;
-            border-radius: 4px;
-            padding:8px 5px;
-          }
-        }
-      }
-    }
-  }
-  .activeSelect{
-    background: $mainBgColor;
-    color: $mainColor;
-    border: 1px solid $mainBgColor!important;
-  }
-}
+  @import "@/commom/scss/filterBox/index.scss";
 </style>

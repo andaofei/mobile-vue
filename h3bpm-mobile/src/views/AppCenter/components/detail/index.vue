@@ -24,7 +24,7 @@
                   @beforeScroll="listScroll">
        <div class="wrapper-header">
          <!--明细表-->
-         <div class="table-type" >
+         <div class="table-type" v-show="ListTitle">
            <div class="title">{{ListTitle}}</div>
            <div class="table-box">
              <el-table
@@ -59,7 +59,7 @@
            </div>
          </div>
          <!--柱状图-->
-         <div class="table-type" >
+         <div class="table-type" v-show="BarTitle">
            <div class="title">{{BarTitle}}</div>
            <div class="bar-title">
              <span class="item" v-for="(item, index) in barTitle" :key="index" @click="changeBarDate(item, index)" :class="{'isSelect': active === index}">{{item}}</span>
@@ -67,7 +67,7 @@
            <div   ref="chart" :style="{height:barHeight,width:width}"></div>
          </div>
          <!--汇总表-->
-         <div class="table-type" >
+         <div class="table-type" v-show="TotalTitle">
            <div class="title">{{TotalTitle}}</div>
            <div>
              <el-table
@@ -85,27 +85,27 @@
            </div>
          </div>
          <!--折线图-->
-         <div class="table-type" >
+         <div class="table-type" v-show="LineTitle">
            <div class="title">{{LineTitle}}</div>
            <div   ref="LineChart" :style="{height:'500px',width:width}"></div>
          </div>
          <!--雷达图-->
-         <div class="table-type" >
+         <div class="table-type" v-show="RadarTitle">
            <div class="title">{{RadarTitle}}</div>
            <div   ref="RadarChart" :style="{height:'500px',width:width}"></div>
          </div>
          <!--饼图-->
-         <div class="table-type" >
+         <div class="table-type" v-show="PieTitle">
            <div class="title">{{PieTitle}}</div>
            <div   ref="PieChart" :style="{height:'400px',width:width}"></div>
          </div>
          <!--漏斗图-->
-         <div class="table-type" >
+         <div class="table-type" v-show="FunnelTitle">
            <div class="title">{{FunnelTitle}}</div>
            <div   ref="FunnelChart" :style="{height:'500px',width:width}"></div>
          </div>
          <!--简易看板-->
-         <div class="table-type" >
+         <div class="table-type" v-show="SimpleTitle">
            <div class="title">{{SimpleTitle}}</div>
          </div>
        </div>
