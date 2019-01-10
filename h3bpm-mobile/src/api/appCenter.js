@@ -1,5 +1,5 @@
 import request from '@/utils/request'
-import {appList, appChildList, ReportPage, ReportDetail, ReportBar} from '@/api/options/urls'
+import {appList, appChildList, ReportPage, ReportDetail, ReportBar, ReportSimple} from '@/api/options/urls'
 import qs from 'qs'
 // 应用中心
 export function getAppLst(data) {
@@ -48,6 +48,17 @@ export function getReportBar(data) {
       'Content-Type': 'application/x-www-form-urlencoded'
     },
     url: ReportBar,
+    method: 'POST',
+    data: qs.stringify(data)
+  })
+}
+// 柱状图数据
+export function getReportSimple(data) {
+  return request({
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    },
+    url: ReportSimple,
     method: 'POST',
     data: qs.stringify(data)
   })

@@ -16,6 +16,8 @@ import fastclick from 'fastclick'
 import { Button, Form, Input, FormItem, Checkbox, Badge, Radio, Tag, Breadcrumb, BreadcrumbItem, Table, TableColumn, Pagination, Loading } from 'element-ui'
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
 import { Actionsheet, Toast, DatetimePicker } from 'mint-ui'
+import LoadingImg from '@/commom/default/loading.svg'
+import DefaultImg from '@/commom/default/bpm.jpg'
 fastclick.attach(document.body)
 Vue.component(CollapseTransition.name, CollapseTransition)
 Vue.component(Actionsheet.name, Actionsheet)
@@ -37,8 +39,8 @@ Vue.use(Pagination)
 Vue.use(Loading)
 Vue.config.productionTip = false
 Vue.use(VueLazyload, {
-  loading: require('../static/default/loading.svg'), // 加载的图片
-  error: require('../static/default/bpm.jpg')
+  loading: LoadingImg,
+  error: DefaultImg
 })
 
 let newVue = new Vue({

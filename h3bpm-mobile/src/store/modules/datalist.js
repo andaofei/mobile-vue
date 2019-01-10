@@ -113,7 +113,9 @@ const dataList = {
       })
       state.itemCheckList = []
     },
-
+    CLEARN_CHECk_List: (state, payload) => {
+      state.itemCheckList = []
+    },
     // 取消/选中待阅单选状态
     SET_CHECKED_LIST: (state, payload) => {
       const list = state.readList

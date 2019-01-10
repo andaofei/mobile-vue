@@ -22,7 +22,7 @@
 
                     <p class="time" v-if="routeId === 0 || routeId === 1 || routeId === 4">
                       <span class="time-title">接收时间：</span>
-                      <span class="time-inner">{{item.ReceiveTime}}</span>
+                      <span class="time-inner">{{item.ReceiveTime || item.RecieveTime}}</span>
                     </p>
                     <p class="time" v-else>
                       <span class="time-title">处理时间：</span>
@@ -38,10 +38,13 @@
                       <svg-icon icon-class="zhang"/>
                       <span class="detail-inner">{{item.ActivityName}}</span>
                     </p>
-                    <p class="detail" v-else-if="routeId === 4 || routeId === 5 || routeId === 6">
+                    <p class="detail" v-else-if="routeId === 4">
                       <svg-icon icon-class="zhang"/>
                       <span v-show="'item.ActivityNames.length？true: false'" class="detail-inner"  v-for="(inner, index) in item.ActivityNames" :key="index">{{inner}}</span>
                       <span v-show="!item.ActivityNames || !item.ActivityNames.length" class="detail-inner">-</span>
+                    </p>
+                    <p class="detail" v-else-if="routeId === 5 || routeId === 6">
+                      <!--<span>&nbsp;</span>-->
                     </p>
                     <!--已办才有-->
                     <p class="detail" v-else>
@@ -106,6 +109,10 @@ import Bubble from '../bubble/bubble.vue'
 import NoData from '@/components/NoData/index'
 import {getBaseUrl} from '@/utils/auth'
 import {getRect} from '../../commom/js/dom'
+import jiaji from '@/commom/images/jiaji.png'
+import jiaji2 from '@/commom/images/jiaji2.svg'
+import cuiban2 from '@/commom/images/cuiban2.svg'
+import cuiban from '@/commom/images/cuiban.png'
 const COMPONENT_NAME = 'scroll'
 const DIRECTION_H = 'horizontal'
 const DIRECTION_V = 'vertical'
@@ -200,10 +207,10 @@ export default {
       pullDownStyle: '',
       bubbleY: 0,
       baseUrl: getBaseUrl(),
-      jiaji: 'static/images/jiaji.png',
-      jiaji2: 'static/images/jiaji2.svg',
-      cuiban: 'static/images/cuiban.png',
-      cuiban2: 'static/images/cuiban2.svg',
+      jiaji: jiaji,
+      jiaji2: jiaji2,
+      cuiban: cuiban,
+      cuiban2: cuiban2,
       routeId: -1
     }
   },

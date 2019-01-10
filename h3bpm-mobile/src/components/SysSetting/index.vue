@@ -8,7 +8,8 @@
 
       <p class="title">{{$t('setting.title')}}</p>
 
-      <p class="sure" @click="sureIp">{{$t('setting.sure')}}</p>
+      <!--<p class="sure" @click="sureIp">{{$t('setting.sure')}}</p>-->
+      <p class="sure" @click="sureIp"></p>
     </div>
     <div class="setting-container">
     <div class="item">
@@ -131,6 +132,7 @@ export default {
     }
     .sure {
       color: $mainColor;
+      width: 50px;
     }
   }
   .setting-container {

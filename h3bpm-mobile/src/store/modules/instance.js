@@ -53,7 +53,7 @@ const instance = {
       return new Promise((resolve, reject) => {
         getInstanceDoing(payload).then(res => {
           if (res.code === ERR_OK) {
-            commit('SET_INSTANCE_DATA', res.data)
+            commit('SET_INSTANCE_COUNT', res.data.TotalCount)
           }
           resolve(res)
         }).catch(error => {

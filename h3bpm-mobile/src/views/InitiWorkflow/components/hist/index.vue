@@ -14,12 +14,12 @@
         <ul class="inner-box" v-if="workFlowLst && workFlowLst.length > 0">
           <li :key="index" v-for="(item, index) in workFlowLst">
             <div class="item-box" v-if="item.Workflows">
-              <div class="item-right" :key="index" v-for="(inner, index) in item.Workflows" v-if="inner.IsFavorite" @click="handleClickSelect(inner, index)">
-                <span class="svg-box">
+              <div class="item-right" :key="index" v-for="(inner, index) in item.Workflows" v-if="inner.IsFavorite" >
+                <span class="svg-box" @click.stop="setFavorite(inner)">
                   <svg-icon icon-class="star-f" v-if="inner.IsFavorite"/>
                    <svg-icon icon-class="star" v-else/>
                 </span>
-                <p class="inner-right">
+                <p class="inner-right" @click="handleClickSelect(inner, index)">
                   <span class="inner-text">{{inner.DisplayName}}</span>
                   <span class="svg-box">
                       <svg-icon icon-class="right"/>
@@ -28,11 +28,11 @@
               </div>
             </div>
             <div class="item-box" v-else>
-              <div class="item-right" @click="handleClickSelect(inner, index)" v-if="item.IsFavorite">
-                <span class="svg-box">
+              <div class="item-right">
+                <span class="svg-box" @click.stop="setFavorite(item)">
                   <svg-icon icon-class="star-f"/>
                 </span>
-                <p class="inner-right">
+                <p class="inner-right" @click="handleClickSelect(item)" v-if="item.IsFavorite">
                   <span class="inner-text">{{item.DisplayName}}</span>
                   <span class="svg-box">
                       <svg-icon icon-class="right"/>

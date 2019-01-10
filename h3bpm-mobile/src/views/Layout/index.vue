@@ -70,13 +70,13 @@ export default {
     width: 100%;
   }
   .filter-box{
+    z-index: 9999;
     position: fixed;
     width: 100%;
     height: 100%;
     left: 0;
     top:0;
     background: rgba(0,0,0,.4);
-    z-index: 99;
     display: flex;
     .filter-left{
       flex:0 0 55px;

@@ -22,12 +22,12 @@
 <script type="text/ecmascript-6">
 import vue from 'vue'
 import getInstanceMixin from '@/commom/mixins/isntanceMixin'
-import getListMixin from '@/commom/mixins/getList'
+import homeCenterMixin from '@/commom/mixins/homeCenterMixin'
 import {getUserInfo} from '@/utils/auth'
 import { ERR_OK } from '@/api/options/statusCode'
 export default {
   name: 'Done',
-  mixins: [getListMixin, getInstanceMixin],
+  mixins: [homeCenterMixin, getInstanceMixin],
   data() {
     return {}
   },
@@ -45,7 +45,7 @@ export default {
         status: 4,
         userId: getUserInfo().id
       }
-      let newOptions = vue.userProfile = Object.assign(options, this.todoOptions)
+      let newOptions = vue.userProfile = Object.assign(options, this.instanceOptions)
       setTimeout(() => {
         this.$store.dispatch('getInstanceDoing', newOptions)
           .then((res) => {
@@ -67,7 +67,7 @@ export default {
           userId: getUserInfo().id
         }
         // let newOptions = Object.assign(options, this.instanceOptions)
-        let newOptions = vue.userProfile = Object.assign(options, this.todoOptions)
+        let newOptions = vue.userProfile = Object.assign(options, this.instanceOptions)
         this.$store.dispatch('pullingUpInstanceList', newOptions)
           .then((res) => {
             if (res.code === ERR_OK) {
@@ -83,11 +83,5 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  .Done{
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top:0;
-  }
+  @import "../commom/scss/index";
 </style>

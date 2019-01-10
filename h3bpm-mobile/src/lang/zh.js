@@ -26,7 +26,7 @@ export default {
     text: '登录失效，请重新登录'
   },
   setting: {
-    title: '系统设置',
+    title: '设置',
     sure: '确定',
     currentVersion: '当前版本',
     domainName: '域名',

@@ -58,7 +58,7 @@
                     :startY="parseInt(startY)"
                      @pullingDown="onPullingDown"
                     @pullingUp="onPullingUp">
-                <ul class="inner-box" v-if="sponsorList">
+                <ul class="inner-box" v-if="sponsorList.length > 0">
                   <li :key="item.id" v-for="(item, index) in sponsorList" @click="handleClickSelect(item, index)">
                   <span class="svg-box">
                     <svg-icon icon-class="check" v-if="!item.checked"/>
@@ -101,19 +101,18 @@
 </template>
 
 <script>
-import getListMixin from '@/commom/mixins/getList'
+import homeCenterMixin from '@/commom/mixins/homeCenterMixin'
 import {getSelectPerson} from '@/api/getworkitems'
 // import BtScroll from '@/components/BtScroll/index'
 import BtScroll from '@/components/scroll/new-scroll'
 import SelectHeader from '@/components/SelectCommom/Header/index'
 import SearchInput from '@/components/SelectCommom/InputSearch/index'
 import {getUserInfo, getBaseUrl} from '@/utils/auth'
-import NoData from '@/components/NoData/index'
 import {ERR_OK} from '@/api/options/statusCode'
 import { mapMutations } from 'vuex'
 export default {
   name: 'SelectPerson',
-  mixins: [getListMixin],
+  mixins: [homeCenterMixin],
   data() {
     return {
       baseUrl: getBaseUrl(),
@@ -122,7 +121,6 @@ export default {
       scrollY: 0,
       pullingUp: true,
       beforeScroll: true,
-      loadShow: false,
       selected: -1,
       activeClass: 'activeClass',
       activeClass2: 'activeClass2',
@@ -150,6 +148,7 @@ export default {
     }),
     // 获取数据
     initList() {
+      this.loadShow = true
       let options = {
         IsMobile: true,
         ParentID: getUserInfo().ParentID,
@@ -157,7 +156,8 @@ export default {
       }
       return new Promise((resolve, reject) => {
         getSelectPerson(options).then(res => {
-          console.log(res.data)
+          // console.log(res.data)
+          this.loadShow = false
           if (res.code === ERR_OK) {
             const list = res.data
             list.map((item) => {
@@ -169,6 +169,7 @@ export default {
           resolve(res)
         }).catch(error => {
           console.error(error)
+          this.loadShow = false
           reject(error)
         })
       })
@@ -220,6 +221,9 @@ export default {
         }
       }
       this.setAlLChecked({data: data, state: this.allCheckStatus})
+      setTimeout(() => {
+        this.refresh()
+      }, 300)
     },
 
     // 关闭tag
@@ -290,7 +294,6 @@ export default {
     sponsorList: {
       handler() {
         if (this.sponsorList.length > 0 && this.sponsorList.length === this.checkedPersonList.length) {
-          console.log(true)
           this.allCheckStatus = true
         } else {
           this.allCheckStatus = false
@@ -303,8 +306,7 @@ export default {
   components: {
     BtScroll,
     SelectHeader,
-    SearchInput,
-    NoData
+    SearchInput
   }
 }
 </script>

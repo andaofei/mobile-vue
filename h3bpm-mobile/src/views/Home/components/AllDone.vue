@@ -1,6 +1,5 @@
 <template>
   <div class="all-done">
-    <!--回顶部-->
     <ToTop v-show="topTop" @backTop="backTop"></ToTop>
     <scroll ref="scroll"
             v-loading="loadingShow"
@@ -20,16 +19,12 @@
 </template>
 
 <script type="text/ecmascript-6">
-import getListMixin from '@/commom/mixins/getList'
+import homeCenterMixin from '@/commom/mixins/homeCenterMixin'
 import {getUserInfo} from '@/utils/auth'
 import { ERR_OK } from '@/api/options/statusCode'
-// import {mapMutations} from 'vuex'
 export default {
   name: 'AllDone',
-  mixins: [getListMixin],
-  data() {
-    return {}
-  },
+  mixins: [homeCenterMixin],
   created() {
     this.setOptions({}) // 清空搜索条件
     this.getTagCounts() // 待阅数/ 待办数
@@ -38,9 +33,6 @@ export default {
   computed: {
     itemList() {
       return this.$store.getters.itemList
-    },
-    todoOptions() {
-      return this.$store.getters.todoOptions
     }
   },
   methods: {
@@ -112,11 +104,5 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  .all-done{
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top:0;
-  }
+  @import "../commom/scss/index.scss";
 </style>

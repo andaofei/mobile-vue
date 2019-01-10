@@ -70,7 +70,7 @@
 </template>
 
 <script>
-import BtScroll from '@/components/BtScroll/index'
+import appCenterMixin from '@/commom/mixins/appCenterMixin'
 import AppHeader from '../header'
 import {getAppChildLst} from '@/api/appCenter'
 import {ERR_OK} from '@/api/options/statusCode'
@@ -79,17 +79,11 @@ import { Toast } from 'mint-ui'
 // import qs from 'qs'
 export default {
   name: 'AppChild',
+  mixins: [appCenterMixin],
   data() {
     return {
-      probeType: 0,
-      pullingUp: true,
-      beforeScroll: true,
-      img: 'static/images/caidan.svg',
       listShow: true,
       counts: 0,
-      activeClass: 'activeClass',
-      activeClass2: 'activeClass2',
-      activeClass3: 'activeClass3',
       childName: '',
       appChildList: [],
       noChild: [],
@@ -97,10 +91,6 @@ export default {
     }
   },
   created() {
-    this.probeType = 3
-    this.listenScroll = true
-    this.pullingUp = true
-    console.log(getAppName())
     const code = getAppName().code
     this.childName = getAppName().name
     let options = {
@@ -193,7 +183,7 @@ export default {
         case 4: // 打开表单
           // http://localhost:8085/Portal/MvcDefaultSheet.jsp?
           let obj = eval('(' + item.Url + ')') //  ToFix: eval语句是有害的
-          const Url = this.$baseUrl + `Portal/MvcDefaultSheet.jsp?SheetCode=` + obj.SheetCode + '&Mode=' + obj.Mode + '&SchemaCode=' + obj.SchemaCode + '&IsMobile=true&onlyData=true&go=-2&T=' + new Date().getTime()
+          const Url = this.baseUrl + `Portal/MvcDefaultSheet.jsp?SheetCode=` + obj.SheetCode + '&Mode=' + obj.Mode + '&SchemaCode=' + obj.SchemaCode + '&IsMobile=true&onlyData=true&go=-2&T=' + new Date().getTime()
           console.log(Url)
           window.location.href = Url
           break
@@ -207,27 +197,12 @@ export default {
     },
     toggleChildShow() {
       this.childShow = !this.childShow
-    },
-    // 下拉
-    scroll(pos) {
-      // console.log(pos.y)
-    },
-
-    //  刷新
-    refresh() {
-      this.$refs.userList.refresh()
-    },
-
-    //  下拉监听
-    listScroll() {
-      this.$emit('listScroll')
     }
   },
   computed: {
   },
   components: {
-    AppHeader,
-    BtScroll
+    AppHeader
   }
 }
 </script>
@@ -273,7 +248,7 @@ export default {
                 height: 3.5rem;
                 display: inline-block;
                 border-radius: 10px;
-                background: url(/static/images/menu.svg) $blueColor no-repeat center;
+                background: url(../../imgs/menu.svg) $blueColor no-repeat center;
                 background-size: 60% 60%;
               }
             }

@@ -1,6 +1,5 @@
 <template>
   <div class="Doing">
-    <!--回顶部-->
     <ToTop v-show="topTop" @backTop="backTop"></ToTop>
     <scroll ref="scroll"
             v-loading="loadingShow"
@@ -21,7 +20,7 @@
 
 <script type="text/ecmascript-6">
 import vue from 'vue'
-import getListMixin from '@/commom/mixins/getList'
+import homeCenterMixin from '@/commom/mixins/homeCenterMixin'
 import getInstanceMixin from '@/commom/mixins/isntanceMixin'
 import {getUserInfo} from '@/utils/auth'
 import { ERR_OK } from '@/api/options/statusCode'
@@ -29,7 +28,7 @@ import { ERR_OK } from '@/api/options/statusCode'
 export default {
   name: 'Doing',
 
-  mixins: [getListMixin, getInstanceMixin],
+  mixins: [homeCenterMixin, getInstanceMixin],
 
   data() {
     return {}
@@ -49,7 +48,7 @@ export default {
         status: 2,
         userId: getUserInfo().id
       }
-      let newOptions = vue.userProfile = Object.assign(options, this.todoOptions)
+      let newOptions = vue.userProfile = Object.assign(options, this.instanceOptions)
       console.log(newOptions)
       setTimeout(() => {
         this.$store.dispatch('getInstanceDoing', newOptions)
@@ -72,7 +71,7 @@ export default {
           status: 2,
           userId: getUserInfo().id
         }
-        let newOptions = vue.userProfile = Object.assign(options, this.todoOptions)
+        let newOptions = vue.userProfile = Object.assign(options, this.instanceOptions)
         this.$store.dispatch('pullingUpInstanceList', newOptions)
           .then((res) => {
             if (res.code === ERR_OK) {
@@ -89,11 +88,5 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  .Doing{
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top:0;
-  }
+  @import "../commom/scss/index";
 </style>

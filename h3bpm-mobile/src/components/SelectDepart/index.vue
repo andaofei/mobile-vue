@@ -15,6 +15,7 @@
             <!--</div>-->
             <div class="search-inner-body">
               <BtScroll class="tag-scroll"
+                        v-loading="loadShow"
                         ref="userList"
                         @scroll="scroll"
                         @refresh="refresh"
@@ -36,7 +37,7 @@
                         {{tag.Text}}
                       </el-tag>
                     </div>
-                    <div>
+                    <div v-if="departList.length > 0">
                       <div class="title">{{departTitle}}</div>
                       <ul>
                         <li :key="index" v-for="(item, index) in departList"  @click="handleClickChild(item)">
@@ -44,11 +45,14 @@
                           <p>
                             <span>{{item.ExtendObject.ChildrenCount}}</span>
                             <span class="svg-box">
-               <svg-icon icon-class="right"></svg-icon>
-            </span>
+                            <svg-icon icon-class="right"></svg-icon>
+                            </span>
                           </p>
                         </li>
                       </ul>
+                    </div>
+                    <div class="inner-box-nodata" v-else>
+                      <NoData></NoData>
                     </div>
                   </div>
                 </div>
@@ -92,6 +96,7 @@ export default {
       setDeletePart: 'SET_DELETE_DEPART' // 单选
     }),
     initList() {
+      this.loadShow = true
       let options = {
         IsMobile: true,
         LoadTree: true,
@@ -102,6 +107,7 @@ export default {
       return new Promise((resolve, reject) => {
         getSelectPerson(options).then(res => {
           console.log(res.data, 'data')
+          this.loadShow = false
           if (res.code === ERR_OK) {
             const list = res.data[0].children
             this.departTitle = res.data[0].Text
@@ -109,6 +115,7 @@ export default {
           }
           resolve(res)
         }).catch(error => {
+          this.loadShow = false
           console.error(error)
           reject(error)
         })
@@ -157,7 +164,6 @@ export default {
           return item
         }
       })
-      console.log(articlesArray, 'articlesArray')
       this.departList = articlesArray
     }
   },
@@ -427,6 +433,12 @@ export default {
           @include border-bottom-1px($borderBottom);
         }
       }
+    }
+    .inner-box-nodata{
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 100%;
     }
   }
 }

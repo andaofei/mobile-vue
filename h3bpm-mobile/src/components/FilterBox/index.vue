@@ -95,7 +95,7 @@ export default {
       statusList: [
         {
           name: this.$t('filter.yes'),
-          id: 0
+          id: 2
         },
         {
           name: this.$t('filter.no'),
@@ -103,7 +103,7 @@ export default {
         },
         {
           name: this.$t('filter.Unlimited'),
-          id: 2
+          id: 0
         }
       ],
       active: -1,
@@ -184,8 +184,8 @@ export default {
         arr.push(item.ObjectID)
       }
       let options = {
-        IsPriority: this.IsPriority,
-        Originators: arr, // 发起人
+        isPriority: this.IsPriority,
+        Originators: JSON.stringify(arr), // 发起人
         endDate: this.endTime,
         keyWord: this.input,
         startDate: this.startTime,
@@ -236,11 +236,14 @@ export default {
     handleReset() {
       this.input = ''
       this.active = -1
+      this.IsPriority = ''
       this.endTime = null
       this.startTime = null
       this.cleanChecked([])
-      this.$emit('handleHiddenBox')
-      this.searchActions()
+      setTimeout(() => {
+        this.$emit('handleHiddenBox')
+        this.searchActions()
+      }, 100)
     }
   },
   computed: {

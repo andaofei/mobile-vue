@@ -1,10 +1,11 @@
 import BtScroll from '@/components/BtScroll/index'
 import NoData from '@/components/NoData/index'
-import {initSelfWorkflow} from '@/api/loadWorkFlows'
+import {initSelfWorkflow, setFavoriteWorkflow} from '@/api/loadWorkFlows'
 import { ERR_OK } from '@/api/options/statusCode'
 import {isDingtalk} from '@/utils/dingoptions'
 import dingtalk from 'dingtalk-javascript-sdk'
 import {getBaseUrl} from '@/utils/auth'
+import { Toast } from 'mint-ui'
 const InitWorkflowMixin = {
   data() {
     return {
@@ -59,7 +60,11 @@ const InitWorkflowMixin = {
       this.showLoading = true
       this.initSelfWork(item)
     },
-
+    // 设为常用
+    setFavorite(item) {
+      console.log(item)
+      this.SetFavWork(item)
+    },
     // 发起流程
     initSelfWork(data) {
       const options = {
@@ -99,7 +104,41 @@ const InitWorkflowMixin = {
         })
       })
     },
-
+    // 设为常用
+    SetFavWork(data) {
+      const options = {
+        workflowCode: data.WorkflowCode,
+        isFavorite: !data.IsFavorite
+      }
+      return new Promise((resolve, reject) => {
+        setFavoriteWorkflow(options).then(res => {
+          this.showLoading = false
+          if (res.code === ERR_OK) {
+            let instance = Toast({
+              message: this.$t('home.success'),
+              iconClass: 'icon el-icon-success'
+            })
+            setTimeout(() => {
+              instance.close()
+              this.getDataList()
+            }, 1000)
+          } else {
+            let instance = Toast({
+              message: this.$t('home.fail'),
+              iconClass: 'icon el-icon-error'
+            })
+            setTimeout(() => {
+              instance.close()
+              this.getDataList()
+            }, 1000)
+          }
+          resolve(res)
+        }).catch(error => {
+          reject(error)
+          this.loadingShow = false
+        })
+      })
+    },
     // 下拉
     scroll(pos) {
       // console.log(pos.y)

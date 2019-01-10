@@ -1,6 +1,5 @@
 <template>
   <div class="tobe-read">
-    <!--回顶部-->
     <ToTop v-show="topTop" @backTop="backTop"></ToTop>
     <!--批量阅读-->
     <div class="read-all" @click="handleReadAll" v-show="readList.length && readList.length > 1">{{$t('home.Batch')}}</div>
@@ -44,14 +43,13 @@
 
 <script type="text/ecmascript-6">
 import vue from 'vue'
-import getListMixin from '@/commom/mixins/getList'
-// import {mapMutations} from 'vuex'
+import homeCenterMixin from '@/commom/mixins/homeCenterMixin'
 import {getUserInfo} from '@/utils/auth'
 import { ERR_OK } from '@/api/options/statusCode'
 import { Toast } from 'mint-ui'
 export default {
   name: 'AllDone',
-  mixins: [getListMixin],
+  mixins: [homeCenterMixin],
   data() {
     return {
       ReadAll: false,
@@ -93,15 +91,15 @@ export default {
           this.loadingShow = false
         })
     },
+
     // 单击选中
     handleSelect(data) {
       console.log(data)
       this.setListChecked(data)
     },
+
     // 批量阅读
     handleReadAll() {
-      // this.isChecked = !this.isChecked
-      // console.log(this.readList)
       if (!this.BatchStatus) {
         this.setListCheck(this.readList)
       } else {
@@ -109,11 +107,13 @@ export default {
       }
       this.BatchStatus = !this.BatchStatus
     },
+
     // 全选
     handleCheckAll() {
       const data = this.readList
       this.setAlLChecked({data: data, state: this.allCheckStatus})
     },
+
     // 确定
     handleSureClick() {
       console.log(this.itemCheckList, 'itemCheckList')
@@ -156,9 +156,11 @@ export default {
           })
       }
     },
+
     onPullingDown() {
       let that = this
       that.BatchStatus = false
+      this.setCleanChecked()
       // 下拉更新数据
       setTimeout(() => {
         let options = {
@@ -184,11 +186,9 @@ export default {
           })
       }, 1500)
     },
+
     onPullingUp() {
       // 更新数据
-      // console.log('pulling up and load data')
-      // console.log(this.BatchStatus, '是否批量状态')
-      // console.log(this.allCheckStatus, '是否全选状态')
       let that = this
       setTimeout(() => {
         let options = {
@@ -225,22 +225,11 @@ export default {
             }
           })
       }, 1500)
-    },
-    //  刷新
-    refresh() {
-      this.$refs.scroll.refresh()
-      // console.log('refresh')
     }
-    // scroll(pos) {
-    //   this.scrollY = pos.y
-    //   // console.log(pos.y)
-    // }
   },
   watch: {
     readList: {
       handler() {
-        // console.log(this.itemCheckList, 'itemCheckList')
-        // console.log(this.$store.getters.readList, 'readList')
         if (this.readList.length === this.itemCheckList.length) {
           this.allCheckStatus = true
         } else {
@@ -250,6 +239,7 @@ export default {
       deep: true
     }
   },
+
   computed: {
     // 数据列表
     readList: {
@@ -263,10 +253,6 @@ export default {
     // 已选列表
     itemCheckList() {
       return this.$store.getters.itemCheckList
-    },
-    // 筛选配置
-    todoOptions() {
-      return this.$store.getters.todoOptions
     }
   }
 }

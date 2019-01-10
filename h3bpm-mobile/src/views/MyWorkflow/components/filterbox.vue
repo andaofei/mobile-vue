@@ -86,7 +86,7 @@ export default {
       statusList: [
         {
           name: this.$t('filter.yes'),
-          id: 0
+          id: 2
         },
         {
           name: this.$t('filter.no'),
@@ -94,7 +94,7 @@ export default {
         },
         {
           name: this.$t('filter.Unlimited'),
-          id: 2
+          id: 0
         }
       ],
       active: -1,
@@ -165,7 +165,7 @@ export default {
     searchActions() {
       const routeId = this.$route.meta.id
       let options = {
-        IsPriority: this.IsPriority,
+        isPriority: this.IsPriority,
         endDate: this.endTime,
         keyWord: this.input,
         startDate: this.startTime,
@@ -205,9 +205,12 @@ export default {
       this.active = -1
       this.endTime = null
       this.startTime = null
-      this.searchActions()
-      this.$emit('handleHiddenBox')
-      this.$emit('handleSearch')
+      this.IsPriority = ''
+      setTimeout(() => {
+        this.$emit('handleHiddenBox')
+        this.$emit('handleSearch')
+        this.searchActions()
+      }, 100)
     }
   },
   computed: {

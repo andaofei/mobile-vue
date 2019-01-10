@@ -1,14 +1,16 @@
-import { mapMutations } from 'vuex'
-import NoData from '@/components/NoData/index'
+import {mapMutations} from 'vuex'
+import {getBaseUrl} from '@/utils/auth'
 import BtScroll from '@/components/BtScroll/index'
-const getPartMixin = {
+const appCenterMixin = {
   data() {
     return {
+      baseUrl: getBaseUrl(),
       probeType: 0,
       pullingUp: true,
       beforeScroll: true,
-      title: '',
-      allCheckStatus: false
+      activeClass: 'activeClass',
+      activeClass2: 'activeClass2',
+      activeClass3: 'activeClass3'
     }
   },
   created() {
@@ -18,7 +20,6 @@ const getPartMixin = {
   },
   methods: {
     ...mapMutations({
-      setAlLChecked: 'SET_ALL_CHECKED_DEPART'
     }),
     // 下拉
     scroll(pos) {
@@ -35,11 +36,8 @@ const getPartMixin = {
       this.$emit('listScroll')
     }
   },
-  computed: {
-  },
   components: {
-    BtScroll,
-    NoData
+    BtScroll
   }
 }
-export default getPartMixin
+export default appCenterMixin

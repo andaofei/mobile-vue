@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Scroll from '@/components/scroll/scroll.vue'
+import NoData from '@/components/NoData/index'
 import {getWorkUrl, getSelfWorkflow} from '@/api/loadWorkFlows'
 import { ease } from '@/commom/js/ease'
 import ToTop from '@/views/Home/commom/ToTop'
@@ -8,7 +9,7 @@ import dingtalk from 'dingtalk-javascript-sdk'
 import {mapMutations} from 'vuex'
 import {getUserInfo, getBaseUrl} from '@/utils/auth'
 import { ERR_OK } from '@/api/options/statusCode'
-const getListMixin = {
+const homeCenterMixin = {
   data() {
     return {
       topTop: false,
@@ -35,9 +36,11 @@ const getListMixin = {
       loadingShow: false
     }
   },
+
   created() {
     this.topTop = false
   },
+
   watch: {
     scrollbarObj: {
       handler() {
@@ -61,7 +64,12 @@ const getListMixin = {
       this.rebuildScroll()
     }
   },
+
   computed: {
+    // 筛选配置
+    todoOptions() {
+      return this.$store.getters.todoOptions
+    },
     scrollbarObj: function() {
       return this.scrollbar ? {fade: this.scrollbarFade} : false
     },
@@ -91,6 +99,7 @@ const getListMixin = {
       this.$store.dispatch('setTodoCounts', options) // 待办数
       this.$store.dispatch('setTagCounts') // 待阅数
     },
+
     // 点击元素事件
     handleClick(item) {
       const routeId = this.$route.meta.id
@@ -175,6 +184,12 @@ const getListMixin = {
         this.topTop = false
       }
     },
+
+    //  刷新
+    refresh() {
+      this.$refs.scroll.refresh()
+    },
+
     backTop() {
       if (this.$refs.scroll) {
         this.$refs.scroll.scrollTo(0, 0, '500', 'bounce')
@@ -183,15 +198,18 @@ const getListMixin = {
       this.$refs.userList.scrollTo(0, 0, '500', 'bounce')
       // this.topTop = false
     },
+
     scrollTo() {
       this.$refs.scroll.scrollTo(this.scrollToX, this.scrollToY, this.scrollToTime, ease[this.scrollToEasing])
     },
+
     rebuildScroll() {
       Vue.nextTick(() => {
         this.$refs.scroll.destroy()
         this.$refs.scroll.initScroll()
       })
     },
+
     ...mapMutations({
       setToDoCounts: 'SET_TODO_COUNTS', // 待办数量
       setAlLChecked: 'SET_ALL_CHECKED_TOREAD', // 选择所有待阅
@@ -200,12 +218,14 @@ const getListMixin = {
       clearChecked: 'CLEAR_ALL_CHECKED', // 清空所有选择
       setListCheck: 'CHANGE_DATA_LIST_CHECKED', // 设置选中 false属性
       setListUnCheck: 'CHANGE_DATA_LIST_UNCHEKED', // 取消待阅选中
-      setListChecked: 'SET_CHECKED_LIST' // 选中待阅
+      setListChecked: 'SET_CHECKED_LIST', // 选中待阅
+      setCleanChecked: 'CLEARN_CHECk_List' // 清空
     })
   },
   components: {
     Scroll,
-    ToTop
+    ToTop,
+    NoData
   }
 }
-export default getListMixin
+export default homeCenterMixin

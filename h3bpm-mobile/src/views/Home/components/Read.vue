@@ -20,15 +20,12 @@
 </template>
 
 <script type="text/ecmascript-6">
-import getListMixin from '@/commom/mixins/getList'
+import homeCenterMixin from '@/commom/mixins/homeCenterMixin'
 import {getUserInfo} from '@/utils/auth'
 import { ERR_OK } from '@/api/options/statusCode'
 export default {
   name: 'Read',
-  mixins: [getListMixin],
-  data() {
-    return {}
-  },
+  mixins: [homeCenterMixin],
   created() {
     this.setOptions({}) // 清空搜索条件
     this.getTagCounts() // 待阅数/ 待办数
@@ -38,9 +35,6 @@ export default {
     // 数据列表
     readList() {
       return this.$store.getters.readList
-    },
-    todoOptions() {
-      return this.$store.getters.todoOptions
     }
   },
   methods: {
@@ -114,11 +108,5 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  .read{
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0;
-    top:0;
-  }
+  @import "../commom/scss/index.scss";
 </style>

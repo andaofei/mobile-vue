@@ -19,6 +19,7 @@
     </div>
     <div class="selectDepartChild-wrapper">
       <BtScroll class="child-scroll"
+                v-loading="loadShow"
                 ref="userList"
                 @scroll="scroll"
                 @refresh="refresh"
@@ -27,7 +28,7 @@
                 :pullingUp="pullingUp"
                 :beforeScroll="beforeScroll"
                 @beforeScroll="listScroll">
-        <div class="selectDepartChild">
+        <div class="selectDepartChild" v-if="sponsorList.length > 0">
           <ul>
             <!--用户-->
             <li v-if="item.ExtendObject.UnitType === 'U'"  :key="index" v-for="(item, index) in sponsorList" @click="handleClickSelect(item, index)" class="userList">
@@ -57,6 +58,9 @@
               </p>
             </li>
           </ul>
+        </div>
+        <div class="inner-box-nodata" v-else>
+          <NoData></NoData>
         </div>
       </BtScroll>
     </div>
@@ -119,6 +123,7 @@ export default {
     }),
     // 初始数据
     initList() {
+      this.loadShow = true
       const id = this.$route.params.objId
       // this.$store.dispatch('addView', this.$route)
       let options = {
@@ -158,9 +163,11 @@ export default {
             })
 
             this.sponsorList = list
+            this.loadShow = false
           }
           resolve(res)
         }).catch(error => {
+          this.loadShow = false
           reject(error)
         })
       })
@@ -461,6 +468,11 @@ export default {
         }
       }
     }
+  }
+  .inner-box-nodata{
+    position: absolute;
+    width: 100%;
+    height: 100%;
   }
   .selected-person {
     display: flex;

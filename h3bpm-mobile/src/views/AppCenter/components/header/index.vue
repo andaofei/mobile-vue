@@ -43,5 +43,8 @@ export default {
     .title{
       font-size: 16px;
     }
+    .sure{
+      width: 50px;
+    }
   }
 </style>

@@ -48,12 +48,13 @@ import dingtalk from 'dingtalk-javascript-sdk'
 import {Toast} from 'mint-ui'
 import {getDingTalkInfo} from '@/api/dingTalk'
 import {isDingtalk} from '@/utils/dingoptions'
+import logo from '@/commom/default/bpm.jpg'
 const evn = process.env.NODE_ENV === 'production'
 export default {
   name: 'Login',
   data() {
     return {
-      img: '/static/default/bpm.jpg',
+      img: logo,
       loginForm: {
         username: 'administrator',
         password: '000000'

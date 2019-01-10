@@ -19,12 +19,12 @@
                 <p class="text">{{item.DisplayName}}</p>
               </div>
 
-              <div class="item-right"  :key="index" v-for="(inner, index) in item.Workflows" @click="handleClickSelect(inner, index)">
-                <span class="svg-box">
+              <div class="item-right"  :key="index" v-for="(inner, index) in item.Workflows" >
+                <span class="svg-box" @click.stop="setFavorite(inner, index)">
                    <svg-icon icon-class="star-f" v-if="inner.IsFavorite"/>
                    <svg-icon icon-class="star" v-else/>
                     </span>
-                <p class="inner-right">
+                <p class="inner-right" @click="handleClickSelect(inner, index)">
                   <span class="inner-text">{{inner.DisplayName}}</span>
                   <span class="svg-box">
                       <svg-icon icon-class="right"/>
@@ -33,12 +33,12 @@
               </div>
             </div>
             <div class="item-box" v-else>
-              <div class="item-right" @click="handleClickSelect(item, index)">
-                <span class="svg-box">
+              <div class="item-right">
+                <span class="svg-box" @click.stop="setFavorite(item, index)">
                    <svg-icon icon-class="star-f" v-if="item.IsFavorite"/>
                    <svg-icon icon-class="star" v-else/>
                 </span>
-                <p class="inner-right">
+                <p class="inner-right" @click="handleClickSelect(item, index)">
                   <span class="inner-text">{{item.DisplayName}}</span>
                   <span class="svg-box">
                       <svg-icon icon-class="right"/>

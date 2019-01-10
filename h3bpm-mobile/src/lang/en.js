@@ -26,7 +26,7 @@ export default {
     text: 'Logon is invalid, please login again'
   },
   setting: {
-    title: 'SystemSet',
+    title: 'Setting',
     sure: 'Determine',
     currentVersion: 'CurrentVersion',
     domainName: 'DomainName',
