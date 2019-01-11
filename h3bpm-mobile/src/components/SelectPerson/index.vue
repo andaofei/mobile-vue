@@ -67,8 +67,8 @@
                 <div class="inner-right">
                   <div class="inner-right-box">
                   <span class="img-box">
-                   <img v-if="item.ExtendObject ? item.ExtendObject.UserImageUrl.length > 0 : ''" v-lazy="baseUrl + item.ExtendObject.UserImageUrl" alt="" class="icon-text">
-                    <img v-else  v-lazy="item.ExtendObject.UserGender===2? woman : man" alt="" class="icon-text">
+                   <!--<img v-if="item.ExtendObject ? item.ExtendObject.UserGender.length > 0 : ''" v-lazy="baseUrl + item.ExtendObject.UserImageUrl" alt="" class="icon-text">-->
+                    <img v-if="item.ExtendObject" v-lazy="item.ExtendObject.UserGender === 2 ? woman : man" alt="" class="icon-text">
                   </span>
                   <span class="inner-text">{{item.Text}}</span>
                 </div>
