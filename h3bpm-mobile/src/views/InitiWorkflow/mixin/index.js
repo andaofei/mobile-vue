@@ -2,7 +2,7 @@ import BtScroll from '@/components/BtScroll/index'
 import NoData from '@/components/NoData/index'
 import {initSelfWorkflow, setFavoriteWorkflow} from '@/api/loadWorkFlows'
 import { ERR_OK } from '@/api/options/statusCode'
-import {isDingtalk} from '@/utils/dingoptions'
+import DingtalkEnv from 'dingtalk-javascript-env'
 import dingtalk from 'dingtalk-javascript-sdk'
 import {getBaseUrl} from '@/utils/auth'
 import { Toast } from 'mint-ui'
@@ -81,7 +81,7 @@ const InitWorkflowMixin = {
             // console.log(res.data)
             // const urls = `http://192.168.7.48:8080` + res.data.Url
             // this.src = urls
-            if (isDingtalk) {
+            if (DingtalkEnv.isDingtalk) {
               dingtalk.ready(function() {
                 const dd = dingtalk.apis
                 dd.biz.util.openLink({

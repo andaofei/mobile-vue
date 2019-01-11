@@ -46,8 +46,9 @@ import Vue from 'vue'
 import { ERR_OK } from '@/api/options/statusCode'
 import dingtalk from 'dingtalk-javascript-sdk'
 import {Toast} from 'mint-ui'
-import {getDingTalkInfo} from '@/api/dingTalk'
-import {isDingtalk} from '@/utils/dingoptions'
+import {getDingTalkInfo, getDingTalkValidate} from '@/api/dingTalk'
+import {getToken, setToken, setUserInfo, getBaseUrl} from '@/utils/auth'
+import DingtalkEnv from 'dingtalk-javascript-env'
 import logo from '@/commom/default/bpm.jpg'
 const evn = process.env.NODE_ENV === 'production'
 export default {
@@ -69,22 +70,25 @@ export default {
       redirect: undefined
     }
   },
+  beforeCreate() {
+    console.log(getToken(), 'beforeCreate')
+  },
   created() {
     if (evn) {
       Vue.prototype.getConfigJson()
     }
+    let sourceUrl = getBaseUrl()
+    let url = sourceUrl.toLocaleLowerCase()
+    if (DingtalkEnv.isDingTalk) {
+      this.getDingTalkInfo(url)
+    }
+    console.log(getToken(), 'created')
   },
   mounted() {
     if (this.autoLogin) {
-      console.log(this.autoLogin)
       this.handleLogin()
     }
-    // let sourceUrl = document.location.href
-    let url = 'http://192.168.7.48:9980/#/login'
-    // let url = sourceUrl.toLocaleLowerCase()
-    if (isDingtalk) {
-      this.getDingTalkInfo(url)
-    }
+    // let sourceUrl = 'http://192.168.7.48:9980/#/login'
   },
   methods: {
     showPwd() {
@@ -98,28 +102,10 @@ export default {
     getDingTalkInfo(option) {
       return new Promise((resolve, reject) => {
         getDingTalkInfo(option).then((res) => {
-          // console.log(res.data, '获取签名')
+          console.log(res.data, '获取签名')
+          const data = res.data
           if (res.code === ERR_OK) {
-            dingtalk.config({
-              agentId: res.data.agentId,
-              corpId: res.data.corpId,
-              timeStamp: res.data.timeStamp,
-              nonceStr: res.data.nonce,
-              signature: res.data.signature,
-              jsApiList: [
-                'runtime.info',
-                'biz.contact.choose',
-                'device.notification.confirm',
-                'device.notification.alert',
-                'device.notification.prompt',
-                'biz.ding.post',
-                'runtime.permission.requestAuthCode',
-                'device.geolocation.get',
-                'biz.contact.complexChoose',
-                'biz.util.openLink'
-              ]
-            })
-            this.getDingTalkReady('211165759')
+            this.getDingTalkReady(data.corpId)
           }
           resolve(res)
         }).catch(error => {
@@ -127,21 +113,20 @@ export default {
         })
       })
     },
-    // 免登录
+
+    // 免登录验证
     getDingTalkReady(corpId) {
+      let that = this
       return new Promise(function(resolve, reject) {
         dingtalk.ready(function() {
-          const dd = dingtalk.jsApiList
-          // dd.biz.navigation.setTitle({
-          //   title: 'icepy'
-          // })
+          const dd = dingtalk.apis
           dd.runtime.permission.requestAuthCode({
             corpId: corpId,
             onSuccess(result) {
-              resolve(result, 'result')
+              that.getDingTalkValidate(result)
             },
             onFail(err) {
-              console.log(err, '登录错误-----------------')
+              console.log(err, 'err')
               reject(err)
             }
           })
@@ -150,6 +135,33 @@ export default {
           // 钉钉验证出错
           console.log(err, '钉钉验证出错-----------------')
           reject(err)
+        })
+      })
+    },
+    // 处理单点登录
+    // getUrlParam(name) {
+    //   let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
+    //   let r = window.location.search.substr(1).match(reg)
+    //   console.log(r, 'r')
+    //   if (r != null) {
+    //     return r[2]
+    //   }
+    //   return null
+    // },
+    // 权限验证
+    getDingTalkValidate(option) {
+      return new Promise((resolve, reject) => {
+        getDingTalkValidate(option).then((res) => {
+          if (res.code === ERR_OK) {
+            const data = res.data
+            console.log(data, '获取权限验证--------')
+            setToken(data.MobileUser.ObjectID)
+            setUserInfo({name: data.MobileUser.Name, id: data.MobileUser.ObjectID, userCode: data.MobileUser.Code, ParentID: data.MobileUser.ObjectID})
+            this.$router.push({ path: '/dashboard' })
+          }
+          resolve(res)
+        }).catch(error => {
+          reject(error)
         })
       })
     },

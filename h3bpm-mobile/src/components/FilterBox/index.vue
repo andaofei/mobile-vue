@@ -159,7 +159,7 @@ export default {
       }
       let options = {
         isPriority: this.IsPriority,
-        Originators: JSON.stringify(arr), // 发起人
+        originators: arr, // 发起人
         endDate: this.endTime,
         keyWord: this.input,
         startDate: this.startTime,

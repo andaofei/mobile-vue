@@ -72,7 +72,7 @@ Vue.prototype.getConfigJson = function() {
 if (evn) {
   Vue.prototype.getConfigJson()// 调用声明的全局方法
 } else {
-  console.log(process.env.BASE_API)
+  // console.log(process.env.BASE_API)
   // Vue.prototype.$baseUrl = process.env.BASE_API
   setBaseUrl(process.env.BASE_API)
 }

@@ -1,6 +1,6 @@
 {
   "name": "h3bpm",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "zhuaf",
   "author": "e <2353536563@qq.com>",
   "private": true,
@@ -17,6 +17,7 @@
     "axios": "^0.18.0",
     "better-scroll": "^1.13.2",
     "blueimp-md5": "^2.10.0",
+    "dingtalk-javascript-env": "^1.0.2",
     "dingtalk-javascript-sdk": "^0.2.0",
     "echart": "^0.1.3",
     "echarts": "^4.2.0-rc.2",

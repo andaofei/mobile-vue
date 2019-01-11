@@ -18,4 +18,5 @@ export const ReportPage = 'Portal/Mobile/Report/LoadReportPage' // 表格类型�
 export const ReportDetail = 'Portal/Mobile/Report/LoadGridData' // 明细表
 export const ReportBar = 'Portal/Mobile/Report/LoadChartsData' // 柱状图
 export const ReportSimple = 'Portal/Mobile/Report/LoadSimpleBoard' // 柱状图
-export const DingTalkUrl = 'Portal/DingTalk/GetSignConfig' // 钉钉登录
+export const DingTalkUrl = 'Portal/Mobile/DingTalk/GetSignConfig' // 钉钉登录
+export const DingTalkValidate = 'Portal/Mobile/DingTalk/ValidateLoginForDingTalk' // 钉钉权限验证

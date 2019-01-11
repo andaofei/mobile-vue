@@ -14,7 +14,7 @@ export default {
     }
   },
   create() {
-    console.log(this.$route)
+    // console.log(this.$route)
   },
   computed: {
     visitedViews() {

@@ -4,7 +4,7 @@ import NoData from '@/components/NoData/index'
 import {getWorkUrl, getSelfWorkflow} from '@/api/loadWorkFlows'
 import { ease } from '@/commom/js/ease'
 import ToTop from '@/views/Home/commom/ToTop'
-import {isDingtalk} from '@/utils/dingoptions'
+import DingtalkEnv from 'dingtalk-javascript-env'
 import dingtalk from 'dingtalk-javascript-sdk'
 import {mapMutations} from 'vuex'
 import {getUserInfo, getBaseUrl} from '@/utils/auth'
@@ -119,7 +119,7 @@ const homeCenterMixin = {
           this.loadingShow = false
           if (res.code === ERR_OK) {
             const urls = this.baseUrl + res.data
-            if (isDingtalk) {
+            if (DingtalkEnv.isDingtalk) {
               dingtalk.ready(function() {
                 const dd = dingtalk.apis
                 dd.biz.util.openLink({
@@ -152,7 +152,7 @@ const homeCenterMixin = {
           if (res.code === ERR_OK) {
             // const urls = this.baseUrl + res.data
             const urls = this.baseUrl + res.data
-            if (isDingtalk) {
+            if (DingtalkEnv.isDingtalk) {
               dingtalk.ready(function() {
                 const dd = dingtalk.apis
                 dd.biz.util.openLink({

@@ -193,7 +193,7 @@ export default {
       setTimeout(() => {
         let options = {
           IsPriority: '',
-          Originators: [],
+          originators: [],
           endDate: '',
           readWorkItem: false,
           keyWord: '',

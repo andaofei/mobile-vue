@@ -1,0 +1,33 @@
+const getters = {
+  token: state => state.user.token,
+  roles: state => state.user.roles,
+  autoLogin: state => state.user.autoLogin,
+  language: state => state.app.language,
+  ipPath: state => state.app.ipPath,
+  filterShow: state => state.app.filterShow, // 筛选
+  filterTitle: state => state.app.filterTitle, // 筛选名称
+  filterPath: state => state.app.filterPath, // 筛选路径
+  todoOptions: state => state.dataList.todoOptions, // 待办筛选
+  todoCounts: state => state.dataList.todoCounts, // 待办数量
+  toReadCounts: state => state.dataList.toReadCounts, // 待阅数量
+  checkedPersonList: state => state.dataList.checkedPersonList, // 已选发起人列表
+  sponsorList: state => state.dataList.sponsorList, // 发起人列表--唯一数据列表
+  checkedDepartList: state => state.dataList.checkedDepartList, // 已选部门发起人列表
+  departList: state => state.dataList.departList, // 选人部门列表
+  departTitle: state => state.dataList.departTitle, // 选人部门名称
+  departChildOgList: state => state.dataList.departChildOgList, // 选人部门组织列表
+  departChildUsList: state => state.dataList.departChildUsList, // 选人部门用户列表
+  visitedViews: state => state.dataList.visitedViews, // 路由
+  itemList: state => state.dataList.itemList, // 待办列表
+  readList: state => state.dataList.readList, // 待阅列表
+  searchUserList: state => state.dataList.searchUserList, // 搜索列表
+  itemCheckList: state => state.dataList.itemCheckList, // 待阅已选
+  instanceList: state => state.instance.instanceList, // 我的流程
+  listCounts: state => state.instance.listCounts, // 数量
+  instanceOptions: state => state.instance.instanceOptions, // 过滤条件
+  appList: state => state.appCenter.appList, // 应用中心
+  reportOptions: state => state.appCenter.reportOptions, // 应用中心
+  workFlowLst: state => state.workFlow.workFlowLst, // 我的流程
+  searchList: state => state.workFlow.searchList // 我的流程
+}
+export default getters

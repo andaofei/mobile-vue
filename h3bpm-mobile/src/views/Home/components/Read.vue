@@ -84,7 +84,7 @@ export default {
       setTimeout(() => {
         let options = {
           keyWord: '',
-          Originators: [],
+          originators: [],
           readWorkItem: true,
           loadStart: this.readList.length || 0,
           sortDirection: 'Desc',

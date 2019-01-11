@@ -29,12 +29,14 @@
            <div class="table-box">
              <el-table
                :data="tableData"
-               max-height="400"
+               height="200"
                border
                show-summary
                style="width: 100%">
                <el-table-column
                  type="index"
+                 label="行号"
+                 fixed
                  width="50">
                </el-table-column>
                <el-table-column
@@ -71,6 +73,7 @@
            <div class="title">{{TotalTitle}}</div>
            <div>
              <el-table
+               v-show="false"
                :data="RowTable"
                :span-method="objectSpanMethod"
                border
@@ -82,6 +85,70 @@
                  :label="item.Value">
                </el-table-column>
              </el-table>
+
+             <el-table
+               v-show="false"
+               :data="tableData6"
+               :span-method="objectSpanMethod"
+               border
+               style="width: 100%; margin-top: 20px">
+               <el-table-column
+                 prop="id"
+                 label="ID">
+               </el-table-column>
+               <el-table-column
+                 prop="name"
+                 label="姓名">
+               </el-table-column>
+               <el-table-column
+                 prop="amount1"
+                 label="数值 1（元）">
+               </el-table-column>
+               <el-table-column
+                 prop="amount2"
+                 label="数值 2（元）">
+               </el-table-column>
+               <el-table-column
+                 prop="amount3"
+                 label="数值 3（元）">
+               </el-table-column>
+             </el-table>
+             <table border= "1 "   width= "300" >
+               <tr>
+                 <td colspan="4"  >ss
+
+                 </td>
+               </tr>
+               <tr>
+                 <td   width= "25% "> 4 </td>
+                 <td   width= "25% "> 4 </td>
+                 <td   width= "25% "> 4 </td>
+                 <td   width= "25% "> 4 </td>
+               </tr>
+               <tr>
+                 <td   width= "25%" rowspan="2"> 3 </td>
+                 <td   width= "25% "> 3 </td>
+                 <td   width= "25% "> 3 </td>
+                 <td   width= "25% "> 3 </td>
+               </tr>
+               <tr>
+
+                 <td   width= "25% "> 2 </td>
+                 <td   width= "25% " rowspan="3"> 2 </td>
+                 <td   width= "25% "> 2 </td>
+               </tr>
+               <tr>
+                 <td   width= "25% " colspan="2"  > 2 </td>
+                 <td   width= "25% "> 2 </td>
+
+               </tr>
+               <tr>
+                 <td   width= "25% ">  </td>
+                 <td   width= "25% "> 2 </td>
+                 <td   width= "25% "> 2 </td>
+
+               </tr>
+             </table>
            </div>
          </div>
          <!--折线图-->
@@ -155,7 +222,45 @@ export default {
       columnHeader: [],
       RowTable: [],
       SimpleTable: [],
-      topTop: false
+      valueTable: [],
+      topTop: false,
+      tableData6: [{
+        id: '12987122',
+        name: '王小虎',
+        amount1: '234',
+        amount2: '3.2',
+        amount3: 10
+      }, {
+        id: '12987123',
+        name: '王小虎',
+        amount1: '165',
+        amount2: '4.43',
+        amount3: 12
+      }, {
+        id: '12987124',
+        name: '王小虎',
+        amount1: '324',
+        amount2: '1.9',
+        amount3: 9
+      }, {
+        id: '12987125',
+        name: '王小虎',
+        amount1: '621',
+        amount2: '2.2',
+        amount3: 17
+      }, {
+        id: '12987126',
+        name: '王小虎',
+        amount1: '539',
+        amount2: '4.1',
+        amount3: 15
+      }, {
+        id: '12987126',
+        name: '王小虎',
+        amount1: '539',
+        amount2: '4.1',
+        amount3: 15
+      }]
     }
   },
   created() {
@@ -176,21 +281,9 @@ export default {
     })
   },
   methods: {
-    backTop() {
-      this.$refs.userList.scrollTo(0, 0, '500', 'bounce')
-    },
-
-    // 下拉
-    scroll(pos) {
-      if (pos.y < -100) {
-        this.topTop = true
-      } else {
-        this.topTop = false
-      }
-    },
-
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
+        // console.log(rowIndex)
         if (rowIndex % 2 === 0) {
           return {
             rowspan: 2,
@@ -204,6 +297,18 @@ export default {
         }
       }
     },
+    backTop() {
+      this.$refs.userList.scrollTo(0, 0, '500', 'bounce')
+    },
+
+    // 下拉
+    scroll(pos) {
+      if (pos.y < -100) {
+        this.topTop = true
+      } else {
+        this.topTop = false
+      }
+    },
 
     // 获取dataPage
     getReportOptions(options) {
@@ -212,7 +317,7 @@ export default {
         getReportPage(options).then(res => {
           if (res.code === ERR_OK) {
             const data = res.data
-            console.log(data, 'getReportOptions')
+            // console.log(data, 'getReportOptions')
             // that.title = data.ReportPage.ReportWidgets[0].DisplayName // 标题
             // that.WidgetType = data.ReportPage.ReportWidgets[0].WidgetType // 表格类型
             // that.ObjectId = data.ReportPage.ReportWidgets[0].ObjectID // id
@@ -804,6 +909,7 @@ export default {
             const data = res.data
             this.columnHeader = data.ColumnTable.ColumnHeaderTableLastLine
             this.RowTable = data.RowTable
+            this.valueTable = data.ValueTable
             let arr = []
             this.RowTable.map((item) => {
               item.map((inner) => {
