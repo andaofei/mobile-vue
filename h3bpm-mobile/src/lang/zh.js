@@ -5,6 +5,9 @@ export default {
     logOut: '退出登录',
     dashboard: '首页'
   },
+  dingtalk: {
+    error: '验证失败'
+  },
   login: {
     title: '系统登录',
     logIn: '登录',
@@ -15,7 +18,8 @@ export default {
     sysSetting: '系统设置',
     success: '登录成功',
     fail: '登录失败',
-    effect: '登录失效'
+    effect: '登录失效',
+    slogan: '赋能基础管理  焕新IT价值'
   },
   logout: {
     title: '注销',
@@ -48,7 +52,9 @@ export default {
     ReadItem: '已阅',
     Batch: ' 批量阅读',
     selectAll: '全选',
-    submit: '确定'
+    submit: '确定',
+    startTime: '接收时间',
+    endTime: '结束时间'
   },
   appCenter: {
     noData: '暂无数据',

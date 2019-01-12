@@ -1,42 +1,54 @@
 <template>
 <div class="login-container">
-  <div class="login-logo">
-    <img v-lazy="img" alt="">
+  <!--浏览器登录-->
+  <div class="mobile-login" v-show="!DingtalkEnv">
+    <div class="login-logo">
+      <img v-lazy="img" alt="">
+    </div>
+    <div class="login-form">
+      <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
+        <el-form-item prop="username">
+          <span class="svg-container">
+            <svg-icon icon-class="user" />
+          </span>
+          <el-input v-model="loginForm.username" maxlength="16" :placeholder="$t('login.username')" name="username" type="text" auto-complete="on"/>
+        </el-form-item>
+
+        <el-form-item prop="password">
+          <span class="svg-container">
+            <svg-icon icon-class="password" />
+          </span>
+          <el-input :type="passwordType" maxlength="16" v-model="loginForm.password" :placeholder="$t('login.password')" name="password" auto-complete="on" @keyup.enter.native="handleLogin" />
+          <span class="show-pwd" @click="showPwd">
+            <svg-icon v-if="passwordType ==='password'" icon-class="eye" />
+            <svg-icon v-else icon-class="eyeopen" />
+          </span>
+        </el-form-item>
+
+        <el-button :loading="loading" type="primary" size="medium" style="width:100%;margin-bottom:12px;height: 44px" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
+
+        <div class="login-setting">
+          <p>
+            <el-checkbox v-model="autoLogin" >{{$t('login.auto')}}</el-checkbox>
+          </p>
+          <p @click="handleSetting" class="settings">
+           <span class="sv-box">
+              <svg-icon  icon-class="setting" />
+           </span>
+           <span>{{$t('login.sysSetting')}}</span>
+          </p>
+        </div>
+      </el-form>
+    </div>
   </div>
-  <div class="login-form">
-    <el-form ref="loginForm" :model="loginForm" :rules="loginRules" class="login-form" auto-complete="on" label-position="left">
-      <el-form-item prop="username">
-        <span class="svg-container">
-          <svg-icon icon-class="user" />
-        </span>
-        <el-input v-model="loginForm.username" maxlength="16" :placeholder="$t('login.username')" name="username" type="text" auto-complete="on"/>
-      </el-form-item>
-
-      <el-form-item prop="password">
-        <span class="svg-container">
-          <svg-icon icon-class="password" />
-        </span>
-        <el-input :type="passwordType" maxlength="16" v-model="loginForm.password" :placeholder="$t('login.password')" name="password" auto-complete="on" @keyup.enter.native="handleLogin" />
-        <span class="show-pwd" @click="showPwd">
-          <svg-icon v-if="passwordType ==='password'" icon-class="eye" />
-          <svg-icon v-else icon-class="eyeopen" />
-        </span>
-      </el-form-item>
-
-      <el-button :loading="loading" type="primary" size="medium" style="width:100%;margin-bottom:12px;height: 44px" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
-
-      <div class="login-setting">
-        <p>
-          <el-checkbox v-model="autoLogin" >{{$t('login.auto')}}</el-checkbox>
-        </p>
-        <p @click="handleSetting" class="settings">
-         <span class="sv-box">
-            <svg-icon  icon-class="setting" />
-         </span>
-         <span>{{$t('login.sysSetting')}}</span>
-        </p>
-      </div>
-    </el-form>
+  <!--钉钉登录-->
+  <div class="ding-login"  v-show="DingtalkEnv">
+    <transition name="el-fade-in-linear">
+    <div class="login-logo">
+      <img v-lazy="img" alt="">
+      <p>{{$t('login.slogan')}}</p>
+    </div>
+    </transition>
   </div>
 </div>
 </template>
@@ -47,10 +59,10 @@ import { ERR_OK } from '@/api/options/statusCode'
 import dingtalk from 'dingtalk-javascript-sdk'
 import {Toast} from 'mint-ui'
 import {getDingTalkInfo, getDingTalkValidate} from '@/api/dingTalk'
-import {getToken, setToken, setUserInfo, getBaseUrl} from '@/utils/auth'
+import {setToken, setUserInfo, getBaseUrl} from '@/utils/auth'
 import DingtalkEnv from 'dingtalk-javascript-env'
 import logo from '@/commom/default/bpm.jpg'
-const evn = process.env.NODE_ENV === 'production'
+const evn = process.env.NODE_ENV === 'production' // 生产环境
 export default {
   name: 'Login',
   data() {
@@ -67,28 +79,25 @@ export default {
       passwordType: 'password',
       loading: false,
       showDialog: false,
-      redirect: undefined
+      redirect: undefined,
+      DingtalkEnv: DingtalkEnv.isDingTalk
     }
-  },
-  beforeCreate() {
-    console.log(getToken(), 'beforeCreate')
   },
   created() {
     if (evn) {
       Vue.prototype.getConfigJson()
     }
+  },
+  mounted() {
+    // 钉钉自动登录
     let sourceUrl = getBaseUrl()
     let url = sourceUrl.toLocaleLowerCase()
     if (DingtalkEnv.isDingTalk) {
       this.getDingTalkInfo(url)
     }
-    console.log(getToken(), 'created')
-  },
-  mounted() {
     if (this.autoLogin) {
       this.handleLogin()
     }
-    // let sourceUrl = 'http://192.168.7.48:9980/#/login'
   },
   methods: {
     showPwd() {
@@ -127,6 +136,13 @@ export default {
             },
             onFail(err) {
               console.log(err, 'err')
+              let instance = Toast({
+                message: this.$t('dingtalk.error'),
+                iconClass: 'icon el-icon-error'
+              })
+              setTimeout(() => {
+                instance.close()
+              }, 2000)
               reject(err)
             }
           })
@@ -134,20 +150,18 @@ export default {
         dingtalk.error(function(err) {
           // 钉钉验证出错
           console.log(err, '钉钉验证出错-----------------')
+          let instance = Toast({
+            message: this.$t('dingtalk.error'),
+            iconClass: 'icon el-icon-error'
+          })
+          setTimeout(() => {
+            instance.close()
+          }, 2000)
           reject(err)
         })
       })
     },
-    // 处理单点登录
-    // getUrlParam(name) {
-    //   let reg = new RegExp('(^|&)' + name + '=([^&]*)(&|$)')
-    //   let r = window.location.search.substr(1).match(reg)
-    //   console.log(r, 'r')
-    //   if (r != null) {
-    //     return r[2]
-    //   }
-    //   return null
-    // },
+
     // 权限验证
     getDingTalkValidate(option) {
       return new Promise((resolve, reject) => {
@@ -165,6 +179,7 @@ export default {
         })
       })
     },
+
     // 登录
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
@@ -212,7 +227,7 @@ export default {
   watch: {
     $route: {
       handler: function(route) {
-        console.log(route)
+        console.log(route, '监听路由')
         this.redirect = route.query && route.query.redirect
       },
       immediate: true
@@ -227,7 +242,7 @@ export default {
   $cursor: #fff;
 
   @supports (-webkit-mask: none) and (not (cater-color: $cursor)) {
-    .login-container .el-input input{
+    .mobile-login .el-input input{
       color: $cursor;
       &::first-line {
         color: $light_gray;
@@ -236,7 +251,7 @@ export default {
   }
 
   /* reset element-ui css */
-  .login-container {
+  .mobile-login {
     .el-input {
       display: inline-block;
       height: 44px;
@@ -272,8 +287,29 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 @import "../../commom/scss/mixin";
 @import "../../commom/scss/varible";
-
-.login-container {
+.login-container,.ding-login{
+  width: 100%;
+  height: 100%;
+}
+.ding-login {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  .login-logo{
+    padding-bottom: 2rem;
+    p{
+      font-size: 1rem;
+      line-height: 2rem;
+      color: $textColor;
+    }
+    img {
+      width: 6.5rem;
+      height: 6.5rem;
+    }
+  }
+}
+.mobile-login {
   height: 100%;
   width: 100%;
   background-color: $bg;

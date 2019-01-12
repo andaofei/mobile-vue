@@ -7,8 +7,13 @@ import ToTop from '@/views/Home/commom/ToTop'
 import DingtalkEnv from 'dingtalk-javascript-env'
 import dingtalk from 'dingtalk-javascript-sdk'
 import {mapMutations} from 'vuex'
-import {getUserInfo, getBaseUrl} from '@/utils/auth'
+import {getBaseUrl} from '@/utils/auth'
 import { ERR_OK } from '@/api/options/statusCode'
+import jiaji from '@/commom/images/jiaji.png'
+import jiaji2 from '@/commom/images/jiaji2.svg'
+import cuiban2 from '@/commom/images/cuiban2.svg'
+import cuiban from '@/commom/images/cuiban.png'
+import defaultUrl from '@/commom/default/bpm.jpg'
 const homeCenterMixin = {
   data() {
     return {
@@ -33,7 +38,12 @@ const homeCenterMixin = {
       items: [],
       itemIndex: 0,
       baseUrl: getBaseUrl(),
-      loadingShow: false
+      loadingShow: false,
+      jiaji: jiaji,
+      jiaji2: jiaji2,
+      cuiban: cuiban,
+      cuiban2: cuiban2,
+      defaultUrl: defaultUrl
     }
   },
 
@@ -66,6 +76,10 @@ const homeCenterMixin = {
   },
 
   computed: {
+    // 国际化
+    language() {
+      return this.$store.getters.language
+    },
     // 筛选配置
     todoOptions() {
       return this.$store.getters.todoOptions
@@ -88,16 +102,16 @@ const homeCenterMixin = {
   },
   methods: {
     getTagCounts() {
-      let options = {
-        keyWord: '',
-        finishedWorkItem: false,
-        sortDirection: 'Desc',
-        sortKey: 'ReceiveTime',
-        existsLength: 0,
-        userId: getUserInfo().id
-      }
-      this.$store.dispatch('setTodoCounts', options) // 待办数
-      this.$store.dispatch('setTagCounts') // 待阅数
+      // let options = {
+      //   keyWord: '',
+      //   finishedWorkItem: false,
+      //   sortDirection: 'Desc',
+      //   sortKey: 'ReceiveTime',
+      //   existsLength: 0,
+      //   userId: getUserInfo().id
+      // }
+      // this.$store.dispatch('setTodoCounts', options) // 待办数
+      this.$store.dispatch('setTagCounts') // 待阅数 待办数
     },
 
     // 点击元素事件
@@ -113,7 +127,7 @@ const homeCenterMixin = {
 
     // 首页
     getWorkUrl(data) {
-      const options = data.item.ObjectID
+      const options = data.ObjectID
       return new Promise((resolve, reject) => {
         getWorkUrl(options).then(res => {
           this.loadingShow = false
@@ -145,7 +159,7 @@ const homeCenterMixin = {
 
     // 我的流程
     getSelfWork(data) {
-      const options = data.item.ObjectID
+      const options = data.ObjectID
       return new Promise((resolve, reject) => {
         getSelfWorkflow(options).then(res => {
           this.loadingShow = false

@@ -32,6 +32,7 @@
                 </p>
               </div>
             </div>
+
             <div class="item-box" v-else>
               <div class="item-right">
                 <span class="svg-box" @click.stop="setFavorite(item, index)">

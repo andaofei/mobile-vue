@@ -48,6 +48,10 @@ export function getBaseUrl() {
   return Cookies.getJSON(Url)
 }
 
+export function removeBaseUrl() {
+  return Cookies.remove(Url)
+}
+
 // 设置应用名称
 export function setAppName(data) {
   return Cookies.set(App, data)

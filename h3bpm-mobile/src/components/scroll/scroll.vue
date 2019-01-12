@@ -4,68 +4,71 @@
       <div ref="listWrapper">
         <slot>
 
-          <!--列表-->
-          <ul class="list-content" v-if="data && data.length > 0">
-            <li @click="clickItem(item,index)" class="list-item" v-for="(item,index) in data" :key="index" >
-              <div class="item-left">
-                <span class="svg-box" @click.stop="handleSelect(item, index, $event)" v-if="item.isChecked" >
-                    <svg-icon class="checked-icon" icon-class="checked" v-if="item.checked"/>
-                    <svg-icon icon-class="check" v-else/>
-                </span>
-                <img v-lazy="baseUrl + item.OriginatorImageURL" alt="" v-else>
-              </div>
+          <!--&lt;!&ndash;列表&ndash;&gt;-->
+          <!--<ul class="list-content" v-if="data && data.length > 0">-->
+            <!--<li @click="clickItem(item,index)" class="list-item" v-for="(item,index) in data" :key="index" >-->
+              <!--<div class="item-left">-->
+                <!--<span class="svg-box" @click.stop="handleSelect(item, index, $event)" v-if="item.isChecked" >-->
+                    <!--<svg-icon class="checked-icon" icon-class="checked" v-if="item.checked"/>-->
+                    <!--<svg-icon icon-class="check" v-else/>-->
+                <!--</span>-->
+                <!--<span v-else>-->
+                  <!--<img v-if="item.OriginatorImageURL" v-lazy="baseUrl+item.OriginatorImageURL" alt="" >-->
+                  <!--<img v-else v-lazy="" alt="" >-->
+                <!--</span>-->
+              <!--</div>-->
 
-              <div class="item-right">
-                <div class="item-right-box">
-                  <div class="right-box-top">{{item.InstanceName}}</div>
-                  <div class="right-box-btm">
+              <!--<div class="item-right">-->
+                <!--<div class="item-right-box">-->
+                  <!--<div class="right-box-top">{{item.InstanceName}}</div>-->
+                  <!--<div class="right-box-btm">-->
 
-                    <p class="time" v-if="routeId === 0 || routeId === 1 || routeId === 4">
-                      <span class="time-title">接收时间：</span>
-                      <span class="time-inner">{{item.ReceiveTime || item.RecieveTime}}</span>
-                    </p>
-                    <p class="time" v-else>
-                      <span class="time-title">处理时间：</span>
-                      <span class="time-inner">{{item.FinishTime}}</span>
-                    </p>
+                    <!--<p class="time" v-if="routeId === 0 || routeId === 1 || routeId === 4">-->
+                      <!--<span class="time-title">接收时间：</span>-->
+                      <!--<span class="time-inner">{{item.ReceiveTime || item.RecieveTime}}</span>-->
+                    <!--</p>-->
+                    <!--<p class="time" v-else>-->
+                      <!--<span class="time-title">处理时间：</span>-->
+                      <!--<span class="time-inner">{{item.FinishTime}}</span>-->
+                    <!--</p>-->
 
-                    <p class="time" v-if="item.Summary" :key="index" v-for="(list, index) in item.Summary">
-                      <span class="time-title">{{list.DisplayName}}:</span>
-                      <span class="time-inner">{{list.Value}}</span>
-                    </p>
+                    <!--<p class="time" v-if="item.Summary" :key="index" v-for="(list, index) in item.Summary">-->
+                      <!--<span class="time-title">{{list.DisplayName}}:</span>-->
+                      <!--<span class="time-inner">{{list.Value}}</span>-->
+                    <!--</p>-->
 
-                    <p class="detail" v-if="routeId === 0 || routeId === 1 || routeId === 3">
-                      <svg-icon icon-class="zhang"/>
-                      <span class="detail-inner">{{item.ActivityName}}</span>
-                    </p>
-                    <p class="detail" v-else-if="routeId === 4">
-                      <svg-icon icon-class="zhang"/>
-                      <span v-show="'item.ActivityNames.length？true: false'" class="detail-inner"  v-for="(inner, index) in item.ActivityNames" :key="index">{{inner}}</span>
-                      <span v-show="!item.ActivityNames || !item.ActivityNames.length" class="detail-inner">-</span>
-                    </p>
-                    <p class="detail" v-else-if="routeId === 5 || routeId === 6">
-                      <!--<span>&nbsp;</span>-->
-                    </p>
-                    <!--已办才有-->
-                    <p class="detail" v-else>
-                      <svg-icon icon-class="zhang"/>
-                      <span class="detail-inner">{{item.ActivityName}}</span>
-                      <span class="detail-inner" :class="item.ApprovelStatus === '1'? 'orange' : 'red'">({{item.ApprovelStatueName}})</span>
-                    </p>
-                  </div>
-                </div>
+                    <!--<p class="detail" v-if="routeId === 0 || routeId === 1 || routeId === 3">-->
+                      <!--<svg-icon icon-class="zhang"/>-->
+                      <!--<span class="detail-inner">{{item.ActivityName}}</span>-->
+                    <!--</p>-->
+                    <!--<p class="detail" v-else-if="routeId === 4">-->
+                      <!--<svg-icon icon-class="zhang"/>-->
+                      <!--<span v-show="'item.ActivityNames.length？true: false'" class="detail-inner"  v-for="(inner, index) in item.ActivityNames" :key="index">{{inner}}</span>-->
+                      <!--<span v-show="!item.ActivityNames || !item.ActivityNames.length" class="detail-inner">-</span>-->
+                    <!--</p>-->
+                    <!--<p class="detail" v-else-if="routeId === 5 || routeId === 6">-->
+                      <!--&lt;!&ndash;<span>&nbsp;</span>&ndash;&gt;-->
+                    <!--</p>-->
+                    <!--&lt;!&ndash;已办才有&ndash;&gt;-->
+                    <!--<p class="detail" v-else>-->
+                      <!--<svg-icon icon-class="zhang"/>-->
+                      <!--<span class="detail-inner">{{item.ActivityName}}</span>-->
+                      <!--<span class="detail-inner" :class="item.ApprovelStatus === '1'? 'orange' : 'red'">({{item.ApprovelStatueName}})</span>-->
+                    <!--</p>-->
+                  <!--</div>-->
+                <!--</div>-->
 
-                <div class="item-right-img">
-                    <img v-lazy="language === 'zh' ? jiaji: jiaji2" alt="" v-if="item.RemindStatus === 1">
-                    <img v-lazy="language === 'zh' ? cuiban: cuiban2" alt="" v-else-if="item.RemindStatus === 2">
-                </div>
-              </div>
-            </li>
-          </ul>
+                <!--<div class="item-right-img">-->
+                    <!--<img v-lazy="language === 'zh' ? jiaji: jiaji2" alt="" v-if="item.RemindStatus === 1">-->
+                    <!--<img v-lazy="language === 'zh' ? cuiban: cuiban2" alt="" v-else-if="item.RemindStatus === 2">-->
+                <!--</div>-->
+              <!--</div>-->
+            <!--</li>-->
+          <!--</ul>-->
 
-          <div v-else>
-            <NoData></NoData>
-          </div>
+          <!--<div v-else>-->
+            <!--<NoData></NoData>-->
+          <!--</div>-->
         </slot>
       </div>
 
@@ -109,10 +112,10 @@ import Bubble from '../bubble/bubble.vue'
 import NoData from '@/components/NoData/index'
 import {getBaseUrl} from '@/utils/auth'
 import {getRect} from '../../commom/js/dom'
-import jiaji from '@/commom/images/jiaji.png'
-import jiaji2 from '@/commom/images/jiaji2.svg'
-import cuiban2 from '@/commom/images/cuiban2.svg'
-import cuiban from '@/commom/images/cuiban.png'
+// import jiaji from '@/commom/images/jiaji.png'
+// import jiaji2 from '@/commom/images/jiaji2.svg'
+// import cuiban2 from '@/commom/images/cuiban2.svg'
+// import cuiban from '@/commom/images/cuiban.png'
 const COMPONENT_NAME = 'scroll'
 const DIRECTION_H = 'horizontal'
 const DIRECTION_V = 'vertical'
@@ -207,10 +210,10 @@ export default {
       pullDownStyle: '',
       bubbleY: 0,
       baseUrl: getBaseUrl(),
-      jiaji: jiaji,
-      jiaji2: jiaji2,
-      cuiban: cuiban,
-      cuiban2: cuiban2,
+      // jiaji: jiaji,
+      // jiaji2: jiaji2,
+      // cuiban: cuiban,
+      // cuiban2: cuiban2,
       routeId: -1
     }
   },
@@ -319,10 +322,10 @@ export default {
       this.$emit('handleClick', {item, index})
     },
     // 选中
-    handleSelect(item, index, e) {
-      // console.log(item, index, e)
-      this.$emit('handleSelect', {item, index, e})
-    },
+    // handleSelect(item, index, e) {
+    //   // console.log(item, index, e)
+    //   this.$emit('handleSelect', {item, index, e})
+    // },
     destroy() {
       this.scroll.destroy()
     },

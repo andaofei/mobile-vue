@@ -14,6 +14,8 @@
 import SysSetting from '@/components/SysSetting'
 import { MessageBox } from 'mint-ui'
 import {getUserInfo} from '@/utils/auth'
+import dingtalk from 'dingtalk-javascript-sdk'
+import DingtalkEnv from 'dingtalk-javascript-env'
 export default {
   name: 'HomeSetting',
   data() {
@@ -35,13 +37,39 @@ export default {
           // 后台注销
           this.$store.dispatch('LogoutSys')
             .then(() => {
-              location.reload()
+              if (DingtalkEnv.isDingTalk) {
+                const dd = dingtalk.apis
+                dd.biz.navigation.close({
+                  onSuccess: function(result) {
+                  },
+                  onFail: function(err) {
+                    console.error(err)
+                  }
+                })
+              } else {
+                location.reload()
+                // this.$router.push('/login')
+              }
             })
             .catch((error) => {
               console.log(error)
               // 前端登出
               this.$store.dispatch('FedLogOut').then(() => {
-                location.reload()
+                if (DingtalkEnv.isDingTalk) {
+                  const dd = dingtalk.apis
+                  dd.biz.navigation.close({
+                    onSuccess: function(result) {
+                    },
+                    onFail: function(err) {
+                      console.error(err)
+                    }
+                  })
+                } else {
+                  setTimeout(() => {
+                    // this.$router.push('/login')
+                    location.reload()
+                  }, 1000)
+                }
               })
             })
         })

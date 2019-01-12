@@ -219,6 +219,15 @@ export default {
         this.$emit('handleHiddenBox')
         this.searchActions()
       }, 100)
+    },
+    // 清空筛选条件
+    cleanSelected() {
+      this.input = ''
+      this.active = -1
+      this.IsPriority = ''
+      this.endTime = null
+      this.startTime = null
+      this.cleanChecked([])
     }
   },
   computed: {
@@ -242,10 +251,8 @@ export default {
   watch: {
     $route: {
       handler: function(val, oldVal) {
-        // console.log(val.path, 'path')
-        // console.log(this.filterPath, 'filterPath')
         if (!this.filterPath) { // 重置筛选条件
-          this.handleReset()
+          this.cleanSelected()
         }
       },
       deep: true

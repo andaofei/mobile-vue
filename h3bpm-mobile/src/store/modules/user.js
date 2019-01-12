@@ -1,5 +1,5 @@
 import {loginSys, logoutSys, getUserInfo} from '@/api/login'
-import {getToken, setToken, getAuto, setAuto, setUserInfo, removeToken, removeUserInfo} from '@/utils/auth'
+import {getToken, setToken, getAuto, setAuto, setUserInfo, removeToken, removeUserInfo, removeBaseUrl} from '@/utils/auth'
 import { ERR_OK } from '@/api/options/statusCode'
 const user = {
   state: {
@@ -54,9 +54,6 @@ const user = {
           } else {
             reject('getInfo: roles must be a non-null array !')
           }
-          // commit('SET_NAME', data.name)
-          // commit('SET_AVATAR', data.avatar)
-          // commit('SET_INTRODUCTION', data.introduction)
           resolve(response)
         }).catch(error => {
           reject(error)
@@ -72,6 +69,7 @@ const user = {
           commit('SET_AUTO_LOGIN', '')
           removeToken()
           removeUserInfo()
+          removeBaseUrl()
           resolve()
         }).catch(error => {
           reject(error)
@@ -86,6 +84,7 @@ const user = {
         commit('SET_AUTO_LOGIN', '')
         removeUserInfo()
         removeToken()
+        removeBaseUrl()
         resolve()
       })
     }

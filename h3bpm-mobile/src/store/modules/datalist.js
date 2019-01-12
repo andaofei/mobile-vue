@@ -119,6 +119,8 @@ const dataList = {
     // 取消/选中待阅单选状态
     SET_CHECKED_LIST: (state, payload) => {
       const list = state.readList
+      console.log(list)
+      console.log(payload)
       let check = list[payload.index].checked
       const status = !check
       list[payload.index].checked = status
@@ -472,7 +474,7 @@ const dataList = {
         getWorkCount().then(res => {
           if (res.code === ERR_OK) {
             const data = res.data
-            // commit('SET_TODO_COUNTS', data.UnfinishedWorkItemCount)
+            commit('SET_TODO_COUNTS', data.UnfinishedWorkItemCount)
             commit('INIT_TO_READ_COUNTS', data.UnreadWorkItemCount)
           }
           resolve(res)
@@ -481,20 +483,20 @@ const dataList = {
         })
       })
     },
-    setTodoCounts({ commit }, payload) {
-      return new Promise((resolve, reject) => {
-        getWorkItem(payload).then(res => {
-          console.log(res, '初始待办数量')
-          if (res.code === ERR_OK) {
-            // console.log(res)
-            commit('SET_TODO_COUNTS', res.data.totalCount)
-          }
-          resolve(res)
-        }).catch(error => {
-          reject(error)
-        })
-      })
-    },
+    // setTodoCounts({ commit }, payload) {
+    //   return new Promise((resolve, reject) => {
+    //     getWorkItem(payload).then(res => {
+    //       console.log(res, '初始待办数量')
+    //       if (res.code === ERR_OK) {
+    //         // console.log(res)
+    //         commit('SET_TODO_COUNTS', res.data.totalCount)
+    //       }
+    //       resolve(res)
+    //     }).catch(error => {
+    //       reject(error)
+    //     })
+    //   })
+    // },
 
     // 添加面包屑路由
     addView({ commit }, view) {

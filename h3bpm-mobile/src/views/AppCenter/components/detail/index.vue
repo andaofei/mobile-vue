@@ -11,172 +11,179 @@
         </p>
       </div>
       <ToTop v-show="topTop" @backTop="backTop"></ToTop>
-      <div class="wrapper">
-        <BtScroll class="tag-scroll"
-                  ref="userList"
-                  v-loading="loading"
-                  @scroll="scroll"
-                  @refresh="refresh"
-                  :probe-type="probeType"
-                  :listenScroll="listenScroll"
-                  :pullingUp="pullingUp"
-                  :beforeScroll="beforeScroll"
-                  @beforeScroll="listScroll">
-       <div class="wrapper-header">
-         <!--明细表-->
-         <div class="table-type" v-show="ListTitle">
-           <div class="title">{{ListTitle}}</div>
-           <div class="table-box">
-             <el-table
-               :data="tableData"
-               height="200"
-               border
-               show-summary
-               style="width: 100%">
-               <el-table-column
-                 type="index"
-                 label="行号"
-                 fixed
-                 width="50">
-               </el-table-column>
-               <el-table-column
-                 v-for="(item, index) in tableColums"
-                 :key="index"
-                 :prop="item.ColumnCode"
-                 :label="item.DisplayName"
-               >
-               </el-table-column>
-             </el-table>
-           </div>
-           <div class="pageinations">
-             <el-pagination
-               @size-change="handleSizeChange"
-               @current-change="handleCurrentChange"
-               :current-page.sync="currentPage"
-               :page-size="10"
-               :pager-count="5"
-               layout="total, prev, pager, next"
-               :total="totalCounts">
-             </el-pagination>
-           </div>
-         </div>
-         <!--柱状图-->
-         <div class="table-type" v-show="BarTitle">
-           <div class="title">{{BarTitle}}</div>
-           <div class="bar-title">
-             <span class="item" v-for="(item, index) in barTitle" :key="index" @click="changeBarDate(item, index)" :class="{'isSelect': active === index}">{{item}}</span>
-           </div>
-           <div   ref="chart" :style="{height:barHeight,width:width}"></div>
-         </div>
-         <!--汇总表-->
-         <div class="table-type" v-show="TotalTitle">
-           <div class="title">{{TotalTitle}}</div>
-           <div>
-             <el-table
-               v-show="false"
-               :data="RowTable"
-               :span-method="objectSpanMethod"
-               border
-               style="width: 100%; margin-top: 20px">
-               <el-table-column
-                 v-for="(item, index) in columnHeader"
-                 :key="index"
-                 :prop="item.Value"
-                 :label="item.Value">
-               </el-table-column>
-             </el-table>
+      <div class="detail-wrapper">
+          <div class="detail-scroll" id="scroll" ref="scroll">
+            <div class="wrapper-header" >
+             <!--明细表-->
+             <div class="table-type" v-show="ListTitle">
+               <div class="title">{{ListTitle}}</div>
+               <div class="table-box">
+                 <el-table
+                   :data="tableData"
+                   height="400"
+                   border
+                   show-summary
+                   style="width: 100%">
+                   <el-table-column
+                     type="index"
+                     label="行号"
+                     fixed
+                     width="50">
+                   </el-table-column>
+                   <el-table-column
+                     v-for="(item, index) in tableColums"
+                     :key="index"
+                     :prop="item.ColumnCode"
+                     :label="item.DisplayName"
+                   >
+                   </el-table-column>
+                 </el-table>
+               </div>
+               <div class="pageinations">
+                 <el-pagination
+                   @size-change="handleSizeChange"
+                   @current-change="handleCurrentChange"
+                   :current-page.sync="currentPage"
+                   :page-size="10"
+                   :pager-count="5"
+                   layout="total, prev, pager, next"
+                   :total="totalCounts">
+                 </el-pagination>
+               </div>
+             </div>
 
-             <el-table
-               v-show="false"
-               :data="tableData6"
-               :span-method="objectSpanMethod"
-               border
-               style="width: 100%; margin-top: 20px">
-               <el-table-column
-                 prop="id"
-                 label="ID">
-               </el-table-column>
-               <el-table-column
-                 prop="name"
-                 label="姓名">
-               </el-table-column>
-               <el-table-column
-                 prop="amount1"
-                 label="数值 1（元）">
-               </el-table-column>
-               <el-table-column
-                 prop="amount2"
-                 label="数值 2（元）">
-               </el-table-column>
-               <el-table-column
-                 prop="amount3"
-                 label="数值 3（元）">
-               </el-table-column>
-             </el-table>
-             <table border= "1 "   width= "300" >
-               <tr>
-                 <td colspan="4"  >ss
+              <!--汇总表-->
+             <div class="table-type" v-show="TotalTitle">
+               <div class="title">{{TotalTitle}}</div>
+               <div>
+                 <el-table
+                   v-show="false"
+                   :data="RowTable"
+                   :span-method="objectSpanMethod"
+                   border
+                   style="width: 100%; margin-top: 20px">
+                   <el-table-column
+                     v-for="(item, index) in columnHeader"
+                     :key="index"
+                     :prop="item.Value"
+                     :label="item.Value">
+                   </el-table-column>
+                 </el-table>
 
-                 </td>
-               </tr>
-               <tr>
-                 <td   width= "25% "> 4 </td>
-                 <td   width= "25% "> 4 </td>
-                 <td   width= "25% "> 4 </td>
-                 <td   width= "25% "> 4 </td>
-               </tr>
-               <tr>
-                 <td   width= "25%" rowspan="2"> 3 </td>
-                 <td   width= "25% "> 3 </td>
-                 <td   width= "25% "> 3 </td>
-                 <td   width= "25% "> 3 </td>
-               </tr>
-               <tr>
+                 <el-table
+                   v-show="false"
+                   :data="tableData6"
+                   :span-method="objectSpanMethod"
+                   border
+                   style="width: 100%; margin-top: 20px">
+                   <el-table-column
+                     prop="id"
+                     label="ID">
+                   </el-table-column>
+                   <el-table-column
+                     prop="name"
+                     label="姓名">
+                   </el-table-column>
+                   <el-table-column
+                     prop="amount1"
+                     label="数值 1（元）">
+                   </el-table-column>
+                   <el-table-column
+                     prop="amount2"
+                     label="数值 2（元）">
+                   </el-table-column>
+                   <el-table-column
+                     prop="amount3"
+                     label="数值 3（元）">
+                   </el-table-column>
+                 </el-table>
+                 <table border= "1 "   width= "300" >
+                   <tr>
+                     <td colspan="4"  >ss
 
-                 <td   width= "25% "> 2 </td>
-                 <td   width= "25% " rowspan="3"> 2 </td>
-                 <td   width= "25% "> 2 </td>
-               </tr>
-               <tr>
-                 <td   width= "25% " colspan="2"  > 2 </td>
-                 <td   width= "25% "> 2 </td>
+                     </td>
+                   </tr>
+                   <tr>
+                     <td   width= "25% "> 4 </td>
+                     <td   width= "25% "> 4 </td>
+                     <td   width= "25% "> 4 </td>
+                     <td   width= "25% "> 4 </td>
+                   </tr>
+                   <tr>
+                     <td   width= "25%" rowspan="2"> 3 </td>
+                     <td   width= "25% "> 3 </td>
+                     <td   width= "25% "> 3 </td>
+                     <td   width= "25% "> 3 </td>
+                   </tr>
+                   <tr>
 
-               </tr>
-               <tr>
-                 <td   width= "25% ">  </td>
-                 <td   width= "25% "> 2 </td>
-                 <td   width= "25% "> 2 </td>
+                     <td   width= "25% "> 2 </td>
+                     <td   width= "25% " rowspan="3"> 2 </td>
+                     <td   width= "25% "> 2 </td>
+                   </tr>
+                   <tr>
+                     <td   width= "25% " colspan="2"  > 2 </td>
+                     <td   width= "25% "> 2 </td>
 
-               </tr>
-             </table>
-           </div>
+                   </tr>
+                   <tr>
+                     <td   width= "25% ">  </td>
+                     <td   width= "25% "> 2 </td>
+                     <td   width= "25% "> 2 </td>
+
+                   </tr>
+                 </table>
+               </div>
+             </div>
+
+             <!--折线图-->
+             <div class="table-type" v-show="LineTitle">
+               <div class="title">{{LineTitle}}</div>
+               <div   ref="LineChart" :style="{height:'400px',width:width}"></div>
+             </div>
+
+             <!--柱状图-->
+             <div class="table-type" v-show="BarTitle">
+               <div class="title">{{BarTitle}}</div>
+               <p class="type">(类别)</p>
+               <div class="bar-title">
+                 <span class="item" v-for="(item, index) in barTitle" :key="index" @click="changeBarDate(item, index)" :class="{'isSelect': active === index}">{{item}}</span>
+               </div>
+               <div   ref="chart" :style="{height:barHeight,width:width}"></div>
+             </div>
+
+             <!--饼图-->
+             <div class="table-type" v-show="PieTitle">
+               <div class="title">{{PieTitle}}</div>
+               <div   ref="PieChart" :style="{height:'400px',width:width}"></div>
+             </div>
+
+             <!--雷达图-->
+             <div class="table-type" v-show="RadarTitle">
+               <div class="title">{{RadarTitle}}</div>
+               <div   ref="RadarChart" :style="{height:'500px',width:width}"></div>
+             </div>
+
+             <!--漏斗图-->
+             <div class="table-type" v-show="FunnelTitle">
+               <div class="title">{{FunnelTitle}}</div>
+               <div   ref="FunnelChart" :style="{height:'500px',width:width}"></div>
+             </div>
+
+             <!--简易看板-->
+             <div class="table-type" v-show="SimpleTitle">
+               <div class="title">{{SimpleTitle}}</div>
+                 <div class="simple-box">
+                   <ul>
+                     <li v-for="(item, index) in simpData" :key="index">
+                       <span class="left">{{item.value}}</span>
+                       <span>{{item.text}}</span>
+                     </li>
+                   </ul>
+                 </div>
+             </div>
          </div>
-         <!--折线图-->
-         <div class="table-type" v-show="LineTitle">
-           <div class="title">{{LineTitle}}</div>
-           <div   ref="LineChart" :style="{height:'500px',width:width}"></div>
-         </div>
-         <!--雷达图-->
-         <div class="table-type" v-show="RadarTitle">
-           <div class="title">{{RadarTitle}}</div>
-           <div   ref="RadarChart" :style="{height:'500px',width:width}"></div>
-         </div>
-         <!--饼图-->
-         <div class="table-type" v-show="PieTitle">
-           <div class="title">{{PieTitle}}</div>
-           <div   ref="PieChart" :style="{height:'400px',width:width}"></div>
-         </div>
-         <!--漏斗图-->
-         <div class="table-type" v-show="FunnelTitle">
-           <div class="title">{{FunnelTitle}}</div>
-           <div   ref="FunnelChart" :style="{height:'500px',width:width}"></div>
-         </div>
-         <!--简易看板-->
-         <div class="table-type" v-show="SimpleTitle">
-           <div class="title">{{SimpleTitle}}</div>
-         </div>
-       </div>
-        </BtScroll>
+      </div>
       </div>
     </div>
 </template>
@@ -224,6 +231,30 @@ export default {
       SimpleTable: [],
       valueTable: [],
       topTop: false,
+      scrollTop: '',
+      scrollBox: '',
+      simpData: [
+        {
+          value: 1111,
+          text: 'code'
+        },
+        {
+          value: 22,
+          text: 'code'
+        },
+        {
+          value: 231,
+          text: 'code2'
+        },
+        {
+          value: 2231,
+          text: 'code2'
+        },
+        {
+          value: 232,
+          text: 'code1'
+        }
+      ],
       tableData6: [{
         id: '12987122',
         name: '王小虎',
@@ -280,7 +311,26 @@ export default {
       }, 200)
     })
   },
+  mounted() {
+    this.$nextTick(function() {
+      this.scrollBox = this.$refs.scroll
+      // 修改事件监听
+      this.scrollBox.addEventListener('scroll', this.handleScroll)
+    })
+  },
+  destroyed() {
+    window.removeEventListener('scroll', this.handleScroll)
+  },
   methods: {
+    // 监听滚动
+    handleScroll() {
+      let scrollTop = this.scrollBox.scrollTop
+      if (scrollTop > 200) {
+        this.topTop = true
+      } else {
+        this.topTop = false
+      }
+    },
     objectSpanMethod({ row, column, rowIndex, columnIndex }) {
       if (columnIndex === 0) {
         // console.log(rowIndex)
@@ -297,8 +347,9 @@ export default {
         }
       }
     },
+    // 回顶部
     backTop() {
-      this.$refs.userList.scrollTo(0, 0, '500', 'bounce')
+      this.scrollBox.scrollTop = 0
     },
 
     // 下拉
@@ -317,47 +368,9 @@ export default {
         getReportPage(options).then(res => {
           if (res.code === ERR_OK) {
             const data = res.data
-            // console.log(data, 'getReportOptions')
-            // that.title = data.ReportPage.ReportWidgets[0].DisplayName // 标题
-            // that.WidgetType = data.ReportPage.ReportWidgets[0].WidgetType // 表格类型
-            // that.ObjectId = data.ReportPage.ReportWidgets[0].ObjectID // id
-
             for (const item of data.ReportPage.ReportWidgets) {
               this.loadData(item)
             }
-
-            // switch (that.WidgetType) {
-            //   case 1: //  1 柱状图
-            //     const barOptions = {
-            //       Command: 'LoadChartsData',
-            //       UnitFilterDataJson: 'null',
-            //       ObjectId: data.ReportPage.ReportWidgets[0].ObjectID,
-            //       Code: that.code
-            //     }
-            //     that.getReportBar(barOptions)
-            //     break
-            //   case 7:
-            //     //  7 明细表
-            //     const options = {
-            //       Command: 'LoadGridData',
-            //       FilterData: 'null',
-            //       WidgetID: data.ReportPage.ReportWidgets[0].ObjectID,
-            //       Code: that.code,
-            //       start: 0,
-            //       length: 10
-            //     }
-            //     that.getReportDetail(options)
-            //     break
-            //   case 8: //  8 汇总表
-            //     const totalOptions = {
-            //       Command: 'LoadChartsData',
-            //       UnitFilterDataJson: 'null',
-            //       ObjectId: data.ReportPage.ReportWidgets[0].ObjectID,
-            //       Code: that.code
-            //     }
-            //     that.getReportTotal(totalOptions)
-            //     break
-            // }
           }
           resolve(res)
         }).catch(error => {
@@ -455,6 +468,7 @@ export default {
               WidgetSimpleBoard: item
             }
             this.getReportSimple(SimpleOptions)
+            console.log(this.getReportSimple(SimpleOptions))
           }
           break
       }
@@ -483,7 +497,7 @@ export default {
     // 更改柱状图日期
     changeBarDate(item, index) {
       this.active = index
-      this.initChart(this.barTitle, this.nameList, this.barData[index])
+      this.initChart(this.barTitle[index], this.nameList, this.barData[index])
     },
 
     // 柱状图
@@ -525,7 +539,6 @@ export default {
       })
     },
     initChart(arr, nameList, sourceList) {
-      // console.log(arr, nameList, sourceList)
       const self = this
       self.chart = echarts.init(self.$refs.chart, 'macarons')
       let option = {
@@ -533,7 +546,7 @@ export default {
           text: '',
           subtext: ''
         },
-        // color: ['#2970FF', '#FAAD14', '#52C41B', '#FF3B30'],
+        color: ['#7AAFFF', '#FAAD14', '#52C41B', '#FF3B30'],
         tooltip: {
           trigger: 'axis',
           axisPointer: {
@@ -543,7 +556,7 @@ export default {
         legend: {
           orient: 'horizontal',
           left: 'left',
-          data: []
+          data: arr
         },
         grid: {
           left: '3%',
@@ -633,9 +646,6 @@ export default {
           containLabel: true
         },
         toolbox: {
-          feature: {
-            saveAsImage: {}
-          }
         },
         xAxis: {
           type: 'category',
@@ -687,7 +697,7 @@ export default {
         },
         legend: {
           orient: 'horizontal',
-          left: 'left',
+          left: 'center',
           data: legend
         },
         series: [
@@ -817,8 +827,8 @@ export default {
           text: ''
         },
         tooltip: {
-          trigger: 'item',
-          formatter: '{a} <br/>{b} : {c}%'
+          trigger: 'item'
+          // formatter: '{a} <br/>{b} : {c}%'
         },
         legend: {
           data: legend
@@ -888,11 +898,11 @@ export default {
     // 简易看板
     getReportSimple(options) {
       return new Promise((resolve, reject) => {
-        getReportSimple(options).then(res => {
+        return getReportSimple(options).then(res => {
           if (res.code === ERR_OK) {
-            return res.data
+            console.log(res.data)
           }
-          resolve(res)
+          return res.data
         }).catch(error => {
           reject(error)
         })
@@ -1000,14 +1010,14 @@ export default {
         }
       }
     }
-    .wrapper{
+    .detail-wrapper{
       flex: 1 0 auto;
       position: relative;
-      .tag-scroll{
+      .detail-scroll{
         width: 100%;
         height: 100%;
         position: absolute;
-        overflow: hidden;
+        overflow-y: scroll;
       }
       .wrapper-header{
         .title{
@@ -1019,6 +1029,9 @@ export default {
         .table-box{
           padding: 10px;
         }
+        .type{
+          padding: 10px 20px;
+        }
         .bar-title{
           display: flex;
           padding: 10px;
@@ -1027,9 +1040,32 @@ export default {
             width: 33%;
             text-align: center;
             line-height: 20px;
+            padding: 5px 0;
           }
           .isSelect{
-            color: $mainColor;
+            color: $baseColor;
+            background: #7AAFFF;
+            border-radius: 4px;
+          }
+        }
+        .simple-box{
+          padding: 10px;
+          ul{
+            border: 1px solid $solidColor;
+            border-bottom: 0;
+            li{
+              border-bottom: 1px solid $solidColor;
+              display: flex;
+              span{
+                flex: 1;
+                text-align: center;
+                line-height: 30px;
+                color: $textColor;
+              }
+              .left{
+                border-right:1px solid $solidColor;
+              }
+            }
           }
         }
         .pageinations{

@@ -1,8 +1,24 @@
 import axios from 'axios'
 import { Toast, MessageBox } from 'mint-ui'
+import { ERR_OK } from '@/api/options/statusCode'
 import store from '@/store'
 // create an axios instance
-import {getBaseUrl} from '@/utils/auth'
+import {getBaseUrl, setBaseUrl} from '@/utils/auth'
+// Fixed: 第一次加载时无法获取设置的API地址 导致无法请求 需要刷新
+const evn = process.env.NODE_ENV === 'production'
+
+if (evn) {
+  axios.get('serverConfig.json').then((result) => {
+    if (result.status === ERR_OK) {
+      setBaseUrl(result.data.baseUrl)
+    }
+  }).catch(() => {
+  })
+} else {
+  setBaseUrl(process.env.BASE_API)
+}
+
+console.log(getBaseUrl(), 'getBaseUrl')
 const service = axios.create({
   withCredentials: true,
   baseURL: getBaseUrl(), // api 的 base_url
@@ -76,5 +92,4 @@ service.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-
 export default service

@@ -13,6 +13,7 @@
                 @beforeScroll="listScroll">
         <ul class="inner-box" v-if="workFlowLst && workFlowLst.length > 0">
           <li :key="index" v-for="(item, index) in workFlowLst">
+
             <div class="item-box" v-if="item.Workflows">
               <div class="item-right" :key="index" v-for="(inner, index) in item.Workflows" v-if="inner.IsFavorite" >
                 <span class="svg-box" @click.stop="setFavorite(inner)">
@@ -27,6 +28,7 @@
                 </p>
               </div>
             </div>
+
             <div class="item-box" v-else>
               <div class="item-right">
                 <span class="svg-box" @click.stop="setFavorite(item)">

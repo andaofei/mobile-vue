@@ -5,8 +5,6 @@
     <div class="read-all" @click="handleReadAll" v-show="readList.length && readList.length > 1">{{$t('home.Batch')}}</div>
     <scroll ref="scroll"
             v-loading="loadingShow"
-            @handleClick="handleClick"
-            @handleSelect="handleSelect"
             :data="readList"
             :isChecked="isChecked"
             :checked="checked"
@@ -22,6 +20,55 @@
             @scroll="scroll"
             @pullingDown="onPullingDown"
             @pullingUp="onPullingUp">
+      <!--列表-->
+      <ul class="list-content" v-if="readList && readList.length > 0">
+        <li @click="handleClick(item,index)" class="list-item" v-for="(item,index) in readList" :key="index" >
+          <!--头像-->
+          <div class="item-left">
+                <span class="svg-box" @click.stop="handleSelect(item, index)" v-if="item.isChecked" >
+                    <svg-icon class="checked-icon" icon-class="checked" v-if="item.checked"/>
+                    <svg-icon icon-class="check" v-else/>
+                </span>
+            <span v-else>
+                  <img v-if="item.OriginatorImageURL" :src="baseUrl+item.OriginatorImageURL" alt="" >
+                  <img v-else :src="defaultUrl" alt="" >
+                </span>
+          </div>
+
+          <div class="item-right">
+            <div class="item-right-box">
+              <!--流程名-->
+              <div class="right-box-top">{{item.InstanceName}}</div>
+              <div class="right-box-btm">
+                <!--时间-->
+                <p class="time">
+                  <span class="time-title">{{$t('home.startTime')}}：</span>
+                  <span class="time-inner">{{item.ReceiveTime || item.RecieveTime}}</span>
+                </p>
+                <!--流程内容-->
+                <p class="time" v-if="item.Summary" :key="index" v-for="(list, index) in item.Summary">
+                  <span class="time-title">{{list.DisplayName}}:</span>
+                  <span class="time-inner">{{list.Value}}</span>
+                </p>
+                <!--操作详情-->
+                <p class="detail">
+                  <svg-icon icon-class="zhang"/>
+                  <span class="detail-inner">{{item.ActivityName}}</span>
+                </p>
+              </div>
+            </div>
+            <!--加急|催办-->
+            <div class="item-right-img">
+              <img v-if="item.RemindStatus === 1" :src="language === 'zh' ? jiaji: jiaji2" alt="" >
+              <img v-else-if="item.RemindStatus === 2" :src="language === 'zh' ? cuiban: cuiban2" alt="" >
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <div v-else>
+        <NoData></NoData>
+      </div>
    </scroll>
     <!--全选-->
     <div class="select-btm" v-show="BatchStatus">
@@ -64,7 +111,9 @@ export default {
     }
   },
   created() {
-    this.initToReadList()
+    this.$nextTick(() => {
+      this.initToReadList()
+    })
   },
   methods: {
     initToReadList() {
@@ -93,9 +142,9 @@ export default {
     },
 
     // 单击选中
-    handleSelect(data) {
-      console.log(data)
-      this.setListChecked(data)
+    handleSelect(item, index) {
+      console.log(item, index)
+      this.setListChecked({item: item, index: index})
     },
 
     // 批量阅读
@@ -114,7 +163,7 @@ export default {
       this.setAlLChecked({data: data, state: this.allCheckStatus})
     },
 
-    // 确定
+    // 确定全选
     handleSureClick() {
       console.log(this.itemCheckList, 'itemCheckList')
       if (this.itemCheckList.length) {
@@ -125,8 +174,6 @@ export default {
         let options = {
           circulateItemIds: arr,
           readAll: false
-          // userCode: getUserInfo().userCode,
-          // userId: getUserInfo().id
         }
         this.$store.dispatch('BatchReading', options)
           .then((res) => {
@@ -137,7 +184,7 @@ export default {
               })
               setTimeout(() => {
                 instance.close()
-                this._initList()
+                this.initToReadList()
                 this.BatchStatus = false
               }, 1000)
             } else {
@@ -147,7 +194,7 @@ export default {
               })
               setTimeout(() => {
                 instance.close()
-                this._initList()
+                this.initToReadList()
                 this.BatchStatus = false
               }, 1000)
             }

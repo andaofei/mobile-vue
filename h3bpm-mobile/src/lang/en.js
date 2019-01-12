@@ -5,6 +5,9 @@ export default {
     logOut: 'Logout',
     dashboard: 'Dashboard'
   },
+  dingtalk: {
+    error: 'Nail verification failed'
+  },
   login: {
     title: 'Login Form',
     logIn: 'Log in',
@@ -15,7 +18,9 @@ export default {
     sysSetting: 'SystemSet',
     success: 'Success',
     fail: 'Login failed',
-    effect: 'Logon effect'
+    effect: 'Logon effect',
+
+    slogan: 'Empowerment Foundation Management Renewal IT Value'
   },
   logout: {
     title: 'Logout',
@@ -48,7 +53,9 @@ export default {
     ReadItem: 'ReadItem',
     Batch: ' BatchReading',
     selectAll: 'selectAll',
-    submit: 'Submit'
+    submit: 'Submit',
+    startTime: 'Receiving time',
+    endTime: 'End Time'
   },
   appCenter: {
     noData: 'no App',

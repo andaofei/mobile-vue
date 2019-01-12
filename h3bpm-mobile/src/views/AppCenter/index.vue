@@ -12,9 +12,8 @@
                 :probe-type="probeType"
                 :listenScroll="listenScroll"
                 :pullingUp="pullingUp"
-                :beforeScroll="beforeScroll"
-                >
-        <ul class="list" v-if="appList">
+                :beforeScroll="beforeScroll">
+        <ul class="list" v-if="appList && appList.length > 0">
           <li class="item" :key="index" v-for="(item, index) in appList">
             <div class="item-inner" @click="appChild(item)" >
               <p class="img-box">

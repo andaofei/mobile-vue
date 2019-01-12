@@ -3,7 +3,6 @@
     <ToTop v-show="topTop" @backTop="backTop"></ToTop>
     <scroll ref="scroll"
             v-loading="loadingShow"
-            @handleClick="handleClick"
             :data="itemList"
             :probe-type="probeType"
             :listenScroll="listenScroll"
@@ -14,6 +13,49 @@
             @scroll="scroll"
             @pullingDown="onPullingDown"
             @pullingUp="onPullingUp">
+      <!--列表-->
+      <ul class="list-content" v-if="itemList && itemList.length > 0">
+        <li @click="handleClick(item,index)" class="list-item" v-for="(item,index) in itemList" :key="index" >
+          <!--头像-->
+          <div class="item-left">
+                  <img v-if="item.OriginatorImageURL" :src="baseUrl+item.OriginatorImageURL" alt="" >
+                  <img v-else :src="defaultUrl" alt="" >
+          </div>
+
+          <div class="item-right">
+            <div class="item-right-box">
+              <!--流程名-->
+              <div class="right-box-top">{{item.InstanceName}}</div>
+              <div class="right-box-btm">
+                <!--时间-->
+                <p class="time">
+                  <span class="time-title">{{$t('home.startTime')}}：</span>
+                  <span class="time-inner">{{item.ReceiveTime || item.RecieveTime}}</span>
+                </p>
+                <!--流程内容-->
+                <p class="time" v-if="item.Summary" :key="index" v-for="(list, index) in item.Summary">
+                  <span class="time-title">{{list.DisplayName}}:</span>
+                  <span class="time-inner">{{list.Value}}</span>
+                </p>
+                <!--操作详情-->
+                <p class="detail">
+                  <svg-icon icon-class="zhang"/>
+                  <span class="detail-inner">{{item.ActivityName}}</span>
+                </p>
+              </div>
+            </div>
+            <!--加急|催办-->
+            <div class="item-right-img">
+              <img v-if="item.RemindStatus === 1" :src="language === 'zh' ? jiaji: jiaji2" alt="" >
+              <img v-else-if="item.RemindStatus === 2" :src="language === 'zh' ? cuiban: cuiban2" alt="" >
+            </div>
+          </div>
+        </li>
+      </ul>
+
+      <div v-else>
+        <NoData></NoData>
+      </div>
     </scroll>
   </div>
 </template>
@@ -28,7 +70,9 @@ export default {
   created() {
     this.setOptions({}) // 清空搜索条件
     this.getTagCounts() // 待阅数/ 待办数
-    this.initToDoList()
+    this.$nextTick(() => {
+      this.initToDoList()
+    })
   },
   computed: {
     itemList() {

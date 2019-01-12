@@ -18,6 +18,7 @@ import CollapseTransition from 'element-ui/lib/transitions/collapse-transition'
 import { Actionsheet, Toast, DatetimePicker } from 'mint-ui'
 import LoadingImg from '@/commom/default/loading.svg'
 import DefaultImg from '@/commom/default/bpm.jpg'
+import { ERR_OK } from '@/api/options/statusCode'
 fastclick.attach(document.body)
 Vue.component(CollapseTransition.name, CollapseTransition)
 Vue.component(Actionsheet.name, Actionsheet)
@@ -42,7 +43,6 @@ Vue.use(VueLazyload, {
   loading: LoadingImg,
   error: DefaultImg
 })
-
 let newVue = new Vue({
   el: '#app',
   store,
@@ -50,32 +50,24 @@ let newVue = new Vue({
   router,
   render: h => h(App)
 })
-
 // 设置全局api->生产环境
 const evn = process.env.NODE_ENV === 'production'
-
 Vue.prototype.$axios = axios
 Vue.prototype.getConfigJson = function() {
   Vue.prototype.$axios.get('serverConfig.json').then((result) => {
-    if (result.status === 200) {
-      // Vue.prototype.$baseUrl = result.data.baseUrl
-      setBaseUrl(result.data.baseUrl)
-    } else {
-      // Vue.prototype.$baseUrl = process.env.BASE_API
+    if (result.status === ERR_OK) {
       setBaseUrl(result.data.baseUrl)
     }
   }).catch(() => {
-    // Vue.prototype.$baseUrl = process.env.BASE_API
     setBaseUrl(process.env.BASE_API)
   })
 }
 if (evn) {
   Vue.prototype.getConfigJson()// 调用声明的全局方法
 } else {
-  // console.log(process.env.BASE_API)
-  // Vue.prototype.$baseUrl = process.env.BASE_API
   setBaseUrl(process.env.BASE_API)
 }
+
 /* eslint-disable no-new */
 Vue.use({
   newVue
