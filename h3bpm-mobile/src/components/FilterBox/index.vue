@@ -23,14 +23,14 @@
         <div class="process">
           <p class="item-name">{{$t('filter.title')}}</p>
           <p class="item-input">
-            <el-input v-model="input" @input="handleFocus" :placeholder="placeHolder" maxlength="20"></el-input>
+            <el-input v-model="input" @focus="handleFocus" :placeholder="placeHolder" autofocus maxlength="20"></el-input>
           </p>
         </div>
 
         <div class="process-person">
           <span class="process-person-name">{{$t('filter.sponsor')}}</span>
           <p class="process-person-list" @click="handleSelect">
-            <span class="list-name"  :key="item.id" v-for="(item, index) in checkedSponsor" v-if="index<2 && item.checked">{{item.Text}}</span>
+            <span class="list-name"  :key="item.id" v-for="(item, index) in checkedSponsor" v-if="index<2 && item.checked">{{item.text}}</span>
             <span v-if="checkedSponsor.length>2">{{$t('filter.and')}}{{checkedSponsor.length}}{{$t('filter.people')}}</span>
             <span v-else-if="!checkedSponsor">{{$t('filter.select')}}</span>
             <span class="svg-box">
@@ -155,7 +155,7 @@ export default {
       let arr = []
       const checkedSponsor = this.checkedSponsor
       for (const item of checkedSponsor) {
-        arr.push(item.ObjectID)
+        arr.push(item.objectID)
       }
       let options = {
         isPriority: this.IsPriority,

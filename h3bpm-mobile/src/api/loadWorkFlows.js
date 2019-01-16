@@ -1,4 +1,4 @@
-import request from '@/utils/request'
+import request from '@/main'
 // import qs from 'qs'
 import {LoadWorkFlows, WorkFlowsDetail, WorkFlowsUrl, SelfWorkFlows, StartWorkFlows, FavoriteWorkflow} from '@/api/options/urls'
 // 获取我的流程

@@ -1,11 +1,13 @@
 import {loginSys, logoutSys, getUserInfo} from '@/api/login'
-import {getToken, setToken, getAuto, setAuto, setUserInfo, removeToken, removeUserInfo, removeBaseUrl} from '@/utils/auth'
+import {getToken, setToken, getAuto, setAuto, setUserInfo, removeToken, removeUserInfo, getBaseUrl, setBaseUrl} from '@/utils/auth'
 import { ERR_OK } from '@/api/options/statusCode'
+// import stores from 'store'
 const user = {
   state: {
     roles: [],
     token: getToken(),
-    autoLogin: getAuto() || false
+    autoLogin: getAuto() || false,
+    baserApi: '' || getBaseUrl()
   },
 
   mutations: {
@@ -20,6 +22,10 @@ const user = {
     SET_AUTO_LOGIN: (state, payload) => {
       state.autoLogin = payload
       setAuto(payload)
+    },
+    SET_BASE_URL: (state, payload) => {
+      setBaseUrl(payload)
+      state.baserApi = payload
     }
   },
 
@@ -34,6 +40,12 @@ const user = {
           if (response.code === ERR_OK) {
             commit('SET_TOKEN', data.pageId)
             setToken(data.pageId)
+            // window.localStorage.getItem("H3.PortalRoot")
+            if (data.PortalRoot == null) {
+              window.localStorage.setItem('H3.PortalRoot', '/Portal')
+            } else {
+              window.localStorage.setItem('H3.PortalRoot', data.PortalRoot)
+            }
             setUserInfo({name: data.User.Name, id: data.User.UnitID, userCode: data.User.Code, ParentID: data.User.ParentID})
           }
           resolve(response)
@@ -69,7 +81,7 @@ const user = {
           commit('SET_AUTO_LOGIN', '')
           removeToken()
           removeUserInfo()
-          removeBaseUrl()
+          // removeBaseUrl()
           resolve()
         }).catch(error => {
           reject(error)
@@ -84,7 +96,7 @@ const user = {
         commit('SET_AUTO_LOGIN', '')
         removeUserInfo()
         removeToken()
-        removeBaseUrl()
+        // removeBaseUrl()
         resolve()
       })
     }

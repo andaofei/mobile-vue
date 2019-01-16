@@ -14,7 +14,7 @@
         closable
         :disable-transitions="false"
         @close="handleClose(tag, index)">
-        {{tag.Text}}
+        {{tag.text}}
       </el-tag>
     </div>
     <div class="selectDepartChild-wrapper">
@@ -31,7 +31,7 @@
         <div class="selectDepartChild" v-if="sponsorList.length > 0">
           <ul>
             <!--用户-->
-            <li v-if="item.ExtendObject.UnitType === 'U'"  :key="index" v-for="(item, index) in sponsorList" @click="handleClickSelect(item, index)" class="userList">
+            <li v-if="item.extendObject.UnitType === 'U'"  :key="index" v-for="(item, index) in sponsorList" @click="handleClickSelect(item, index)" class="userList">
                   <span class="svg-box">
                     <svg-icon icon-class="check" v-if="!item.checked"/>
                     <svg-icon class="checked-icon" v-else icon-class="checked"/>
@@ -40,11 +40,11 @@
                 <!--<span class="icon-text" :class="[index%2 === 1 ? activeClass : '', index%3 === 1 ? activeClass2 : '', index%4 === 1 ? activeClass3 : '']">{{item.name}}</span>-->
                 <div class="inner-right-box">
                   <span class="img-box">
-                    <!--<img v-if="item.ExtendObject ? item.ExtendObject.UserImageUrl.length > 0 : ''" v-lazy="baseUrl + item.ExtendObject.UserImageUrl" alt="" class="icon-text">-->
-                    <!--<img v-else  v-lazy="item.ExtendObject.UserGender===2? woman : man" alt="" class="icon-text">-->
-                    <img v-if="item.ExtendObject" v-lazy="item.ExtendObject.UserGender === 2 ? woman : man" alt="" class="icon-text">
+                    <img v-if="item.extendObject" :src="baseUrl + item.extendObject.UserImageUrl" alt="" class="icon-text">
+                    <img v-else  :src="item.extendObject.UserGender===2? woman : man" alt="" class="icon-text">
+                    <!--<img v-if="item.extendObject" v-lazy="item.extendObject.UserGender === 2 ? woman : man" alt="" class="icon-text">-->
                   </span>
-                  <span class="inner-text">{{item.Text}}</span>
+                  <span class="inner-text">{{item.text}}</span>
                 </div>
               </div>
             </li>
@@ -142,10 +142,10 @@ export default {
             let newArr = []
 
             for (const i of list) {
-              newList.push(i.ObjectID)
+              newList.push(i.objectID)
             }
             for (const j of arr) {
-              newArr.push(j.ObjectID)
+              newArr.push(j.objectID)
             }
 
             let a = new Set(newList)
@@ -157,7 +157,7 @@ export default {
             list.map((item) => {
               item.checked = false
               for (const inner of intersect) {
-                if (inner === item.ObjectID) {
+                if (inner === item.objectID) {
                   item.checked = true
                 }
               }
@@ -228,7 +228,7 @@ export default {
       }
       articlesArray = this.sponsorList
       articlesArray = articlesArray.filter(function(item) {
-        if (item.Text.toLowerCase().indexOf(searchString) !== -1) {
+        if (item.text.toLowerCase().indexOf(searchString) !== -1) {
           return item
         }
       })

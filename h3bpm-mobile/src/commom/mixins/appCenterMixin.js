@@ -1,6 +1,7 @@
 import {mapMutations} from 'vuex'
 import {getBaseUrl} from '@/utils/auth'
 import BtScroll from '@/components/BtScroll/index'
+import FilterBox from '@/views/AppCenter/components/FilterBox'
 const appCenterMixin = {
   data() {
     return {
@@ -10,7 +11,8 @@ const appCenterMixin = {
       beforeScroll: true,
       activeClass: 'activeClass',
       activeClass2: 'activeClass2',
-      activeClass3: 'activeClass3'
+      activeClass3: 'activeClass3',
+      transitionName: 'slide-fade'
     }
   },
   created() {
@@ -37,7 +39,8 @@ const appCenterMixin = {
     }
   },
   components: {
-    BtScroll
+    BtScroll,
+    FilterBox
   }
 }
 export default appCenterMixin

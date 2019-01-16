@@ -1,6 +1,7 @@
-import request from '@/utils/request'
+import request from '@/main'
 import {DingTalkUrl, DingTalkValidate} from '@/api/options/urls'
-// 钉钉登录
+// import request from '@/utils/request'
+// 钉钉签名
 export function getDingTalkInfo(data) {
   return request({
     url: DingTalkUrl,

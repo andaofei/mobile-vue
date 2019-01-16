@@ -1,39 +1,18 @@
 import axios from 'axios'
 import { Toast, MessageBox } from 'mint-ui'
 import { ERR_OK } from '@/api/options/statusCode'
-import store from '@/store'
+import store from '../store/index'
 // create an axios instance
-import {getBaseUrl, setBaseUrl} from '@/utils/auth'
-// Fixed: 第一次加载时无法获取设置的API地址 导致无法请求 需要刷新
-const evn = process.env.NODE_ENV === 'production'
-
-if (evn) {
-  axios.get('serverConfig.json').then((result) => {
-    if (result.status === ERR_OK) {
-      setBaseUrl(result.data.baseUrl)
-    }
-  }).catch(() => {
-  })
-} else {
-  setBaseUrl(process.env.BASE_API)
-}
-
-console.log(getBaseUrl(), 'getBaseUrl')
+// toFix: 第一次加载时无法获取设置的API地址 导致无法请求 需要刷新
+console.log(store, 'store')
 const service = axios.create({
   withCredentials: true,
-  baseURL: getBaseUrl(), // api 的 base_url
-  timeout: 10000 // request timeout
+  baseURL: '', // api 的 base_url
+  timeout: 8000 // request timeout
 })
-
 // request interceptor
 service.interceptors.request.use(
   config => {
-    // console.log(config, 'interceptor')
-    // Do something before request is sent
-    // if (store.getters.token) {
-    //   // 让每个请求携带token-- ['X-Token']为自定义key 请根据实际情况自行修改
-    //   config.headers['X-Token'] = getToken()
-    // }
     return config
   },
 
@@ -49,7 +28,7 @@ service.interceptors.response.use(
   // response => response,
   response => {
     const res = response.data
-    if (res.code !== 200) {
+    if (res.code !== ERR_OK) {
       let instance = Toast({
         message: res.errorMsg,
         iconClass: 'icon el-icon-error'

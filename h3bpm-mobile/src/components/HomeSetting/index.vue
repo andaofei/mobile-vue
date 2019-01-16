@@ -57,13 +57,7 @@ export default {
               this.$store.dispatch('FedLogOut').then(() => {
                 if (DingtalkEnv.isDingTalk) {
                   const dd = dingtalk.apis
-                  dd.biz.navigation.close({
-                    onSuccess: function(result) {
-                    },
-                    onFail: function(err) {
-                      console.error(err)
-                    }
-                  })
+                  dd.biz.navigation.close({})
                 } else {
                   setTimeout(() => {
                     // this.$router.push('/login')

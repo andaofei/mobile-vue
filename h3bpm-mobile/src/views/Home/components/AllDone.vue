@@ -70,9 +70,11 @@ export default {
   name: 'AllDone',
   mixins: [homeCenterMixin],
   created() {
-    this.setOptions({}) // 清空搜索条件
-    this.getTagCounts() // 待阅数/ 待办数
-    this.initDoneList()
+    this.$nextTick(() => {
+      this.setOptions({}) // 清空搜索条件
+      this.getTagCounts() // 待阅数/ 待办数
+      this.initDoneList()
+    })
   },
   computed: {
     itemList() {

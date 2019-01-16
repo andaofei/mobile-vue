@@ -149,7 +149,7 @@
                <div class="bar-title">
                  <span class="item" v-for="(item, index) in barTitle" :key="index" @click="changeBarDate(item, index)" :class="{'isSelect': active === index}">{{item}}</span>
                </div>
-               <div   ref="chart" :style="{height:barHeight,width:width}"></div>
+               <div   ref="barChart" :style="{height:barHeight,width:width}"></div>
              </div>
 
              <!--饼图-->
@@ -175,9 +175,9 @@
                <div class="title">{{SimpleTitle}}</div>
                  <div class="simple-box">
                    <ul>
-                     <li v-for="(item, index) in simpData" :key="index">
-                       <span class="left">{{item.value}}</span>
-                       <span>{{item.text}}</span>
+                     <li v-for="(item, index) in simpData" :key="index" :class="{'noSolid': index === 2 || index === 4, 'noSolid2': simpData.length > 4}">
+                       <span class="left">{{item.Value}}</span>
+                       <span>{{item.Text}}</span>
                      </li>
                    </ul>
                  </div>
@@ -185,6 +185,14 @@
          </div>
       </div>
       </div>
+      <!--筛选-->
+      <transition :name="transitionName">
+        <div class="filter-box" v-show="filterShow" >
+          <div class="filter-left" @click="handleHiddenBox">
+          </div>
+          <FilterBox @handleHiddenBox="handleHiddenBox"  @handleSearchBox="handleSearchBox" :filterData="filterData"></FilterBox>
+        </div>
+      </transition>
     </div>
 </template>
 
@@ -203,6 +211,7 @@ export default {
   },
   data() {
     return {
+      filterShow: false,
       ListTitle: '',
       BarTitle: '',
       TotalTitle: '',
@@ -222,6 +231,11 @@ export default {
       barHeight: '500px',
       width: '100%',
       chart: null,
+      barChart: null,
+      lineChart: null,
+      pieChart: null,
+      radarChart: null,
+      funnelChart: null,
       barTitle: [], // 柱状标题
       barData: [], // 柱状数据
       nameList: [], // 柱状数据
@@ -233,28 +247,9 @@ export default {
       topTop: false,
       scrollTop: '',
       scrollBox: '',
-      simpData: [
-        {
-          value: 1111,
-          text: 'code'
-        },
-        {
-          value: 22,
-          text: 'code'
-        },
-        {
-          value: 231,
-          text: 'code2'
-        },
-        {
-          value: 2231,
-          text: 'code2'
-        },
-        {
-          value: 232,
-          text: 'code1'
-        }
-      ],
+      simpData: [],
+      filterData: [],
+      filterDetail: [],
       tableData6: [{
         id: '12987122',
         name: '王小虎',
@@ -302,11 +297,11 @@ export default {
     this.code = appCode.ReportCode // 应用id
     const options = {
       Command: 'LoadReportPage',
-      Code: appCode.ReportCode
+      Code: this.code
     }
     this.$nextTick(() => {
       // 获取配置
-      this.getReportOptions(options)
+      this.getReportOptions(options, this.filterDetail)
       setTimeout(() => {
       }, 200)
     })
@@ -351,7 +346,24 @@ export default {
     backTop() {
       this.scrollBox.scrollTop = 0
     },
-
+    handleHiddenBox() {
+      this.filterShow = false
+    },
+    // 筛选
+    handleSearchBox(item) {
+      console.log(item)
+      this.simpData = []
+      this.filterShow = false
+      const options = {
+        Command: 'LoadReportPage',
+        Code: this.code
+      }
+      this.filterDetail = item
+      this.getReportOptions(options, this.filterDetail)
+    },
+    handleClickFilter() {
+      this.filterShow = true
+    },
     // 下拉
     scroll(pos) {
       if (pos.y < -100) {
@@ -362,14 +374,18 @@ export default {
     },
 
     // 获取dataPage
-    getReportOptions(options) {
-      // let that = this
+    getReportOptions(options, filter) {
       return new Promise((resolve, reject) => {
         getReportPage(options).then(res => {
           if (res.code === ERR_OK) {
             const data = res.data
+            const filterList = res.data.ReportPage.Filters
+            filterList.map((item) => {
+              item.inputValue = ''
+            })
+            this.filterData = filterList
             for (const item of data.ReportPage.ReportWidgets) {
-              this.loadData(item)
+              this.loadData(item, filter)
             }
           }
           resolve(res)
@@ -378,13 +394,15 @@ export default {
         })
       })
     },
-    loadData(item) {
+    // 加载表格数据
+    loadData(item, filter) {
       switch (item.WidgetType) {
         case 0: // 0 折线图
           this.LineTitle = item.DisplayName
           const lineOptions = {
             Command: 'LoadChartsData',
-            UnitFilterDataJson: 'null',
+            UnitFilterDataJson: null,
+            FilterData: filter,
             ObjectId: item.ObjectID,
             Code: this.code
           }
@@ -395,6 +413,7 @@ export default {
           const barOptions = {
             Command: 'LoadChartsData',
             UnitFilterDataJson: 'null',
+            FilterData: filter,
             ObjectId: item.ObjectID,
             Code: this.code
           }
@@ -404,7 +423,8 @@ export default {
           this.PieTitle = item.DisplayName
           const PieOptions = {
             Command: 'LoadChartsData',
-            UnitFilterDataJson: 'null',
+            UnitFilterDataJson: null,
+            FilterData: filter,
             ObjectId: item.ObjectID,
             Code: this.code
           }
@@ -413,10 +433,11 @@ export default {
         case 4: //  4 雷达图
           this.RadarTitle = item.DisplayName
           const RadarOptions = {
-            Command: 'LoadChartsData',
-            UnitFilterDataJson: 'null',
-            ObjectId: item.ObjectID,
-            Code: this.code
+            command: 'LoadChartsData',
+            unitFilterDataJson: null,
+            filterData: filter,
+            objectId: item.ObjectID,
+            code: this.code
           }
           this.getRadarRadar(RadarOptions)
           break
@@ -424,7 +445,8 @@ export default {
           this.FunnelTitle = item.DisplayName
           const FunnelOptions = {
             Command: 'LoadChartsData',
-            UnitFilterDataJson: 'null',
+            UnitFilterDataJson: null,
+            FilterData: filter,
             ObjectId: item.ObjectID,
             Code: this.code
           }
@@ -435,7 +457,7 @@ export default {
           this.ObjectId = item.ObjectID
           const options = {
             Command: 'LoadGridData',
-            FilterData: 'null',
+            FilterData: filter,
             WidgetID: item.ObjectID,
             Code: this.code,
             start: 0,
@@ -447,7 +469,8 @@ export default {
           this.TotalTitle = item.DisplayName
           const totalOptions = {
             Command: 'LoadChartsData',
-            UnitFilterDataJson: 'null',
+            UnitFilterDataJson: null,
+            FilterData: filter,
             ObjectId: item.ObjectID,
             Code: this.code
           }
@@ -455,20 +478,21 @@ export default {
           break
         case 9: //  9 简易看板
           this.SimpleTitle = item.DisplayName
-          console.log(item)
+          let that = this
           for (const j of item.ReportWidgetSimpleBoard) {
-            console.log(j)
-            const SimpleOptions = {
-              Command: 'LoadSimpleBoard',
-              UnitFilterDataJson: 'null',
-              FilterData: 'null',
-              WidgetObjectId: j.ParentObjectID,
-              ReportPageObjectId: this.code,
-              ReportWidgetSimpleBoardObjectId: j.ObjectID,
-              WidgetSimpleBoard: item
+            if (j.ReportSourceId) { // 只获取sourceId
+              const SimpleOptions = {
+                command: 'LoadSimpleBoard',
+                unitFilterDataJson: null,
+                filterData: filter,
+                widgetObjectId: j.ParentObjectID,
+                reportPageObjectId: this.code,
+                reportWidgetSimpleBoardObjectId: j.ObjectID,
+                widgetSimpleBoard: item
+              }
+              // this.getReportSimple(SimpleOptions)
+              that.getReportSimpleData(SimpleOptions)
             }
-            this.getReportSimple(SimpleOptions)
-            console.log(this.getReportSimple(SimpleOptions))
           }
           break
       }
@@ -497,6 +521,8 @@ export default {
     // 更改柱状图日期
     changeBarDate(item, index) {
       this.active = index
+      this.barChart.clear() // 清除画布
+      this.barChart.off('click') // 清除点击事件
       this.initChart(this.barTitle[index], this.nameList, this.barData[index])
     },
 
@@ -540,7 +566,7 @@ export default {
     },
     initChart(arr, nameList, sourceList) {
       const self = this
-      self.chart = echarts.init(self.$refs.chart, 'macarons')
+      self.barChart = echarts.init(self.$refs.barChart, 'macarons')
       let option = {
         title: {
           text: '',
@@ -552,11 +578,6 @@ export default {
           axisPointer: {
             type: 'shadow'
           }
-        },
-        legend: {
-          orient: 'horizontal',
-          left: 'left',
-          data: arr
         },
         grid: {
           left: '3%',
@@ -593,7 +614,11 @@ export default {
           }
         ]
       }
-      self.chart.setOption(option)
+      self.barChart.setOption(option, true)
+      self.barChart.on('click', function(params) {
+        console.log(params.value)
+        console.log(params.name)
+      })
     },
 
     // 折线图
@@ -627,7 +652,7 @@ export default {
     },
     initLine(lineData, arr) {
       const self = this
-      self.chart = echarts.init(self.$refs.LineChart, 'macarons')
+      self.lineChart = echarts.init(self.$refs.LineChart, 'macarons')
       let option = {
         title: {
           text: ''
@@ -636,8 +661,10 @@ export default {
           trigger: 'axis'
         },
         legend: {
-          // data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎']
-          data: arr
+          // orient: 'center',
+          // // data: ['邮件营销', '联盟广告', '视频广告', '直接访问', '搜索引擎']
+          data: arr,
+          type: 'scroll'
         },
         grid: {
           left: '3%',
@@ -657,7 +684,11 @@ export default {
         },
         series: lineData
       }
-      self.chart.setOption(option)
+      self.lineChart.setOption(option)
+      self.lineChart.on('click', function(params) {
+        console.log(params.value)
+        console.log(params.name)
+      })
     },
 
     // 饼图
@@ -686,7 +717,7 @@ export default {
     },
     initPie(pieData, legend) {
       const self = this
-      self.chart = echarts.init(self.$refs.PieChart, 'macarons')
+      self.pieChart = echarts.init(self.$refs.PieChart, 'macarons')
       let option = {
         title: {
           x: 'center'
@@ -696,9 +727,8 @@ export default {
           formatter: '{b} : {c} ({d}%)'
         },
         legend: {
-          orient: 'horizontal',
-          left: 'center',
-          data: legend
+          data: legend,
+          type: 'scroll'
         },
         series: [
           {
@@ -724,7 +754,11 @@ export default {
           }
         ]
       }
-      self.chart.setOption(option)
+      self.pieChart.setOption(option)
+      self.pieChart.on('click', function(params) {
+        console.log(params.value)
+        console.log(params.name)
+      })
     },
 
     // 雷达图
@@ -761,14 +795,15 @@ export default {
     },
     initRadar(CategoriesList, SeriesData, CategoriesName) {
       const self = this
-      self.chart = echarts.init(self.$refs.RadarChart, 'macarons')
+      self.radarChart = echarts.init(self.$refs.RadarChart, 'macarons')
       let option = {
         title: {
           text: ''
         },
         tooltip: {},
         legend: {
-          data: CategoriesList
+          data: CategoriesList,
+          type: 'scroll'
           // data: ['预算分配', '实际开销']
         },
         radar: {
@@ -790,7 +825,11 @@ export default {
           data: SeriesData
         }]
       }
-      self.chart.setOption(option)
+      self.radarChart.setOption(option)
+      self.radarChart.on('click', function(params) {
+        console.log(params.value)
+        console.log(params.name)
+      })
     },
 
     // 漏斗图
@@ -821,7 +860,7 @@ export default {
     initFunnel(FunnelData, legend) {
       // console.log(FunnelData, legend)
       const self = this
-      self.chart = echarts.init(self.$refs.FunnelChart, 'macarons')
+      self.funnelChart = echarts.init(self.$refs.FunnelChart, 'macarons')
       let option = {
         title: {
           text: ''
@@ -831,7 +870,8 @@ export default {
           // formatter: '{a} <br/>{b} : {c}%'
         },
         legend: {
-          data: legend
+          data: legend,
+          type: 'scroll'
         },
         calculable: true,
         series: [
@@ -892,17 +932,20 @@ export default {
           }
         ]
       }
-      self.chart.setOption(option)
+      self.funnelChart.setOption(option)
+      self.funnelChart.on('click', function(params) {
+        console.log(params.value)
+        console.log(params.name)
+      })
     },
 
     // 简易看板
-    getReportSimple(options) {
+    getReportSimpleData(options) {
       return new Promise((resolve, reject) => {
-        return getReportSimple(options).then(res => {
+        return getReportSimple(options).then((res) => {
           if (res.code === ERR_OK) {
-            console.log(res.data)
+            this.simpData.push(res.data)
           }
-          return res.data
         }).catch(error => {
           reject(error)
         })
@@ -946,16 +989,15 @@ export default {
       return result
     },
 
-    handleClickFilter() {},
-
     // 分页
     handleSizeChange(val) {
+      console.log(val)
       const options = {
         Command: 'LoadGridData',
         FilterData: 'null',
         WidgetID: this.ObjectId,
         Code: this.code,
-        start: val * 10,
+        start: (val - 1) * 10,
         length: 10
       }
       this.getReportDetail(options)
@@ -967,7 +1009,7 @@ export default {
         FilterData: 'null',
         WidgetID: this.ObjectId,
         Code: this.code,
-        start: val * 10,
+        start: (val - 1) * 10,
         length: 10
       }
       this.getReportDetail(options)
@@ -981,98 +1023,5 @@ export default {
 </script>
 
 <style rel="stylesheet/scss" lang="scss" scoped>
-  @import "../../../../commom/scss/mixin";
-  @import "../../../../commom/scss/varible";
-  .detail-container {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    .header {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      @include border-bottom-1px($borderBottom);
-      padding: 0 10px;
-      .svg-box{
-        color: $mainColor;
-        line-height: 44px;
-      }
-      .title {
-        text-align: center;
-        line-height: 44px;
-      }
-      .home-header-filter {
-        color: $mainColor;
-        line-height: 44px;
-        .filter-text {
-          font-size: 1rem;
-        }
-      }
-    }
-    .detail-wrapper{
-      flex: 1 0 auto;
-      position: relative;
-      .detail-scroll{
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        overflow-y: scroll;
-      }
-      .wrapper-header{
-        .title{
-          padding: 10px 10px 10px 20px;
-        }
-        .table-type{
-          width: 100%;
-        }
-        .table-box{
-          padding: 10px;
-        }
-        .type{
-          padding: 10px 20px;
-        }
-        .bar-title{
-          display: flex;
-          padding: 10px;
-          flex-wrap: wrap;
-          .item{
-            width: 33%;
-            text-align: center;
-            line-height: 20px;
-            padding: 5px 0;
-          }
-          .isSelect{
-            color: $baseColor;
-            background: #7AAFFF;
-            border-radius: 4px;
-          }
-        }
-        .simple-box{
-          padding: 10px;
-          ul{
-            border: 1px solid $solidColor;
-            border-bottom: 0;
-            li{
-              border-bottom: 1px solid $solidColor;
-              display: flex;
-              span{
-                flex: 1;
-                text-align: center;
-                line-height: 30px;
-                color: $textColor;
-              }
-              .left{
-                border-right:1px solid $solidColor;
-              }
-            }
-          }
-        }
-        .pageinations{
-          text-align: right;
-          padding: 0 10px;
-        }
-      }
-    }
-  }
+@import "../scss/detail";
 </style>

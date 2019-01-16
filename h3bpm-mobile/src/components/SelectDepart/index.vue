@@ -34,16 +34,18 @@
                         closable
                         :disable-transitions="false"
                         @close="handleClose(tag, index)">
-                        {{tag.Text}}
+                        {{tag.text}}
                       </el-tag>
                     </div>
                     <div v-if="departList.length > 0">
                       <div class="title">{{departTitle}}</div>
                       <ul>
                         <li :key="index" v-for="(item, index) in departList"  @click="handleClickChild(item)">
-                          <span>{{item.Text}}</span>
-                          <p>
-                            <span>{{item.ExtendObject.ChildrenCount}}</span>
+                          <p class="item-text">
+                            <span>{{item.text}}</span>
+                          </p>
+                          <p class="item-counts">
+                            <span>{{item.extendObject.ChildrenCount}}</span>
                             <span class="svg-box">
                             <svg-icon icon-class="right"></svg-icon>
                             </span>
@@ -129,15 +131,15 @@ export default {
     },
     handleClickChild(item) {
       console.log(item)
-      if (item.ExtendObject.ChildrenCount === 0) {
+      if (item.extendObject.ChildrenCount === 0) {
         return false
       }
       this.$router.push({
         path: '/selectDepart/selectDepartChild',
         name: 'SelectDepartChild',
         params: {
-          objId: item.ObjectID,
-          title: item.Text
+          objId: item.objectID,
+          title: item.text
         }
       })
       this.title = item.Text
@@ -160,7 +162,7 @@ export default {
       }
       articlesArray = this.departList
       articlesArray = articlesArray.filter(function(item) {
-        if (item.Text.toLowerCase().indexOf(searchString) !== -1) {
+        if (item.text.toLowerCase().indexOf(searchString) !== -1) {
           return item
         }
       })
@@ -431,6 +433,17 @@ export default {
           line-height: 30px;
           color: $textColor2;
           @include border-bottom-1px($borderBottom);
+          .item-text{
+            flex: 1 0 auto;
+            position: relative;
+            span{
+              position: absolute;
+              width: 100%;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
+            }
+          }
         }
       }
     }

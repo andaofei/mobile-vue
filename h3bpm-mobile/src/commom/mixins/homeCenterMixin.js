@@ -102,15 +102,6 @@ const homeCenterMixin = {
   },
   methods: {
     getTagCounts() {
-      // let options = {
-      //   keyWord: '',
-      //   finishedWorkItem: false,
-      //   sortDirection: 'Desc',
-      //   sortKey: 'ReceiveTime',
-      //   existsLength: 0,
-      //   userId: getUserInfo().id
-      // }
-      // this.$store.dispatch('setTodoCounts', options) // 待办数
       this.$store.dispatch('setTagCounts') // 待阅数 待办数
     },
 

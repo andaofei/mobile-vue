@@ -25,10 +25,12 @@
                    <svg-icon icon-class="star" v-else/>
                     </span>
                 <p class="inner-right" @click="handleClickSelect(inner, index)">
+                  <span class="inner-right-box">
                   <span class="inner-text">{{inner.DisplayName}}</span>
                   <span class="svg-box">
                       <svg-icon icon-class="right"/>
                     </span>
+                  </span>
                 </p>
               </div>
             </div>
@@ -40,10 +42,12 @@
                    <svg-icon icon-class="star" v-else/>
                 </span>
                 <p class="inner-right" @click="handleClickSelect(item, index)">
+                  <span class="inner-right-box">
                   <span class="inner-text">{{item.DisplayName}}</span>
                   <span class="svg-box">
                       <svg-icon icon-class="right"/>
                     </span>
+                  </span>
                 </p>
               </div>
             </div>

@@ -1,0 +1,132 @@
+@import "../../../../commom/scss/mixin";
+@import "../../../../commom/scss/varible";
+.detail-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .header {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    @include border-bottom-1px($borderBottom);
+    padding: 0 10px;
+    .svg-box{
+      color: $mainColor;
+      line-height: 44px;
+    }
+    .title {
+      text-align: center;
+      line-height: 44px;
+    }
+    .home-header-filter {
+      color: $mainColor;
+      line-height: 44px;
+      .filter-text {
+        font-size: 1rem;
+      }
+    }
+  }
+  .detail-wrapper{
+    flex: 1 0 auto;
+    position: relative;
+    .detail-scroll{
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      overflow-y: scroll;
+    }
+    .wrapper-header{
+      .title{
+        padding: 10px 10px 10px 20px;
+      }
+      .table-type{
+        width: 100%;
+      }
+      .table-box{
+        padding: 10px;
+      }
+      .type{
+        padding: 10px 20px;
+      }
+      .bar-title{
+        display: flex;
+        padding: 10px;
+        flex-wrap: wrap;
+        .item{
+          width: 33%;
+          text-align: center;
+          line-height: 20px;
+          padding: 5px 0;
+        }
+        .isSelect{
+          color: $baseColor;
+          background: #7AAFFF;
+          border-radius: 4px;
+        }
+      }
+      .simple-box{
+        padding: 10px 10px 20px 10px;
+        ul{
+          border: 1px solid $solidColor;
+          display: flex;
+          flex-wrap: wrap;
+          li{
+            flex: 0 0 50%;
+            display: flex;
+            flex-direction: column;
+            span{
+              flex: 1;
+              text-align: center;
+              line-height: 30px;
+              color: $textColor;
+            }
+            .left{
+            }
+          }
+          .noSolid2{
+            flex: 0 0 33%;
+          }
+          li:nth-child(odd){
+          }
+          li:last-child{
+          }
+          .noSolid{
+            /*border-bottom: 0;*/
+          }
+        }
+      }
+      .pageinations{
+        text-align: right;
+        padding: 0 10px;
+      }
+    }
+  }
+}
+.filter-box{
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top:0;
+  background: rgba(0,0,0,.4);
+  z-index: 99;
+  display: flex;
+  .filter-left{
+    flex:0 0 55px;
+  }
+}
+/* 设置持续时间和动画函数 */
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+
+.slide-fade-leave-active {
+  transition: all .2s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+
+.slide-fade-enter, .slide-fade-leave-to
+  /* .slide-fade-leave-active for below version 2.1.8 */ {
+  transform: translateX(300px);
+  opacity: 0;
+}

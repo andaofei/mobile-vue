@@ -1,6 +1,6 @@
 {
   "name": "h3bpm",
-  "version": "1.0.8",
+  "version": "1.0.16",
   "description": "zhuaf",
   "author": "e <2353536563@qq.com>",
   "private": true,
@@ -33,6 +33,7 @@
     "nprogress": "^0.2.0",
     "qs": "^6.6.0",
     "sass-loader": "^7.1.0",
+    "store": "^2.0.12",
     "stylus": "^0.54.5",
     "stylus-loader": "^3.0.2",
     "svg-sprite-loader": "^4.1.3",

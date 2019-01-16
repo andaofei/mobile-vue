@@ -1,4 +1,5 @@
-import request from '@/utils/request'
+import request from '@/main'
+// import request from '@/utils/request'
 import {GetWorkItems, GetReadItems, GetWorkCount, BatchRead, LoadOrgTreeNodes} from '@/api/options/urls'
 // 待办数据
 export function getWorkItem(data) {
@@ -37,7 +38,7 @@ export function setBatchRead(data) {
 export function getSelectPerson(data) {
   return request({
     url: LoadOrgTreeNodes,
-    method: 'GET',
+    method: 'POST',
     params: data
   })
 }

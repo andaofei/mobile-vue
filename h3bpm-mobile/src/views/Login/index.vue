@@ -44,7 +44,7 @@
   <!--钉钉登录-->
   <div class="ding-login"  v-show="DingtalkEnv">
     <transition name="el-fade-in-linear">
-    <div class="login-logo">
+    <div class="login-logo" v-loading="loading">
       <img v-lazy="img" alt="">
       <p>{{$t('login.slogan')}}</p>
     </div>
@@ -54,15 +54,13 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import { ERR_OK } from '@/api/options/statusCode'
 import dingtalk from 'dingtalk-javascript-sdk'
 import {Toast} from 'mint-ui'
 import {getDingTalkInfo, getDingTalkValidate} from '@/api/dingTalk'
-import {setToken, setUserInfo, getBaseUrl} from '@/utils/auth'
+import {setToken, setUserInfo} from '@/utils/auth'
 import DingtalkEnv from 'dingtalk-javascript-env'
 import logo from '@/commom/default/bpm.jpg'
-const evn = process.env.NODE_ENV === 'production' // 生产环境
 export default {
   name: 'Login',
   data() {
@@ -84,17 +82,18 @@ export default {
     }
   },
   created() {
-    if (evn) {
-      Vue.prototype.getConfigJson()
-    }
   },
   mounted() {
-    // 钉钉自动登录
-    let sourceUrl = getBaseUrl()
-    let url = sourceUrl.toLocaleLowerCase()
-    if (DingtalkEnv.isDingTalk) {
-      this.getDingTalkInfo(url)
-    }
+    console.log(this.baserApi, 'baserApi')
+    this.$nextTick(() => {
+      // 钉钉自动登录
+      if (DingtalkEnv.isDingTalk) {
+        this.loading = true
+        this.loading = false
+        const url = this.baserApi
+        this.getDingTalkInfo(url)
+      }
+    })
     if (this.autoLogin) {
       this.handleLogin()
     }
@@ -118,6 +117,7 @@ export default {
           }
           resolve(res)
         }).catch(error => {
+          this.loading = false
           reject(error)
         })
       })
@@ -143,6 +143,7 @@ export default {
               setTimeout(() => {
                 instance.close()
               }, 2000)
+              that.loading = false
               reject(err)
             }
           })
@@ -157,6 +158,7 @@ export default {
           setTimeout(() => {
             instance.close()
           }, 2000)
+          this.loading = false
           reject(err)
         })
       })
@@ -166,15 +168,22 @@ export default {
     getDingTalkValidate(option) {
       return new Promise((resolve, reject) => {
         getDingTalkValidate(option).then((res) => {
+          this.loading = false
           if (res.code === ERR_OK) {
             const data = res.data
             console.log(data, '获取权限验证--------')
+            if (data.PortalRoot == null) {
+              window.localStorage.setItem('H3.PortalRoot', '/Portal')
+            } else {
+              window.localStorage.setItem('H3.PortalRoot', data.PortalRoot)
+            }
             setToken(data.MobileUser.ObjectID)
-            setUserInfo({name: data.MobileUser.Name, id: data.MobileUser.ObjectID, userCode: data.MobileUser.Code, ParentID: data.MobileUser.ObjectID})
+            setUserInfo({name: data.MobileUser.Name, id: data.MobileUser.ObjectID, userCode: data.MobileUser.Code, ParentID: data.MobileUser.ParentID})
             this.$router.push({ path: '/dashboard' })
           }
           resolve(res)
         }).catch(error => {
+          this.loading = false
           reject(error)
         })
       })
@@ -214,6 +223,7 @@ export default {
       this.$router.push('/setting')
     }
   },
+
   computed: {
     autoLogin: {
       get() {
@@ -222,8 +232,12 @@ export default {
       set(value) {
         this.$store.commit('SET_AUTO_LOGIN', value)
       }
+    },
+    baserApi() {
+      return this.$store.getters.baserApi
     }
   },
+
   watch: {
     $route: {
       handler: function(route) {

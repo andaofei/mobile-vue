@@ -186,6 +186,7 @@ export default {
                 instance.close()
                 this.initToReadList()
                 this.BatchStatus = false
+                this.$refs.scroll.scrollTo(0, 0, '500', 'bounce')
               }, 1000)
             } else {
               let instance = Toast({

@@ -2,6 +2,7 @@ const getters = {
   token: state => state.user.token,
   roles: state => state.user.roles,
   autoLogin: state => state.user.autoLogin,
+  baserApi: state => state.user.baserApi,
   language: state => state.app.language,
   ipPath: state => state.app.ipPath,
   filterShow: state => state.app.filterShow, // 筛选

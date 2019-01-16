@@ -38,7 +38,7 @@
                 closable
                 :disable-transitions="false"
                 @close="handleClose(tag, index)">
-                  <span> {{tag.Text}}</span>
+                  <span> {{tag.text}}</span>
                 </el-tag>
             </div>
             <div class="tag-wrapper" >
@@ -67,10 +67,10 @@
                 <div class="inner-right">
                   <div class="inner-right-box">
                   <span class="img-box">
-                   <!--<img v-if="item.ExtendObject ? item.ExtendObject.UserGender.length > 0 : ''" v-lazy="baseUrl + item.ExtendObject.UserImageUrl" alt="" class="icon-text">-->
-                    <img v-if="item.ExtendObject" v-lazy="item.ExtendObject.UserGender === 2 ? woman : man" alt="" class="icon-text">
+                   <img v-if="item.extendObject" v-lazy="baseUrl + item.extendObject.UserImageUrl" alt="" class="icon-text">
+                    <!--<img v-if="item.extendObject" v-lazy="item.extendObject.UserGender === 2 ? woman : man" alt="" class="icon-text">-->
                   </span>
-                  <span class="inner-text">{{item.Text}}</span>
+                  <span class="inner-text">{{item.text}}</span>
                 </div>
                 </div>
               </li>
@@ -248,7 +248,7 @@ export default {
       }
       articlesArray = this.sponsorList
       articlesArray = articlesArray.filter(function(item) {
-        if (item.Text.toLowerCase().indexOf(searchString) !== -1) {
+        if (item.text.toLowerCase().indexOf(searchString) !== -1) {
           return item
         }
       })
