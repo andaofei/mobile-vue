@@ -13,12 +13,14 @@ const service = axios.create({
 // request interceptor
 service.interceptors.request.use(
   config => {
+    config.headers.lang = `zh_cn`
+    console.log(config)
     return config
   },
 
   error => {
     // Do something with request error
-    console.log(error) // for debug
+    console.error(error) // for debug
     Promise.reject(error)
   }
 )

@@ -6,10 +6,10 @@ import English from './english'
 Vue.use(VueI18n)
 
 export default new VueI18n({
-  locale: 'en',
-  fallbackLocale: 'zh',
+  locale: 'en_us',
+  fallbackLocale: 'zh_cn',
   messages: {
-    zh: Chinese,
-    en: English
+    zh_cn: Chinese,
+    en_us: English
   }
 })

@@ -35,7 +35,7 @@ export default {
     freeScrollImg: 'free-scroll.jpeg',
     formListImg: 'form-list.jpeg',
     goodsListImg: 'goods-list.jpeg',
-    navListImg: 'navigator-zh.jpg',
+    navListImg: 'navigator-zh_cn.jpg',
     infinityScrollImg: 'infinity-scroll.png'
   },
 

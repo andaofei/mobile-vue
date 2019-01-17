@@ -1,8 +1,9 @@
 import Cookies from 'js-cookie'
+import store from 'store'
 
 const app = {
   state: {
-    language: Cookies.get('language') || 'zh',
+    language: store.get('H3.Language') || 'zh_cn',
     ipPath: Cookies.get('sysIp') || '127.0.0.1',
     filterShow: false,
     filterTitle: '',
@@ -12,7 +13,8 @@ const app = {
   mutations: {
     SET_LANGUAGE: (state, language) => {
       state.language = language
-      Cookies.set('language', language)
+      // store.set('H3.Language', language)
+      window.localStorage.setItem('H3.Language', language)
     },
     UP_DATE_IP: (state, value) => {
       state.ipPath = value

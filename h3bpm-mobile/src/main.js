@@ -8,6 +8,7 @@ import axios from 'axios'
 import './permission'
 import './icons'
 import i18n from './lang'
+import storeJs from 'store'
 import 'normalize.css/normalize.css'
 import '../theme/index.css'
 import './commom/mintui/style.scss'
@@ -53,7 +54,6 @@ let newVue = new Vue({
   router,
   render: h => h(App)
 })
-console.log(i18n)
 // 设置全局api->生产环境
 const evn = process.env.NODE_ENV === 'production'
 Vue.prototype.$axios = axios
@@ -84,10 +84,11 @@ if (getBaseUrl()) {
 }
 axios.defaults.timeout = 60000
 axios.defaults.withCredentials = true
-axios.defaults.headers.common['lang'] = 'zh_CN'
+// axios.defaults.headers.common['lang'] = storeJs.get('H3.Language') || 'zh_cn'
 // request interceptor
 axios.interceptors.request.use(
   config => {
+    config.headers.lang = storeJs.get('H3.Language') || `zh_cn`
     return config
   },
 

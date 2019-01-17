@@ -172,13 +172,16 @@ export default {
           if (res.code === ERR_OK) {
             const data = res.data
             console.log(data, '获取权限验证--------')
+            if (!window.localStorage || typeof window.localStorage === 'undefined') {
+              alert('No LocalStorage')
+            }
             if (data.PortalRoot == null) {
               window.localStorage.setItem('H3.PortalRoot', '/Portal')
             } else {
               window.localStorage.setItem('H3.PortalRoot', data.PortalRoot)
             }
             setToken(data.MobileUser.ObjectID)
-            setUserInfo({name: data.MobileUser.Name, id: data.MobileUser.ObjectID, userCode: data.MobileUser.Code, ParentID: data.MobileUser.ParentID})
+            setUserInfo({name: data.MobileUser.Name, id: data.MobileUser.ObjectID, userCode: data.MobileUser.Code, ParentID: data.MobileUser.parentID})
             this.$router.push({ path: '/dashboard' })
           }
           resolve(res)
@@ -316,6 +319,9 @@ export default {
       font-size: 1rem;
       line-height: 2rem;
       color: $textColor;
+      padding: 0 10px;
+      text-align: center;
+      white-space: normal;
     }
     img {
       width: 6.5rem;

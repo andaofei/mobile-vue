@@ -59,8 +59,8 @@
             </div>
             <!--加急|催办-->
             <div class="item-right-img">
-              <img v-if="item.RemindStatus === 1" :src="language === 'zh' ? jiaji: jiaji2" alt="" >
-              <img v-else-if="item.RemindStatus === 2" :src="language === 'zh' ? cuiban: cuiban2" alt="" >
+              <img v-if="item.RemindStatus === 1" :src="language === 'zh_cn' ? jiaji: jiaji2" alt="" >
+              <img v-else-if="item.RemindStatus === 2" :src="language === 'zh_cn' ? cuiban: cuiban2" alt="" >
             </div>
           </div>
         </li>

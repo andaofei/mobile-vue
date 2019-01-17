@@ -26,7 +26,7 @@
 
     <div class="item" @click="changeLang">
       <span>{{$t('setting.switchLanguage')}}</span>
-      <span class="right" v-html="language==='en'?'English':'中文'"></span>
+      <span class="right" v-html="language==='en_us'?'English':'中文'"></span>
     </div>
 
     <mt-actionsheet
@@ -55,6 +55,7 @@ export default {
   },
   computed: {
     language() {
+      console.log(this.$store.getters.language.toLowerCase())
       return this.$store.getters.language
     },
     ipPath: {
@@ -71,10 +72,10 @@ export default {
       this.sheetVisible = true
     },
     selectZh() {
-      this.setLang('zh')
+      this.setLang('zh_cn')
     },
     selectEh() {
-      this.setLang('en')
+      this.setLang('en_us')
     },
     setLang(lang) {
       this.$i18n.locale = lang

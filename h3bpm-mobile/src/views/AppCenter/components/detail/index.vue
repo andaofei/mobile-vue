@@ -248,8 +248,8 @@ export default {
       scrollTop: '',
       scrollBox: '',
       simpData: [],
-      filterData: [],
-      filterDetail: [],
+      filterData: {},
+      filterDetail: null,
       tableData6: [{
         id: '12987122',
         name: '王小虎',
@@ -359,7 +359,7 @@ export default {
         Code: this.code
       }
       this.filterDetail = item
-      this.getReportOptions(options, this.filterDetail)
+      this.getReportOptions(options, JSON.stringify(this.filterDetail))
     },
     handleClickFilter() {
       this.filterShow = true
@@ -994,7 +994,7 @@ export default {
       console.log(val)
       const options = {
         Command: 'LoadGridData',
-        FilterData: 'null',
+        FilterData: null,
         WidgetID: this.ObjectId,
         Code: this.code,
         start: (val - 1) * 10,
@@ -1006,7 +1006,7 @@ export default {
     handleCurrentChange(val) {
       const options = {
         Command: 'LoadGridData',
-        FilterData: 'null',
+        FilterData: null,
         WidgetID: this.ObjectId,
         Code: this.code,
         start: (val - 1) * 10,
